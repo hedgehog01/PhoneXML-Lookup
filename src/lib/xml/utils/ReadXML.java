@@ -6,6 +6,7 @@
 package lib.xml.utils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -32,11 +33,16 @@ public class ReadXML {
      * @param mainElement the main XML element (PHONE)
      * @param tagName the tag to get results from
      */
-    public static void getAllXMLTagTextByName(String XMLName, String mainElement, String tagName) {
+    public static ArrayList<String> getAllXMLTagTextByName(String XMLName, String mainElement, String tagName) {
+        //the list to be returned
+        ArrayList<String> list = null;
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = docFactory.newDocumentBuilder();
             Document doc = builder.parse(XMLName);
+            
+            
+            
 
             // normalize text representation
             doc.getDocumentElement().normalize();
@@ -50,30 +56,33 @@ public class ReadXML {
                     Element element = (Element) node;
 
                     NodeList xmlChilderenNodes = element.getChildNodes();
-                    getNodeTextInfo(xmlChilderenNodes, tagName);
+                    list = getNodeTextInfo(xmlChilderenNodes, tagName);
                 }
             }
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             LOG.log(Level.SEVERE,"Exception:{0}", ex);
         }
+        return list;
     }
 
     /*
      * private method that prints all tag text info from specific tag in all XML
      */
-    private static void getNodeTextInfo(NodeList xmlChilderenNodes, String tagName) {
+    private static ArrayList<String> getNodeTextInfo(NodeList xmlChilderenNodes, String tagName) {
+        ArrayList<String> list = new ArrayList<>();
         for (int i = 0; i < xmlChilderenNodes.getLength(); i++) {
             Node n = xmlChilderenNodes.item(i);
             if (n.getNodeType() == Node.ELEMENT_NODE) {
                 Element name = (Element) n;
                 if (name.getTagName().equals(tagName)) {
                     String tagText = name.getTextContent();
-
+                    list.add(tagText);
                     System.out.println(tagText);
                 }
 
             }
         }
+        return list;
     }
     /**
      * Method to print all XML elements under main node

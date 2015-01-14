@@ -23,14 +23,14 @@
                            </columns>
                         </TableView>
                         <Label fx:id="selectFolderLabel" layoutX="616.0" layoutY="33.0" prefHeight="17.0" prefWidth="254.0" />
-                        <TableView layoutX="265.0" layoutY="165.0" prefHeight="482.0" prefWidth="251.0">
+                        <TableView fx:id="phoneNameTableView" layoutX="265.0" layoutY="165.0" prefHeight="482.0" prefWidth="251.0">
                           <columns>
-                            <TableColumn prefWidth="250.0" text="Phone list" />
+                            <TableColumn fx:id="phoneNameColumn" prefWidth="250.0" text="Phone list" />
                           </columns>
                         </TableView>
                         <TableView layoutX="523.0" layoutY="165.0" prefHeight="480.0" prefWidth="244.0">
                           <columns>
-                            <TableColumn prefWidth="243.0" text="Phone Tags" />
+                            <TableColumn prefWidth="243.0" text="Phone Features" />
                           </columns>
                         </TableView>
                         <TextField layoutY="134.0" prefHeight="25.0" prefWidth="254.0" />

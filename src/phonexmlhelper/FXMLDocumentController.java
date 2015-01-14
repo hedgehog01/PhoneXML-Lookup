@@ -31,6 +31,9 @@ import javafx.stage.DirectoryChooser;
 import lib.FileHandler;
 import lib.FileProperty;
 import lib.FileProperyCreator;
+import lib.xmlphonename.PhoneNameCreator;
+import lib.xmlphonename.PhoneNameHandler;
+import lib.xmlphonename.PhoneNameProperty;
 
 /**
  *
@@ -40,9 +43,18 @@ public class FXMLDocumentController implements Initializable
 {
 
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
-
+    //file name table data
     private ObservableList<FileProperty> filePropertyData = FXCollections.observableArrayList();
 
+    //phone list table data
+    private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
+    
+    @FXML
+    private TableView<FileProperty> fileListTableView;
+    
+    @FXML
+    private TableView<PhoneNameProperty> phoneNameTableView;
+    
     @FXML
     private Label selectFolderLabel;
 
@@ -52,18 +64,24 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private TextField folderPathTextField;
 
-    @FXML
-    private TableView<FileProperty> fileListTableView;
 
+
+    //file name column data
     @FXML
     private TableColumn<FileProperty, String> xmlNameColumn;
+    
+    //Phone name column data
+    @FXML
+    private TableColumn<PhoneNameProperty, String> phoneNameColumn;
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
         //set up filename colomn
         xmlNameColumn.setCellValueFactory(cellData -> cellData.getValue().fileNameProperty());
-
+        //set up phone name column
+        phoneNameColumn.setCellValueFactory(cellData -> cellData.getValue().phoneNameProperty());
+        
         /*
          //set listener for rows of fileListTableView table view
          fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
@@ -89,6 +107,7 @@ public class FXMLDocumentController implements Initializable
         {
             // this method will be called whenever user selected row
 
+            @Override
             public void changed(ObservableValue observale, Object oldValue, Object newValue)
             {
                 FileProperty selectedFile = (FileProperty) newValue;
@@ -96,7 +115,16 @@ public class FXMLDocumentController implements Initializable
                 // make sure you override toString in UserClass
                 content.putString(selectedFile.toString());
                 clipboard.setContent(content);
-                System.out.println("File selected: " + selectedFile);
+                
+                //get XML path
+                System.out.println("File selected: " + selectedFile.getFileName());
+                String xmlPath = (folderPathTextField.getText() + "\\" + selectedFile.getFileName());
+                System.out.println(xmlPath);
+                
+                //get list of phones in the specific XML
+                ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
+                
+                
             }
         });
     }
@@ -121,15 +149,18 @@ public class FXMLDocumentController implements Initializable
         if (!fileList.isEmpty())
         {
             selectFolderLabel.setText("");
-            getFilePropertyData(fileList);
+            setFilePropertyData(fileList);
         } else
         {
             selectFolderLabel.setText("No XML files found...");
         }
 
     }
-
-    private void getFilePropertyData(ArrayList<String> fileList)
+    
+    /*
+    Add the data to file list table
+    */
+    private void setFilePropertyData(ArrayList<String> fileList)
     {
         filePropertyData.removeAll();
         filePropertyData.clear();
@@ -137,6 +168,15 @@ public class FXMLDocumentController implements Initializable
         filePropertyData = FileProperyCreator.createFilePropertyList(fileList);
         fileListTableView.setItems(filePropertyData);
 
+    }
+    
+    private void setPhoneNamePropertyData (ArrayList<String> phoneNameList)
+    {
+        phoneNamePropertyData.clear();
+        
+        phoneNamePropertyData = PhoneNameCreator.createFilePropertyList(phoneNameList);
+        phoneNameTableView.setItems(phoneNamePropertyData);
+        
     }
 
 }

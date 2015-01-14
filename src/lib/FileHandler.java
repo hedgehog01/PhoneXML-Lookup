@@ -43,7 +43,7 @@ public class FileHandler
         {
             if (file.isFile())
             {
-                System.out.println(file.getName());
+                //System.out.println(file.getName());
                 fileListArray.add(file.getName());
             }
         }
