@@ -48,13 +48,13 @@ public class FXMLDocumentController implements Initializable
 
     //phone list table data
     private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
-    
+
     @FXML
     private TableView<FileProperty> fileListTableView;
-    
+
     @FXML
     private TableView<PhoneNameProperty> phoneNameTableView;
-    
+
     @FXML
     private Label selectFolderLabel;
 
@@ -64,12 +64,10 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private TextField folderPathTextField;
 
-
-
     //file name column data
     @FXML
     private TableColumn<FileProperty, String> xmlNameColumn;
-    
+
     //Phone name column data
     @FXML
     private TableColumn<PhoneNameProperty, String> phoneNameColumn;
@@ -81,7 +79,7 @@ public class FXMLDocumentController implements Initializable
         xmlNameColumn.setCellValueFactory(cellData -> cellData.getValue().fileNameProperty());
         //set up phone name column
         phoneNameColumn.setCellValueFactory(cellData -> cellData.getValue().phoneNameProperty());
-        
+
         /*
          //set listener for rows of fileListTableView table view
          fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
@@ -102,7 +100,7 @@ public class FXMLDocumentController implements Initializable
          });
          */
         Clipboard clipboard = Clipboard.getSystemClipboard();
-  // add listner to your tableview selecteditemproperty   
+        // add listner to your tableview selecteditemproperty   
         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
         {
             // this method will be called whenever user selected row
@@ -115,16 +113,18 @@ public class FXMLDocumentController implements Initializable
                 // make sure you override toString in UserClass
                 content.putString(selectedFile.toString());
                 clipboard.setContent(content);
-                
+
                 //get XML path
                 System.out.println("File selected: " + selectedFile.getFileName());
                 String xmlPath = (folderPathTextField.getText() + "\\" + selectedFile.getFileName());
                 System.out.println(xmlPath);
-                
+
                 //get list of phones in the specific XML
                 ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
-                
-                
+                System.out.println ("first phone in the list: "+ phoneList.get(0));
+                System.out.println ("second phone in the list: "+ phoneList.get(1));
+                //setPhoneNamePropertyData(phoneList);
+
             }
         });
     }
@@ -156,10 +156,10 @@ public class FXMLDocumentController implements Initializable
         }
 
     }
-    
+
     /*
-    Add the data to file list table
-    */
+     Add the data to file list table
+     */
     private void setFilePropertyData(ArrayList<String> fileList)
     {
         filePropertyData.removeAll();
@@ -169,14 +169,14 @@ public class FXMLDocumentController implements Initializable
         fileListTableView.setItems(filePropertyData);
 
     }
-    
-    private void setPhoneNamePropertyData (ArrayList<String> phoneNameList)
+
+    private void setPhoneNamePropertyData(ArrayList<String> phoneNameList)
     {
         phoneNamePropertyData.clear();
-        
+
         phoneNamePropertyData = PhoneNameCreator.createFilePropertyList(phoneNameList);
         phoneNameTableView.setItems(phoneNamePropertyData);
-        
+
     }
 
 }
