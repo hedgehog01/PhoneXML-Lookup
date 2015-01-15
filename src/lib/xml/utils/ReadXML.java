@@ -37,7 +37,7 @@ public class ReadXML
     public static ArrayList<String> getAllXMLTagTextByName(String XMLName, String mainElement, String tagName)
     {
         //the list to be returned
-        ArrayList<String> list = null;
+        ArrayList<String> list = new ArrayList<>();
         try
         {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
