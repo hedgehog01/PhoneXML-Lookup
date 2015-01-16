@@ -51,7 +51,7 @@ public final class FXMLDocumentController implements Initializable
 
     //phone list table data
     private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
-
+    
     @FXML
     private AnchorPane mainAnchor;
     
@@ -61,6 +61,14 @@ public final class FXMLDocumentController implements Initializable
     @FXML
     private TableView<PhoneNameProperty> phoneNameTableView;
 
+        //file name column data
+    @FXML
+    private TableColumn<FileProperty, String> xmlNameColumn;
+
+    //Phone name column data
+    @FXML
+    private TableColumn<PhoneNameProperty, String> phoneNameColumn;
+    
     @FXML
     private Label selectFolderLabel;
 
@@ -70,14 +78,6 @@ public final class FXMLDocumentController implements Initializable
     @FXML
     private TextField folderPathTextField;
 
-    //file name column data
-    @FXML
-    private TableColumn<FileProperty, String> xmlNameColumn;
-
-    //Phone name column data
-    @FXML
-    private TableColumn<PhoneNameProperty, String> phoneNameColumn;
-
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -86,25 +86,6 @@ public final class FXMLDocumentController implements Initializable
         //set up phone name column
         phoneNameColumn.setCellValueFactory(cellData -> cellData.getValue().phoneNameProperty());
 
-        /*
-         //set listener for rows of fileListTableView table view
-         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
-         {
-         @Override
-         public void changed(ObservableValue observableValue, Object oldValue, Object newValue)
-         {
-         //Check whether item is selected and set value of selected item to Label
-         if (fileListTableView.getSelectionModel().getSelectedItem() != null)
-         {
-         TableViewSelectionModel selectionModel = fileListTableView.getSelectionModel();
-         ObservableList selectedCells = selectionModel.getSelectedCells();
-         TablePosition tablePosition = (TablePosition) selectedCells.get(0);
-         Object val = tablePosition.getTableColumn().getCellData(newValue);
-         System.out.println("Selected Value" + val);
-         }
-         }
-         });
-         */
         Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selecteditemproperty   
         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
