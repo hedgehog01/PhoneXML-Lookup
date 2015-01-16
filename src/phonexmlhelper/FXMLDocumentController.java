@@ -123,7 +123,7 @@ public class FXMLDocumentController implements Initializable
                 ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
                 System.out.println ("first phone in the list: "+ phoneList.get(0));
                 System.out.println ("second phone in the list: "+ phoneList.get(1));
-                //setPhoneNamePropertyData(phoneList);
+                setPhoneNamePropertyData(phoneList);
 
             }
         });
