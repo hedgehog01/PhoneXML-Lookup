@@ -27,7 +27,9 @@ import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import lib.FileHandler;
 import lib.FileProperty;
 import lib.FileProperyCreator;
@@ -39,9 +41,10 @@ import lib.xmlphonename.PhoneNameProperty;
  *
  * @author Hedgehog01
  */
-public class FXMLDocumentController implements Initializable
+public final class FXMLDocumentController implements Initializable
 {
 
+    private final String FOLDER_CHOOSER_TITLE = "Choose Directory";
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
     //file name table data
     private ObservableList<FileProperty> filePropertyData = FXCollections.observableArrayList();
@@ -49,6 +52,9 @@ public class FXMLDocumentController implements Initializable
     //phone list table data
     private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
 
+    @FXML
+    private AnchorPane mainAnchor;
+    
     @FXML
     private TableView<FileProperty> fileListTableView;
 
@@ -121,8 +127,8 @@ public class FXMLDocumentController implements Initializable
 
                 //get list of phones in the specific XML
                 ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
-                System.out.println ("first phone in the list: "+ phoneList.get(0));
-                System.out.println ("second phone in the list: "+ phoneList.get(1));
+                //System.out.println ("first phone in the list: "+ phoneList.get(0));
+                //System.out.println ("second phone in the list: "+ phoneList.get(1));
                 setPhoneNamePropertyData(phoneList);
 
             }
@@ -132,11 +138,16 @@ public class FXMLDocumentController implements Initializable
     @FXML
     private void selectFolderButtonAction(ActionEvent event)
     {
-        DirectoryChooser dirChoose = new DirectoryChooser();
+        Stage currentStage = (Stage) mainAnchor.getScene().getWindow();
+        final DirectoryChooser dirChoose = new DirectoryChooser();
+        dirChoose.setTitle(FOLDER_CHOOSER_TITLE);
+        final File initialDir = new File("C:\\Users\\Hedgehog01\\Documents\\NetBeansProjects");
+        dirChoose.setInitialDirectory(initialDir);
         dirChoose.setTitle("Select XML Folder");
 
         //open Dialog
-        File folderPath = dirChoose.showDialog(null);
+        final File folderPath = dirChoose.showDialog(currentStage);
+
         String filePathStr = folderPath.getAbsolutePath();
 
         LOG.log(Level.INFO, "Folder path selected is: {0}", filePathStr);
