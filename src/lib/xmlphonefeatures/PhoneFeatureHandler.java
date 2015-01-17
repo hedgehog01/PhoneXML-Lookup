@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Hedgehog01
+ * Copyright (C) 2015 Avishag
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@ package lib.xmlphonefeatures;
 
 /**
  *
- * @author Hedgehog01
+ * @author Avishag
  */
-public class PhoneFeaturesProperty
+public class PhoneFeatureHandler
 {
     
 }

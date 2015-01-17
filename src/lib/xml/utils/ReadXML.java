@@ -191,10 +191,12 @@ public class ReadXML
      *
      * @param XMLName the XML to get results from (full XML path)
      * @param mainElement the main XML element (PHONE)
-     * @param tagText the text in the tag (MUST BE LONGER THAN 2 CHARS)
+     * @param tagText the text in the tag to find by (MUST BE LONGER THAN 2 CHARS)
+     * @return the listof nodes
      */
-    public static void getAllNodeElements(String XMLName, String mainElement, String tagText)
+    public static NodeList getAllNodeElements(String XMLName, String mainElement, String tagText)
     {
+        NodeList phoneNodeList = null;
         //Make sure search text is not
         if (tagText.length() > 2)
         {
@@ -217,15 +219,17 @@ public class ReadXML
 
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         //if text doesn't exist in the node remove from the list.
-                        if (!(getNodeByTagText(xmlChilderenNodes, tagText)))
+                        if ((getNodeByTagText(xmlChilderenNodes, tagText)))
                         {
-                            node.getParentNode().removeChild(node);
+                            //node.getParentNode().removeChild(node);
+                            phoneNodeList = xmlChilderenNodes;
+                            getAllNodeListElements(phoneNodeList);
                         }
 
                     }
 
                 }
-                getAllNodeListElements(nodeList);
+                
             } catch (ParserConfigurationException | SAXException | IOException ex)
             {
                 LOG.log(Level.SEVERE, "Exception:{0}", ex);
@@ -235,6 +239,7 @@ public class ReadXML
         {
             System.out.println("Text to be search was too short");
         }
+        return phoneNodeList;
     }
 
     /*

@@ -21,9 +21,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TableView.TableViewSelectionModel;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -33,6 +32,7 @@ import javafx.stage.Stage;
 import lib.FileHandler;
 import lib.FileProperty;
 import lib.FileProperyCreator;
+import lib.xmlphonefeatures.PhoneFeatureProperty;
 import lib.xmlphonename.PhoneNameCreator;
 import lib.xmlphonename.PhoneNameHandler;
 import lib.xmlphonename.PhoneNameProperty;
@@ -46,29 +46,37 @@ public final class FXMLDocumentController implements Initializable
 
     private final String FOLDER_CHOOSER_TITLE = "Choose Directory";
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
+    
+    private String selectedXMLFilePath ="";
     //file name table data
     private ObservableList<FileProperty> filePropertyData = FXCollections.observableArrayList();
 
     //phone list table data
     private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
-    
+
     @FXML
     private AnchorPane mainAnchor;
-    
+
     @FXML
     private TableView<FileProperty> fileListTableView;
 
     @FXML
+    private TableView<PhoneFeatureProperty> phoneFeatureTableView;
+
+    @FXML
     private TableView<PhoneNameProperty> phoneNameTableView;
 
-        //file name column data
+    //file name column data
     @FXML
     private TableColumn<FileProperty, String> xmlNameColumn;
+
+    @FXML
+    private TableColumn<PhoneFeatureProperty, String> phoneFeatureColumn;
 
     //Phone name column data
     @FXML
     private TableColumn<PhoneNameProperty, String> phoneNameColumn;
-    
+
     @FXML
     private Label selectFolderLabel;
 
@@ -78,6 +86,9 @@ public final class FXMLDocumentController implements Initializable
     @FXML
     private TextField folderPathTextField;
 
+    @FXML
+    private TextArea phoneNodeTextArea;
+
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -86,8 +97,10 @@ public final class FXMLDocumentController implements Initializable
         //set up phone name column
         phoneNameColumn.setCellValueFactory(cellData -> cellData.getValue().phoneNameProperty());
 
+        phoneFeatureColumn.setCellValueFactory(cellData -> cellData.getValue().phoneDateProperty());
+
         Clipboard clipboard = Clipboard.getSystemClipboard();
-        // add listner to your tableview selecteditemproperty   
+        // add listner to your tableview selected itemp roperty of file list
         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
         {
             // this method will be called whenever user selected row
@@ -105,12 +118,43 @@ public final class FXMLDocumentController implements Initializable
                 System.out.println("File selected: " + selectedFile.getFileName());
                 String xmlPath = (folderPathTextField.getText() + "\\" + selectedFile.getFileName());
                 System.out.println(xmlPath);
+                selectedXMLFilePath = xmlPath;
 
                 //get list of phones in the specific XML
                 ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
                 //System.out.println ("first phone in the list: "+ phoneList.get(0));
                 //System.out.println ("second phone in the list: "+ phoneList.get(1));
                 setPhoneNamePropertyData(phoneList);
+
+            }
+        });
+        
+         // add listner to tableview selected item property of phone list
+        phoneNameTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
+        {
+            // this method will be called whenever user selected row
+
+            @Override
+            public void changed(ObservableValue observale, Object oldValue, Object newValue)
+            {
+                PhoneNameProperty selectedFile = (PhoneNameProperty) newValue;
+                ClipboardContent content = new ClipboardContent();
+                // make sure you override toString in UserClass
+                content.putString(selectedFile.toString());
+                clipboard.setContent(content);
+
+                //get XML path
+                System.out.println("Phone selected: " + selectedFile.getPhoneName());
+                
+                System.out.println ("File selected in file list table: "+ selectedXMLFilePath);
+                
+                
+
+                //get list of phones in the specific XML
+                //ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
+                //System.out.println ("first phone in the list: "+ phoneList.get(0));
+                //System.out.println ("second phone in the list: "+ phoneList.get(1));
+                //setPhoneNamePropertyData(phoneList);
 
             }
         });
@@ -122,7 +166,8 @@ public final class FXMLDocumentController implements Initializable
         Stage currentStage = (Stage) mainAnchor.getScene().getWindow();
         final DirectoryChooser dirChoose = new DirectoryChooser();
         dirChoose.setTitle(FOLDER_CHOOSER_TITLE);
-        final File initialDir = new File("C:\\Users\\Hedgehog01\\Documents\\NetBeansProjects");
+        //final File initialDir = new File("C:\\Users\\Hedgehog01\\Documents\\NetBeansProjects");
+        final File initialDir = new File("C:\\");
         dirChoose.setInitialDirectory(initialDir);
         dirChoose.setTitle("Select XML Folder");
 
