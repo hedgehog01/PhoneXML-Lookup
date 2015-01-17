@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import lib.FileHandler;
 import lib.FileProperty;
 import lib.FileProperyCreator;
+import lib.xml.utils.ReadXML;
 import lib.xmlphonefeatures.PhoneFeatureProperty;
 import lib.xmlphonename.PhoneNameCreator;
 import lib.xmlphonename.PhoneNameHandler;
@@ -45,6 +46,7 @@ public final class FXMLDocumentController implements Initializable
 {
 
     private final String FOLDER_CHOOSER_TITLE = "Choose Directory";
+    private final String MAIN_NODE_ELEMENT = "PHONE";
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
     
     private String selectedXMLFilePath ="";
@@ -144,12 +146,14 @@ public final class FXMLDocumentController implements Initializable
                 clipboard.setContent(content);
 
                 //get XML path
-                System.out.println("Phone selected: " + selectedFile.getPhoneName());
+                String selectedPhone = selectedFile.getPhoneName();
+                System.out.println("Phone selected: " + selectedPhone);
                 
                 System.out.println ("File selected in file list table: "+ selectedXMLFilePath);
                 
+                StringBuilder allNodeElements = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+                phoneNodeTextArea.setText(allNodeElements.toString());
                 
-
                 //get list of phones in the specific XML
                 //ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
                 //System.out.println ("first phone in the list: "+ phoneList.get(0));
