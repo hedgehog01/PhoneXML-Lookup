@@ -42,14 +42,14 @@ import lib.xmlphonename.PhoneNameProperty;
  *
  * @author Hedgehog01
  */
-public final class FXMLDocumentController implements Initializable
-{
+public final class FXMLDocumentController implements Initializable {
 
     private final String FOLDER_CHOOSER_TITLE = "Choose Directory";
     private final String MAIN_NODE_ELEMENT = "PHONE";
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
-    
-    private String selectedXMLFilePath ="";
+    private StringBuilder allNodeElements;
+
+    private String selectedXMLFilePath = "";
     //file name table data
     private ObservableList<FileProperty> filePropertyData = FXCollections.observableArrayList();
 
@@ -92,8 +92,7 @@ public final class FXMLDocumentController implements Initializable
     private TextArea phoneNodeTextArea;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb)
-    {
+    public void initialize(URL url, ResourceBundle rb) {
         //set up filename colomn
         xmlNameColumn.setCellValueFactory(cellData -> cellData.getValue().fileNameProperty());
         //set up phone name column
@@ -103,13 +102,11 @@ public final class FXMLDocumentController implements Initializable
 
         Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selected itemp roperty of file list
-        fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
-        {
+        fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             // this method will be called whenever user selected row
 
             @Override
-            public void changed(ObservableValue observale, Object oldValue, Object newValue)
-            {
+            public void changed(ObservableValue observale, Object oldValue, Object newValue) {
                 FileProperty selectedFile = (FileProperty) newValue;
                 ClipboardContent content = new ClipboardContent();
                 // make sure you override toString in UserClass
@@ -130,15 +127,13 @@ public final class FXMLDocumentController implements Initializable
 
             }
         });
-        
-         // add listner to tableview selected item property of phone list
-        phoneNameTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
-        {
+
+        // add listner to tableview selected item property of phone list
+        phoneNameTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             // this method will be called whenever user selected row
 
             @Override
-            public void changed(ObservableValue observale, Object oldValue, Object newValue)
-            {
+            public void changed(ObservableValue observale, Object oldValue, Object newValue) {
                 PhoneNameProperty selectedFile = (PhoneNameProperty) newValue;
                 ClipboardContent content = new ClipboardContent();
                 // make sure you override toString in UserClass
@@ -148,25 +143,26 @@ public final class FXMLDocumentController implements Initializable
                 //get XML path
                 String selectedPhone = selectedFile.getPhoneName();
                 System.out.println("Phone selected: " + selectedPhone);
-                
-                System.out.println ("File selected in file list table: "+ selectedXMLFilePath);
-                
-                StringBuilder allNodeElements = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+
+                System.out.println("File selected in file list table: " + selectedXMLFilePath);
+                if ((allNodeElements != null) && (allNodeElements.length() > 0)) {
+                    allNodeElements.setLength(0);
+                }
+                allNodeElements = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+                phoneNodeTextArea.setText("");
                 phoneNodeTextArea.setText(allNodeElements.toString());
-                
+
                 //get list of phones in the specific XML
                 //ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
                 //System.out.println ("first phone in the list: "+ phoneList.get(0));
                 //System.out.println ("second phone in the list: "+ phoneList.get(1));
                 //setPhoneNamePropertyData(phoneList);
-
             }
         });
     }
 
     @FXML
-    private void selectFolderButtonAction(ActionEvent event)
-    {
+    private void selectFolderButtonAction(ActionEvent event) {
         Stage currentStage = (Stage) mainAnchor.getScene().getWindow();
         final DirectoryChooser dirChoose = new DirectoryChooser();
         dirChoose.setTitle(FOLDER_CHOOSER_TITLE);
@@ -187,12 +183,10 @@ public final class FXMLDocumentController implements Initializable
         LOG.log(Level.INFO, "attempt getting list of files in the folder");
 
         ArrayList<String> fileList = FileHandler.getFileList(filePathStr);
-        if (!fileList.isEmpty())
-        {
+        if (!fileList.isEmpty()) {
             selectFolderLabel.setText("");
             setFilePropertyData(fileList);
-        } else
-        {
+        } else {
             selectFolderLabel.setText("No XML files found...");
         }
 
@@ -201,8 +195,7 @@ public final class FXMLDocumentController implements Initializable
     /*
      Add the data to file list table
      */
-    private void setFilePropertyData(ArrayList<String> fileList)
-    {
+    private void setFilePropertyData(ArrayList<String> fileList) {
         filePropertyData.removeAll();
         filePropertyData.clear();
 
@@ -211,8 +204,7 @@ public final class FXMLDocumentController implements Initializable
 
     }
 
-    private void setPhoneNamePropertyData(ArrayList<String> phoneNameList)
-    {
+    private void setPhoneNamePropertyData(ArrayList<String> phoneNameList) {
         phoneNamePropertyData.clear();
 
         phoneNamePropertyData = PhoneNameCreator.createFilePropertyList(phoneNameList);
