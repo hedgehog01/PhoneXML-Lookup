@@ -193,6 +193,7 @@ public class ReadXML {
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         //if text doesn't exist in the node remove from the list.
                         if (!(getNodeByTagText(xmlChilderenNodes, tagText))) {
+                            LOG.log(Level.INFO, "tagText {0} not found, Removing phone",tagText);
                             removeNode (node);
                             //node.getParentNode().removeChild(node);
                             //phoneInfo = getAllNodeListElements(xmlChilderenNodes);
