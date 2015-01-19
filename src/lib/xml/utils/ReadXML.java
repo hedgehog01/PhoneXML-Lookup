@@ -198,8 +198,9 @@ public class ReadXML {
                             //node.getParentNode().removeChild(node);
                             //phoneInfo = getAllNodeListElements(xmlChilderenNodes);
                         }
-                        else
+                        else if ((getNodeByTagText(xmlChilderenNodes, tagText)))
                         {
+                            LOG.log(Level.INFO, "tagText {0} found",tagText);
                             phoneInfo = getAllNodeListElements(xmlChilderenNodes);
                         }
 
