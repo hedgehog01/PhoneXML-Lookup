@@ -167,7 +167,7 @@ public final class FXMLDocumentController implements Initializable {
         final DirectoryChooser dirChoose = new DirectoryChooser();
         dirChoose.setTitle(FOLDER_CHOOSER_TITLE);
         //final File initialDir = new File("C:\\Users\\Hedgehog01\\Documents\\NetBeansProjects");
-        final File initialDir = new File("C:\\");
+        final File initialDir = new File("C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones");
         dirChoose.setInitialDirectory(initialDir);
         dirChoose.setTitle("Select XML Folder");
 

@@ -193,13 +193,19 @@ public class ReadXML {
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         //if text doesn't exist in the node remove from the list.
                         if (!(getNodeByTagText(xmlChilderenNodes, tagText))) {
-                            node.getParentNode().removeChild(node);
+                            removeNode (node);
+                            //node.getParentNode().removeChild(node);
+                            //phoneInfo = getAllNodeListElements(xmlChilderenNodes);
+                        }
+                        else
+                        {
+                            phoneInfo = getAllNodeListElements(xmlChilderenNodes);
                         }
 
                     }
 
                 }
-                phoneInfo = getAllNodeListElements(nodeList);
+                
             } catch (ParserConfigurationException | SAXException | IOException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
@@ -208,6 +214,14 @@ public class ReadXML {
             System.out.println("Text to be search was too short");
         }
         return phoneInfo;
+    }
+    
+    /*
+    * private method to remove node from Nodelist
+    */
+    private static void removeNode (Node node)
+    {
+        node.getParentNode().removeChild(node);
     }
     /*
      public static NodeList getAllNodeElements(String XMLName, String mainElement, String tagText)
@@ -277,10 +291,9 @@ public class ReadXML {
                 Element name = (Element) n;
                 //check if wanted text exists in the element
                 //LOG.log(Level.INFO, "Tag content: {0}",name.getTextContent());
-                if (name.getTextContent().equals(tagText)) {
-                    LOG.log(Level.INFO, "Text {0} found in node {1}", new Object[]{
-                        tagText, name.getTextContent()
-                    });
+                String tempName = name.getTextContent();
+                if (tempName.equals(tagText)) {
+                    LOG.log(Level.INFO, "TagText {0} found",tagText);
                     textExists = true;
                 }
             }

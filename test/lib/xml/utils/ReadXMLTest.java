@@ -61,7 +61,7 @@ public class ReadXMLTest {
     /**
      * Test of readXMLByName method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testReadXMLByName() {
         System.out.println("readXMLByName");
@@ -75,13 +75,14 @@ public class ReadXMLTest {
     /**
      * Test of getAllNodeElements method, of class ReadXML.
      */
-    @Ignore
+    //@Ignore
     @Test
-    public void testGetAllNodeElements() {
+    public void testGetAllNodeElements() 
+    {
         System.out.println("getAllNodeElements");
         String XMLName = "SamsungGSM.xml";
         String mainElement = "PHONE";
-        String tagText = "GT-I9192 Galaxy S4 Mini Duos";
+        String tagText = "Default";
         StringBuilder expResult = null;
         StringBuilder result = ReadXML.getAllNodeElements(XMLName, mainElement, tagText);
         assertEquals(expResult, result);
