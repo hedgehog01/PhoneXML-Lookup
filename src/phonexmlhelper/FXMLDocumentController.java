@@ -137,7 +137,7 @@ public final class FXMLDocumentController implements Initializable {
                 PhoneNameProperty selectedFile = (PhoneNameProperty) newValue;
                 ClipboardContent content = new ClipboardContent();
                 // make sure you override toString in UserClass
-                content.putString(selectedFile.toString());
+                content.putString(selectedFile.getPhoneName());
                 clipboard.setContent(content);
 
                 //get XML path
@@ -167,8 +167,8 @@ public final class FXMLDocumentController implements Initializable {
         final DirectoryChooser dirChoose = new DirectoryChooser();
         dirChoose.setTitle(FOLDER_CHOOSER_TITLE);
         //final File initialDir = new File("C:\\Users\\Hedgehog01\\Documents\\NetBeansProjects");
-        final File initialDir = new File("C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones");
-        dirChoose.setInitialDirectory(initialDir);
+        //final File initialDir = new File("C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones");
+        //dirChoose.setInitialDirectory(initialDir);
         dirChoose.setTitle("Select XML Folder");
 
         //open Dialog
