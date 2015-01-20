@@ -44,7 +44,7 @@ public class ReadXMLTest {
     /**
      * Test of getAllXMLTagTextByName method, of class ReadXML.
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testGetAllXMLTagTextByName() {
         System.out.println("getAllXMLTagTextByName");
@@ -75,7 +75,7 @@ public class ReadXMLTest {
     /**
      * Test of getAllNodeElements method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testGetAllNodeElements() 
     {
@@ -104,5 +104,6 @@ public class ReadXMLTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
     
 }

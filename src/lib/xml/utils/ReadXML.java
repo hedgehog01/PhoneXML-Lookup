@@ -5,13 +5,17 @@
  */
 package lib.xml.utils;
 
+
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -59,7 +63,7 @@ public class ReadXML {
                         Node n = xmlChilderenNodes.item(j);
                         if (n.getNodeType() == Node.ELEMENT_NODE) {
                             Element name = (Element) n;
-                            if (name.getTagName().equals(tagName)) {
+                            if (name.getTagName().equals(tagName) && !(name.hasAttributes())) {
                                 list.add(name.getTextContent());
                                 System.out.println("Adding " + name.getTextContent());
                             }
@@ -193,21 +197,19 @@ public class ReadXML {
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         //if text doesn't exist in the node remove from the list.
                         if (!(getNodeByTagText(xmlChilderenNodes, tagText))) {
-                            LOG.log(Level.INFO, "tagText {0} not found, Removing phone",tagText);
-                            removeNode (node);
+                            LOG.log(Level.INFO, "tagText {0} not found, Removing phone", tagText);
+                            removeNode(node);
                             //node.getParentNode().removeChild(node);
                             //phoneInfo = getAllNodeListElements(xmlChilderenNodes);
-                        }
-                        else if ((getNodeByTagText(xmlChilderenNodes, tagText)))
-                        {
-                            LOG.log(Level.INFO, "tagText {0} found",tagText);
+                        } else if ((getNodeByTagText(xmlChilderenNodes, tagText))) {
+                            //LOG.log(Level.INFO, "tagText {0} found",tagText);
                             phoneInfo = getAllNodeListElements(xmlChilderenNodes);
                         }
 
                     }
 
                 }
-                
+
             } catch (ParserConfigurationException | SAXException | IOException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
@@ -217,12 +219,11 @@ public class ReadXML {
         }
         return phoneInfo;
     }
-    
+
     /*
-    * private method to remove node from Nodelist
-    */
-    private static void removeNode (Node node)
-    {
+     * private method to remove node from Nodelist
+     */
+    private static void removeNode(Node node) {
         node.getParentNode().removeChild(node);
     }
     /*
@@ -295,7 +296,7 @@ public class ReadXML {
                 //LOG.log(Level.INFO, "Tag content: {0}",name.getTextContent());
                 String tempName = name.getTextContent();
                 if (tempName.equals(tagText)) {
-                    LOG.log(Level.INFO, "TagText {0} found",tagText);
+                    LOG.log(Level.INFO, "TagText {0} found", tagText);
                     textExists = true;
                 }
             }
@@ -330,5 +331,11 @@ public class ReadXML {
 
         }
         return sb;
+    }
+
+    public static boolean isValidSchema(String xmlPath) throws SAXException, IOException, ParserConfigurationException {
+        boolean isValid = false;
+
+        return isValid;
     }
 }
