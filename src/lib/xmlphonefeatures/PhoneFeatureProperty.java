@@ -23,7 +23,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author Hedgehog01
  */
-public final class PhoneFeatureProperty
+public class PhoneFeatureProperty
 {
 
     private final StringProperty phoneDate = new SimpleStringProperty("");

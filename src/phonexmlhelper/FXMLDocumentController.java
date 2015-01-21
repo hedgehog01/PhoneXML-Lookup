@@ -72,8 +72,12 @@ public final class FXMLDocumentController implements Initializable {
     @FXML
     private TableColumn<FileProperty, String> xmlNameColumn;
 
+    //
     @FXML
-    private TableColumn<PhoneFeatureProperty, String> phoneFeatureColumn;
+    private TableColumn<PhoneFeatureProperty, String> phoneFeatureTypeColumn;
+    
+    @FXML
+    private TableColumn<PhoneFeatureProperty, String> phoneFeatureContentColumn;
 
     //Phone name column data
     @FXML
@@ -98,7 +102,7 @@ public final class FXMLDocumentController implements Initializable {
         //set up phone name column
         phoneNameColumn.setCellValueFactory(cellData -> cellData.getValue().phoneNameProperty());
 
-        phoneFeatureColumn.setCellValueFactory(cellData -> cellData.getValue().phoneDateProperty());
+        phoneFeatureTypeColumn.setCellValueFactory(cellData -> cellData.getValue().phoneDateProperty());
 
         Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selected itemp roperty of file list
