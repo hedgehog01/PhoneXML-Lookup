@@ -117,7 +117,7 @@ public class ReadXML {
                     + doc.getDocumentElement().getNodeName());
 
             NodeList nodeList = doc.getElementsByTagName(tagName);
-            getAllNodeListElements(nodeList);
+            //getAllNodeListElements(nodeList);
 
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
@@ -220,62 +220,6 @@ public class ReadXML {
         return phoneInfo;
     }
 
-    /*
-     * private method to remove node from Nodelist
-     */
-    private static void removeNode(Node node) {
-        node.getParentNode().removeChild(node);
-    }
-    /*
-     public static NodeList getAllNodeElements(String XMLName, String mainElement, String tagText)
-     {
-     NodeList phoneNodeList = null;
-     //Make sure search text is not
-     if (tagText.length() > 2)
-     {
-     try
-     {
-     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-     DocumentBuilder builder = docFactory.newDocumentBuilder();
-     Document doc = builder.parse(XMLName);
-
-     // normalize text representation
-     doc.getDocumentElement().normalize();
-
-     NodeList nodeList = doc.getElementsByTagName(mainElement);
-     for (int i = 0; i < nodeList.getLength(); i++)
-     {
-     Node node = nodeList.item(i);
-     if (node.getNodeType() == Node.ELEMENT_NODE)
-     {
-     Element element = (Element) node;
-
-     NodeList xmlChilderenNodes = element.getChildNodes();
-     //if text doesn't exist in the node remove from the list.
-     if ((getNodeByTagText(xmlChilderenNodes, tagText)))
-     {
-     System.out.println ("Found tag with text " +tagText+", printing out node...");
-     //node.getParentNode().removeChild(node);
-     phoneNodeList = xmlChilderenNodes;
-     getAllNodeListElements(xmlChilderenNodes);
-     }
-
-     }
-
-     }
-                
-     } catch (ParserConfigurationException | SAXException | IOException ex)
-     {
-     LOG.log(Level.SEVERE, "Exception:{0}", ex);
-     }
-
-     } else
-     {
-     System.out.println("Text to be search was too short");
-     }
-     return phoneNodeList;
-     }
-     */
 
     /*
      * Method to search for specific text the node elements.
@@ -304,35 +248,12 @@ public class ReadXML {
         return textExists;
     }
 
+
     /**
-     * Method to print all element in the node list
-     *
-     * @param list
+     * Method to return all a nodes Elements
+     * @param node the node to evaluate
+     * @return StringBuilder containing element tag name + tag text
      */
-    public static StringBuilder getAllNodeListElements(NodeList list) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < list.getLength(); i++) {
-            Node node = list.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element) node;
-
-                NodeList xmlChilderenNodes = element.getChildNodes();
-                for (int j = 0; j < xmlChilderenNodes.getLength(); j++) {
-
-                    Node phoneNode = xmlChilderenNodes.item(j);
-                    if (phoneNode.getNodeType() == Node.ELEMENT_NODE) {
-                        sb.append(phoneNode.getNodeName() + ": " + phoneNode.getTextContent() + "\n");
-
-                        System.out.println(phoneNode.getNodeName() + ": " + phoneNode.getTextContent());
-                    }
-
-                }
-            }
-
-        }
-        return sb;
-    }
-    
     public static StringBuilder getAllNodeListElements (Node node)
     {
         StringBuilder sb = new StringBuilder();
@@ -353,11 +274,5 @@ public class ReadXML {
                 }
         }
         return sb;
-    }
-
-    public static boolean isValidSchema(String xmlPath) throws SAXException, IOException, ParserConfigurationException {
-        boolean isValid = false;
-
-        return isValid;
     }
 }

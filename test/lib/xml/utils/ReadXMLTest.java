@@ -22,6 +22,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -93,17 +94,18 @@ public class ReadXMLTest {
     /**
      * Test of getAllNodeListElements method, of class ReadXML.
      */
-    @Ignore
     @Test
     public void testGetAllNodeListElements() {
         System.out.println("getAllNodeListElements");
-        NodeList list = null;
+        Node node = null;
         StringBuilder expResult = null;
-        StringBuilder result = ReadXML.getAllNodeListElements(list);
+        StringBuilder result = ReadXML.getAllNodeListElements(node);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
+
 
     
 }
