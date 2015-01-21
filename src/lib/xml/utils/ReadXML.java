@@ -197,13 +197,13 @@ public class ReadXML {
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         //if text doesn't exist in the node remove from the list.
                         if (!(getNodeByTagText(xmlChilderenNodes, tagText))) {
-                            LOG.log(Level.INFO, "tagText {0} not found, Removing phone", tagText);
-                            removeNode(node);
+                            //LOG.log(Level.INFO, "tagText {0} not found, Removing phone", tagText);
+                            //removeNode(node);
                             //node.getParentNode().removeChild(node);
                             //phoneInfo = getAllNodeListElements(xmlChilderenNodes);
                         } else if ((getNodeByTagText(xmlChilderenNodes, tagText))) {
                             //LOG.log(Level.INFO, "tagText {0} found",tagText);
-                            phoneInfo = getAllNodeListElements(xmlChilderenNodes);
+                            phoneInfo = getAllNodeListElements(node);
                         }
 
                     }
@@ -329,6 +329,28 @@ public class ReadXML {
                 }
             }
 
+        }
+        return sb;
+    }
+    
+    public static StringBuilder getAllNodeListElements (Node node)
+    {
+        StringBuilder sb = new StringBuilder();
+        if (node.getNodeType() == Node.ELEMENT_NODE)
+        {
+            Element element = (Element) node;
+
+                NodeList xmlChilderenNodes = element.getChildNodes();
+                for (int j = 0; j < xmlChilderenNodes.getLength(); j++) {
+
+                    Node phoneNode = xmlChilderenNodes.item(j);
+                    if (phoneNode.getNodeType() == Node.ELEMENT_NODE) {
+                        sb.append(phoneNode.getNodeName() + ": " + phoneNode.getTextContent() + "\n");
+
+                        System.out.println(phoneNode.getNodeName() + ": " + phoneNode.getTextContent());
+                    }
+
+                }
         }
         return sb;
     }
