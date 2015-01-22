@@ -16,6 +16,7 @@
  */
 package lib.xmlphonename;
 
+import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -23,9 +24,16 @@ import javafx.beans.property.StringProperty;
  *
  * @author nathanr
  */
-public final class PhoneNameProperty {
+public final class PhoneNameProperty implements Serializable{
     private final StringProperty phoneName = new SimpleStringProperty("");
 
+    /**
+     * Default constructor
+     */
+    public PhoneNameProperty() {
+    }
+
+    
     public PhoneNameProperty(String phoneName) {
         setPhoneName(phoneName);
         

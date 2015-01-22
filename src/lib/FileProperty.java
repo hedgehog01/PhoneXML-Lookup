@@ -5,6 +5,7 @@
  */
 package lib;
 
+import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -12,10 +13,13 @@ import javafx.beans.property.StringProperty;
  *
  * @author Hedgehog01
  */
-public final class FileProperty
+public final class FileProperty implements Serializable
 {
     private final StringProperty fileName = new SimpleStringProperty("");
 
+    /**
+     * Default constructor
+     */
     public FileProperty()
     {
         setFileName("");

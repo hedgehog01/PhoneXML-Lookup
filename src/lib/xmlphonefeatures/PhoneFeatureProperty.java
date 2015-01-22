@@ -16,6 +16,7 @@
  */
 package lib.xmlphonefeatures;
 
+import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -23,9 +24,9 @@ import javafx.beans.property.StringProperty;
  *
  * @author Hedgehog01
  */
-public class PhoneFeatureProperty
+public final class PhoneFeatureProperty implements Serializable
 {
-
+    
     private final StringProperty phoneDate = new SimpleStringProperty("");
 
     public PhoneFeatureProperty()
