@@ -18,6 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -197,17 +198,10 @@ public class ReadXML {
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         //if text doesn't exist in the node remove from the list.
                         if (!(getNodeByTagText(xmlChilderenNodes, tagText))) {
-                            //LOG.log(Level.INFO, "tagText {0} not found, Removing phone", tagText);
-                            //removeNode(node);
-                            //node.getParentNode().removeChild(node);
-                            //phoneInfo = getAllNodeListElements(xmlChilderenNodes);
                         } else if ((getNodeByTagText(xmlChilderenNodes, tagText))) {
-                            //LOG.log(Level.INFO, "tagText {0} found",tagText);
                             phoneInfo = getAllNodeListElements(node);
                         }
-
                     }
-
                 }
 
             } catch (ParserConfigurationException | SAXException | IOException ex) {
@@ -219,6 +213,7 @@ public class ReadXML {
         }
         return phoneInfo;
     }
+    
 
 
     /*
@@ -262,13 +257,26 @@ public class ReadXML {
             Element element = (Element) node;
 
                 NodeList xmlChilderenNodes = element.getChildNodes();
-                for (int j = 0; j < xmlChilderenNodes.getLength(); j++) {
+                for (int i = 0; i < xmlChilderenNodes.getLength(); i++) {
 
-                    Node phoneNode = xmlChilderenNodes.item(j);
+                    Node phoneNode = xmlChilderenNodes.item(i);
                     if (phoneNode.getNodeType() == Node.ELEMENT_NODE) {
-                        sb.append(phoneNode.getNodeName() + ": " + phoneNode.getTextContent() + "\n");
+                        
+                        /*
+                        NamedNodeMap attributes = phoneNode.getAttributes();
+                        for (int j=0; i<attributes.getLength();j++)
+                        {
+                            Node attr = attributes.item(j);
+                            System.out.println ("attribute name: " + attr.getNodeName() + " attribute Value: " + attr.getNodeValue());
+                        }
+                        */
+                        
+                        String elementInfo = ("<" + phoneNode.getNodeName()  +">" + phoneNode.getTextContent() + "\n");
+                        
+                        
+                        sb.append(elementInfo);
 
-                        System.out.println(phoneNode.getNodeName() + ": " + phoneNode.getTextContent());
+                        System.out.println(elementInfo);
                     }
 
                 }

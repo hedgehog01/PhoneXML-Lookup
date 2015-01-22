@@ -30,7 +30,7 @@
                         </TableView>
                         <TableView fx:id="phoneFeatureTableView" layoutX="523.0" layoutY="165.0" prefHeight="480.0" prefWidth="424.0">
                           <columns>
-                            <TableColumn fx:id="phoneFeatureTypeColumn" prefWidth="143.0" text="Type" />
+                            <TableColumn fx:id="phoneFeatureModuleNameColumn" prefWidth="143.0" text="Name" />
                               <TableColumn fx:id="phoneFeatureContentColumn" prefWidth="279.0" text="Content" />
                           </columns>
                         </TableView>

@@ -74,7 +74,7 @@ public final class FXMLDocumentController implements Initializable {
 
     //
     @FXML
-    private TableColumn<PhoneFeatureProperty, String> phoneFeatureTypeColumn;
+    private TableColumn<PhoneFeatureProperty, String> phoneFeatureModuleNameColumn;
     
     @FXML
     private TableColumn<PhoneFeatureProperty, String> phoneFeatureContentColumn;
@@ -101,8 +101,11 @@ public final class FXMLDocumentController implements Initializable {
         xmlNameColumn.setCellValueFactory(cellData -> cellData.getValue().fileNameProperty());
         //set up phone name column
         phoneNameColumn.setCellValueFactory(cellData -> cellData.getValue().phoneNameProperty());
-
-        phoneFeatureTypeColumn.setCellValueFactory(cellData -> cellData.getValue().phoneDateProperty());
+        
+        //set up phone feature table columns
+        phoneFeatureModuleNameColumn.setCellValueFactory(cellData -> cellData.getValue().elementNameProperty());
+        phoneFeatureContentColumn.setCellValueFactory(cellData -> cellData.getValue().elementContentProperty());
+        
 
         Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selected itemp roperty of file list
@@ -152,15 +155,16 @@ public final class FXMLDocumentController implements Initializable {
                 if ((allNodeElements != null) && (allNodeElements.length() > 0)) {
                     allNodeElements.setLength(0);
                 }
+                
+                //Add phone info to text area
                 allNodeElements = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
                 phoneNodeTextArea.setText("");
                 phoneNodeTextArea.setText(allNodeElements.toString());
+                
+                //Add phone info to phonefeature table view
+                
 
-                //get list of phones in the specific XML
-                //ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
-                //System.out.println ("first phone in the list: "+ phoneList.get(0));
-                //System.out.println ("second phone in the list: "+ phoneList.get(1));
-                //setPhoneNamePropertyData(phoneList);
+                
             }
         });
     }

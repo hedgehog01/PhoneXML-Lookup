@@ -24,40 +24,55 @@ import javafx.beans.property.StringProperty;
  *
  * @author Hedgehog01
  */
-public final class PhoneFeatureProperty implements Serializable
-{
+public final class PhoneFeatureProperty implements Serializable {
+
+    private final StringProperty elementName = new SimpleStringProperty("");
+    private final StringProperty elementContent = new SimpleStringProperty("");
+
+
+
+    public PhoneFeatureProperty() {
+        this (null,null);
+    }
+
+    /**
+     * Constructor with initial data
+     * @param elementName the element name
+     * @param elmentContent the element content
+     */
+    public PhoneFeatureProperty(String elementName,String elmentContent) {
+        setElementName(elementName);
+        setElementContent(elmentContent);        
+    }
+
+    public String getElementName() {
+        return elementName.get();
+    }
+
+    public void setElementName(String value) {
+        elementName.set(value);
+    }
+
+    public StringProperty elementNameProperty() {
+        return elementName;
+    }
+
+    public String getElementContent() {
+        return elementContent.get();
+    }
+
+    public void setElementContent(String value) {
+        elementContent.set(value);
+    }
+
+    public StringProperty elementContentProperty() {
+        return elementContent;
+    }
     
-    private final StringProperty phoneDate = new SimpleStringProperty("");
-
-    public PhoneFeatureProperty()
-    {
-    }
-
-    public PhoneFeatureProperty(String name)
-    {
-        setPhoneDate(name);
-    }
-
-    public String getPhoneDate()
-    {
-        return phoneDate.get();
-    }
-
-    public void setPhoneDate(String value)
-    {
-        phoneDate.set(value);
-    }
-
-    public StringProperty phoneDateProperty()
-    {
-        return phoneDate;
-    }
 
     @Override
-    public String toString()
-    {
-        return "PhoneFeatureProperty{" + "phoneDate=" + phoneDate.get() + '}';
+    public String toString() {
+        return "PhoneFeatureProperty{" + "phoneDate=" + elementContent.get() + '}';
     }
-    
 
 }

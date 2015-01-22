@@ -24,17 +24,19 @@ import javafx.collections.ObservableList;
  *
  * @author Avishag
  */
-public class PhoneFeatureCreator
-{
+public class PhoneFeatureCreator {
+
     ObservableList<PhoneFeatureProperty> phoneData = FXCollections.observableArrayList();
-    
-    public ObservableList<PhoneFeatureProperty> createPhoneFeatureList (ArrayList<String> phoneDate)
-    {
-        for (String file: phoneDate)
+
+    public ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementContent) {
+        if ((elementName!=null && elementContent!=null) && (elementName.size() == elementContent.size())) 
         {
-            phoneData.add(new PhoneFeatureProperty(file));
+            for (int i=0; i<elementName.size(); i++)
+            {
+                phoneData.add(new PhoneFeatureProperty(elementName.get(i), elementContent.get(i)));
+            }
         }
-        
+
         return phoneData;
     }
 }
