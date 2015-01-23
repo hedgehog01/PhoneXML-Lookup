@@ -28,12 +28,19 @@ public class PhoneFeatureCreator {
 
     ObservableList<PhoneFeatureProperty> phoneData = FXCollections.observableArrayList();
 
-    public ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementContent) {
+    /**
+     *
+     * @param elementName
+     * @param elementContent
+     * @param elementAttribute
+     * @return
+     */
+    public ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementContent,ArrayList<String> elementAttribute) {
         if ((elementName!=null && elementContent!=null) && (elementName.size() == elementContent.size())) 
         {
             for (int i=0; i<elementName.size(); i++)
             {
-                phoneData.add(new PhoneFeatureProperty(elementName.get(i), elementContent.get(i)));
+                phoneData.add(new PhoneFeatureProperty(elementName.get(i), elementContent.get(i),elementAttribute.get(i)));
             }
         }
 

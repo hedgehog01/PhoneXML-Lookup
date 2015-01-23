@@ -271,7 +271,7 @@ public class ReadXML {
                         }
                         */
                         
-                        String elementInfo = ("<" + phoneNode.getNodeName()  +">" + phoneNode.getTextContent() + "\n");
+                        String elementInfo = ("<" + phoneNode.getNodeName()  +">" + phoneNode.getTextContent() + "<"+ phoneNode.getNodeName() + ">" +"\n");
                         
                         
                         sb.append(elementInfo);

@@ -24,56 +24,83 @@ import javafx.beans.property.StringProperty;
  *
  * @author Hedgehog01
  */
-public final class PhoneFeatureProperty implements Serializable {
+public final class PhoneFeatureProperty implements Serializable
+{
+
     private static final long serialVersionUID = 1L;
 
     private final StringProperty elementName = new SimpleStringProperty("");
     private final StringProperty elementContent = new SimpleStringProperty("");
+    private final StringProperty elementAttribute = new SimpleStringProperty("");
 
-
-
-    public PhoneFeatureProperty() {
-        this (null,null);
+    public PhoneFeatureProperty()
+    {
+        this(null, null,null);
     }
 
     /**
      * Constructor with initial data
+     *
      * @param elementName the element name
      * @param elmentContent the element content
+     * @param attributes the element content
      */
-    public PhoneFeatureProperty(String elementName,String elmentContent) {
+    public PhoneFeatureProperty(String elementName, String elmentContent, String attributes)
+    {
         setElementName(elementName);
-        setElementContent(elmentContent);        
+        setElementContent(elmentContent);
+        setElementAttribute(attributes);
     }
 
-    public String getElementName() {
+    public String getElementName()
+    {
         return elementName.get();
     }
 
-    public void setElementName(String value) {
+    public void setElementName(String value)
+    {
         elementName.set(value);
     }
 
-    public StringProperty elementNameProperty() {
+    public StringProperty elementNameProperty()
+    {
         return elementName;
     }
 
-    public String getElementContent() {
+    public String getElementContent()
+    {
         return elementContent.get();
     }
 
-    public void setElementContent(String value) {
+    public void setElementContent(String value)
+    {
         elementContent.set(value);
     }
 
-    public StringProperty elementContentProperty() {
+    public StringProperty elementContentProperty()
+    {
         return elementContent;
     }
-    
+
+    public String getElementAttribute()
+    {
+        return elementAttribute.get();
+    }
+
+    public void setElementAttribute(String value)
+    {
+        elementAttribute.set(value);
+    }
+
+    public StringProperty elementAttributeProperty()
+    {
+        return elementAttribute;
+    }
 
     @Override
-    public String toString() {
-        return "PhoneFeatureProperty{" + "elementName=" + elementName.get() + "elementContent= " + elementContent.get() +'}';
+    public String toString()
+    {
+        return "PhoneFeatureProperty{" + "elementName=" + elementName.get() + "elementContent= " + elementContent.get() + '}';
     }
 
 }
