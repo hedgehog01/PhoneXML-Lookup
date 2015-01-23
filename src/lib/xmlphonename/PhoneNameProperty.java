@@ -25,6 +25,7 @@ import javafx.beans.property.StringProperty;
  * @author nathanr
  */
 public final class PhoneNameProperty implements Serializable{
+    private static final long serialVersionUID = 1L;
     private final StringProperty phoneName = new SimpleStringProperty("");
 
     /**

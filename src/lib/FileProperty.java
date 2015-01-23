@@ -15,6 +15,7 @@ import javafx.beans.property.StringProperty;
  */
 public final class FileProperty implements Serializable
 {
+    private static final long serialVersionUID = 1L;
     private final StringProperty fileName = new SimpleStringProperty("");
 
     /**

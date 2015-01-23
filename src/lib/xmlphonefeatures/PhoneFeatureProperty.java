@@ -25,6 +25,7 @@ import javafx.beans.property.StringProperty;
  * @author Hedgehog01
  */
 public final class PhoneFeatureProperty implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final StringProperty elementName = new SimpleStringProperty("");
     private final StringProperty elementContent = new SimpleStringProperty("");
@@ -72,7 +73,7 @@ public final class PhoneFeatureProperty implements Serializable {
 
     @Override
     public String toString() {
-        return "PhoneFeatureProperty{" + "phoneDate=" + elementContent.get() + '}';
+        return "PhoneFeatureProperty{" + "elementName=" + elementName.get() + "elementContent= " + elementContent.get() +'}';
     }
 
 }
