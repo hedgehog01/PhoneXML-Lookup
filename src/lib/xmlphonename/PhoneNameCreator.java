@@ -25,7 +25,7 @@ import javafx.collections.ObservableList;
  *
  * @author nathanr
  */
-public class PhoneNameCreator {
+public final class PhoneNameCreator {
     
      private static ObservableList<PhoneNameProperty> xmlPhonePropertyNameData = FXCollections.observableArrayList();
      

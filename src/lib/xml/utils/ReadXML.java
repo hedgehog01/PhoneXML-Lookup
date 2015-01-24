@@ -199,9 +199,10 @@ public class ReadXML
      * @param tagText the text in the tag to find by (MUST BE LONGER THAN 2
      * CHARS)
      */
-    public static StringBuilder getAllNodeElements(String XMLName, String mainElement, String tagText)
+    public static Node getAllNodeElements(String XMLName, String mainElement, String tagText)
     {
-        StringBuilder phoneInfo = new StringBuilder();
+        //StringBuilder phoneInfo = new StringBuilder();
+        Node phoneInfoNode = null;
 
         //Make sure search text is not
         if (tagText.length() > 2)
@@ -229,7 +230,8 @@ public class ReadXML
                         {
                         } else if ((getNodeByTagText(xmlChilderenNodes, tagText)))
                         {
-                            phoneInfo = getAllNodeListElements(node);
+                            //phoneInfo = getAllNodeListElements(node);
+                            phoneInfoNode = node;
                         }
                     }
                 }
@@ -243,7 +245,7 @@ public class ReadXML
         {
             System.out.println("Text to be search was too short");
         }
-        return phoneInfo;
+        return phoneInfoNode;
     }
 
     /*
@@ -322,6 +324,106 @@ public class ReadXML
         }
         return sb;
     }
+    
+    
+        /**
+     * Method to return all a node phone info & Attributes
+     *
+     * @param node the node to evaluate
+     * @return ArrayList of String containing element of the phone info
+     */
+    public static ArrayList<String> getNodePhoneInfoList (Node node)
+    {
+        ArrayList<String> phoneInfoList = new ArrayList<>();
+        
+        if (node.getNodeType() == Node.ELEMENT_NODE)
+        {
+            Element element = (Element) node;
+
+            NodeList xmlChilderenNodes = element.getChildNodes();
+            for (int i = 0; i < xmlChilderenNodes.getLength(); i++)
+            {
+
+                Node phoneNode = xmlChilderenNodes.item(i);
+                if (phoneNode.getNodeType() == Node.ELEMENT_NODE)
+                {
+
+                    NamedNodeMap attributesNodeMap = phoneNode.getAttributes();
+                    //StringBuilder attributeSB = new StringBuilder ("");
+                    /*
+                    if (attributesNodeMap != null && attributesNodeMap.getLength() > 0)
+                    {
+                         
+                        for (int j = 0; j < attributesNodeMap.getLength(); j++)
+                        {
+                            attributeSB.append(" ").append(attributesNodeMap.item(j).getNodeName()).append("=\"").append(attributesNodeMap.item(j).getNodeValue()).append("\"");
+                        }
+
+                    }
+                    */
+
+                    String elementInfo = ("<" + phoneNode.getNodeName() +">" + phoneNode.getTextContent() + "<" + phoneNode.getNodeName() + ">" + "\n");
+                    
+                    System.out.println("Phone info: " + elementInfo);
+                    phoneInfoList.add(elementInfo);
+                    
+
+                    
+                }
+
+            }
+        }
+        return phoneInfoList;
+    }
+    
+    
+            /**
+     * Method to return all a node phone Attributes
+     *
+     * @param node the node to evaluate
+     * @return ArrayList of String containing element attributes if exists and empty if not
+     */
+    public static ArrayList<String> getNodePhoneAttributeList (Node node)
+    {
+        ArrayList<String> attributeList = new ArrayList<>();
+        
+        if (node.getNodeType() == Node.ELEMENT_NODE)
+        {
+            Element element = (Element) node;
+
+            NodeList xmlChilderenNodes = element.getChildNodes();
+            for (int i = 0; i < xmlChilderenNodes.getLength(); i++)
+            {
+
+                Node phoneNode = xmlChilderenNodes.item(i);
+                if (phoneNode.getNodeType() == Node.ELEMENT_NODE)
+                {
+
+                    NamedNodeMap attributesNodeMap = phoneNode.getAttributes();
+                    StringBuilder attributeSB = new StringBuilder ("");
+                    if (attributesNodeMap != null && attributesNodeMap.getLength() > 0)
+                    {
+                         
+                        for (int j = 0; j < attributesNodeMap.getLength(); j++)
+                        {
+                            attributeSB.append(" ").append(attributesNodeMap.item(j).getNodeName()).append("=\"").append(attributesNodeMap.item(j).getNodeValue()).append("\"");
+                        }
+
+                    }
+
+                    String elementInfo = (attributeSB.toString());
+                    
+                    attributeList.add(elementInfo);
+                    
+
+                    System.out.println("element attribute: " + elementInfo);
+                }
+
+            }
+        }
+        return attributeList;
+    }
+
 
     public static void printElementsAndAttributes(String xmlPath, String mainElement)
     {

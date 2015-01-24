@@ -33,10 +33,12 @@ import lib.FileHandler;
 import lib.FileProperty;
 import lib.FileProperyCreator;
 import lib.xml.utils.ReadXML;
+import lib.xmlphonefeatures.PhoneFeatureCreator;
 import lib.xmlphonefeatures.PhoneFeatureProperty;
 import lib.xmlphonename.PhoneNameCreator;
 import lib.xmlphonename.PhoneNameHandler;
 import lib.xmlphonename.PhoneNameProperty;
+import org.w3c.dom.Node;
 
 /**
  *
@@ -55,6 +57,9 @@ public final class FXMLDocumentController implements Initializable {
 
     //phone list table data
     private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
+    
+    //phone feature table data
+    private ObservableList<PhoneFeatureProperty> phoneFeaturePropertyData = FXCollections.observableArrayList();
 
     @FXML
     private AnchorPane mainAnchor;
@@ -157,11 +162,21 @@ public final class FXMLDocumentController implements Initializable {
                 }
                 
                 //Add phone info to text area
-                allNodeElements = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+                //allNodeElements = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+                Node phoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+                if (phoneNode !=null)
+                {
+                  allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
+                  ArrayList<String> phoneInfoArrayList = ReadXML.getNodePhoneInfoList(phoneNode);
+                  ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(phoneNode);
+                  setPhoneFeatureData (phoneInfoArrayList,phoneAttributeList);
+                }
+                
                 phoneNodeTextArea.setText("");
                 phoneNodeTextArea.setText(allNodeElements.toString());
                 
                 //Add phone info to phonefeature table view
+                //get phone info in array list
                 
 
                 
@@ -218,6 +233,14 @@ public final class FXMLDocumentController implements Initializable {
         phoneNamePropertyData = PhoneNameCreator.createFilePropertyList(phoneNameList);
         phoneNameTableView.setItems(phoneNamePropertyData);
 
+    }
+    
+    private void setPhoneFeatureData (ArrayList<String> phoneinfoList,ArrayList<String> phoneAttributeList)
+    {
+        phoneFeaturePropertyData.clear();
+        
+        phoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(phoneinfoList,phoneinfoList,phoneAttributeList);
+        phoneFeatureTableView.setItems(phoneFeaturePropertyData);
     }
 
 }
