@@ -76,7 +76,7 @@ public class ReadXMLTest {
     /**
      * Test of getAllNodeElements method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testGetAllNodeElements() 
     {
@@ -94,6 +94,7 @@ public class ReadXMLTest {
     /**
      * Test of getAllNodeListElements method, of class ReadXML.
      */
+    @Ignore
     @Test
     public void testGetAllNodeListElements() {
         System.out.println("getAllNodeListElements");
@@ -101,6 +102,20 @@ public class ReadXMLTest {
         StringBuilder expResult = null;
         StringBuilder result = ReadXML.getAllNodeListElements(node);
         assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of printElementsAndAttributes method, of class ReadXML.
+     */
+    @Test
+    public void testPrintElementsAndAttributes()
+    {
+        System.out.println("printElementsAndAttributes");
+        String xmlPath = "SamsungGSM.xml";
+        String mainElement = "PHONE";
+        ReadXML.printElementsAndAttributes(xmlPath, mainElement);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

@@ -27,7 +27,7 @@ import javafx.collections.ObservableList;
  */
 public class PhoneNameCreator {
     
-     private static ObservableList<PhoneNameProperty> xmlPhonePropertyData = FXCollections.observableArrayList();
+     private static ObservableList<PhoneNameProperty> xmlPhonePropertyNameData = FXCollections.observableArrayList();
      
          /**
      * Method to return list of FileProperty objects
@@ -38,10 +38,10 @@ public class PhoneNameCreator {
     {
         for (String file : files)
         {
-            xmlPhonePropertyData.add(new PhoneNameProperty(file));
+            xmlPhonePropertyNameData.add(new PhoneNameProperty(file));
         }
         
-        return xmlPhonePropertyData;
+        return xmlPhonePropertyNameData;
     }
     
 }
