@@ -310,10 +310,9 @@ public class ReadXML
                             attributeSB.append(" ").append(attributesNodeMap.item(j).getNodeName()).append("=\"").append(attributesNodeMap.item(j).getNodeValue()).append("\"");
                         }
 
-                        //System.out.println("Attributes: " + sbAttribs.toString());
                     }
 
-                    String elementInfo = ("<" + phoneNode.getNodeName() + attributeSB.toString() +">" + phoneNode.getTextContent() + "<" + phoneNode.getNodeName() + ">" + "\n");
+                    String elementInfo = ("<" + phoneNode.getNodeName() + attributeSB.toString() +">" + phoneNode.getTextContent() + "</" + phoneNode.getNodeName() + ">" + "\n");
 
                     sb.append(elementInfo);
 
@@ -362,7 +361,7 @@ public class ReadXML
                     }
                     */
 
-                    String elementInfo = ("<" + phoneNode.getNodeName() +">" + phoneNode.getTextContent() + "<" + phoneNode.getNodeName() + ">" + "\n");
+                    String elementInfo = ("<" + phoneNode.getNodeName() +">" + phoneNode.getTextContent() + "</" + phoneNode.getNodeName() + ">");
                     
                     System.out.println("Phone info: " + elementInfo);
                     phoneInfoList.add(elementInfo);

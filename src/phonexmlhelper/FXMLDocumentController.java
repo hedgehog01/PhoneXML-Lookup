@@ -109,7 +109,7 @@ public final class FXMLDocumentController implements Initializable {
         
         //set up phone feature table columns
         phoneFeatureModuleNameColumn.setCellValueFactory(cellData -> cellData.getValue().elementNameProperty());
-        phoneFeatureContentColumn.setCellValueFactory(cellData -> cellData.getValue().elementContentProperty());
+        phoneFeatureContentColumn.setCellValueFactory(cellData -> cellData.getValue().elementAttributeProperty());
         
 
         Clipboard clipboard = Clipboard.getSystemClipboard();

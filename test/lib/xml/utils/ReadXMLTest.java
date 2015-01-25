@@ -73,23 +73,6 @@ public class ReadXMLTest {
         //fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of getAllNodeElements method, of class ReadXML.
-     */
-    @Ignore
-    @Test
-    public void testGetAllNodeElements() 
-    {
-        System.out.println("getAllNodeElements");
-        String XMLName = "SamsungGSM.xml";
-        String mainElement = "PHONE";
-        String tagText = "SGH-ZX30";
-        StringBuilder expResult = null;
-        StringBuilder result = ReadXML.getAllNodeElements(XMLName, mainElement, tagText);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of getAllNodeListElements method, of class ReadXML.
@@ -109,6 +92,7 @@ public class ReadXMLTest {
     /**
      * Test of printElementsAndAttributes method, of class ReadXML.
      */
+    @Ignore
     @Test
     public void testPrintElementsAndAttributes()
     {
@@ -116,6 +100,52 @@ public class ReadXMLTest {
         String xmlPath = "SamsungGSM.xml";
         String mainElement = "PHONE";
         ReadXML.printElementsAndAttributes(xmlPath, mainElement);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodePhoneInfoList method, of class ReadXML.
+     */
+    @Ignore
+    @Test
+    public void testGetNodePhoneInfoList() {
+        System.out.println("getNodePhoneInfoList");
+        Node node = null;
+        ArrayList<String> expResult = null;
+        ArrayList<String> result = ReadXML.getNodePhoneInfoList(node);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodePhoneAttributeList method, of class ReadXML.
+     */
+    @Ignore
+    @Test
+    public void testGetNodePhoneAttributeList() {
+        System.out.println("getNodePhoneAttributeList");
+        Node node = null;
+        ArrayList<String> expResult = null;
+        ArrayList<String> result = ReadXML.getNodePhoneAttributeList(node);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getAllNodeElements method, of class ReadXML.
+     */
+    @Test
+    public void testGetAllNodeElements() {
+        System.out.println("getAllNodeElements");
+        String XMLName = "SamsungGSM.xml";
+        String mainElement = "PHONE";
+        String tagText = "GT-P6800 Galaxy Tab 7.7";
+        Node expResult = null;
+        Node result = ReadXML.getAllNodeElements(XMLName, mainElement, tagText);
+        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
