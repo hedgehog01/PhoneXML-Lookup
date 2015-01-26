@@ -77,9 +77,13 @@ public final class FXMLDocumentController implements Initializable {
     @FXML
     private TableColumn<FileProperty, String> xmlNameColumn;
 
-    //
+    //Module name column
     @FXML
     private TableColumn<PhoneFeatureProperty, String> phoneFeatureModuleNameColumn;
+    
+    //Module value column
+    @FXML
+    private TableColumn<PhoneFeatureProperty, String> phoneFeatureModuleValueColumn;
     
     @FXML
     private TableColumn<PhoneFeatureProperty, String> phoneFeatureContentColumn;
@@ -110,7 +114,7 @@ public final class FXMLDocumentController implements Initializable {
         //set up phone feature table columns
         phoneFeatureModuleNameColumn.setCellValueFactory(cellData -> cellData.getValue().elementNameProperty());
         phoneFeatureContentColumn.setCellValueFactory(cellData -> cellData.getValue().elementAttributeProperty());
-        
+        phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
 
         Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selected itemp roperty of file list
@@ -167,9 +171,10 @@ public final class FXMLDocumentController implements Initializable {
                 if (phoneNode !=null)
                 {
                   allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
-                  ArrayList<String> phoneInfoArrayList = ReadXML.getNodePhoneInfoList(phoneNode);
+                  ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(phoneNode);
+                  ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(phoneNode);
                   ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(phoneNode);
-                  setPhoneFeatureData (phoneInfoArrayList,phoneAttributeList);
+                  setPhoneFeatureData (phoneTagNameArrayList,phoneTagValueArrayList,phoneAttributeList);
                 }
                 
                 phoneNodeTextArea.setText("");
@@ -235,11 +240,11 @@ public final class FXMLDocumentController implements Initializable {
 
     }
     
-    private void setPhoneFeatureData (ArrayList<String> phoneinfoList,ArrayList<String> phoneAttributeList)
+    private void setPhoneFeatureData (ArrayList<String> phoneTagNameList,ArrayList<String>phoneTagValueList, ArrayList<String> phoneAttributeList)
     {
         phoneFeaturePropertyData.clear();
         
-        phoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(phoneinfoList,phoneinfoList,phoneAttributeList);
+        phoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList,phoneTagValueList,phoneAttributeList);
         phoneFeatureTableView.setItems(phoneFeaturePropertyData);
     }
 

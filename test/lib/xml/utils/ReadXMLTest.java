@@ -105,15 +105,15 @@ public class ReadXMLTest {
     }
 
     /**
-     * Test of getNodePhoneInfoList method, of class ReadXML.
+     * Test of getNodePhoneTagNameList method, of class ReadXML.
      */
     @Ignore
     @Test
-    public void testGetNodePhoneInfoList() {
+    public void testGetNodePhoneTagNameList() {
         System.out.println("getNodePhoneInfoList");
         Node node = null;
         ArrayList<String> expResult = null;
-        ArrayList<String> result = ReadXML.getNodePhoneInfoList(node);
+        ArrayList<String> result = ReadXML.getNodePhoneTagNameList(node);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

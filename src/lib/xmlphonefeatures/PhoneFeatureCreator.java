@@ -31,16 +31,16 @@ public final class PhoneFeatureCreator {
     /**
      *
      * @param elementName
-     * @param elementContent
+     * @param elementValue
      * @param elementAttribute
      * @return
      */
-    public static ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementContent,ArrayList<String> elementAttribute) {
-        if ((elementName!=null && elementContent!=null) && (elementName.size() == elementContent.size())) 
+    public static ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementValue,ArrayList<String> elementAttribute) {
+        if ((elementName!=null && elementValue!=null) && (elementName.size() == elementValue.size())) 
         {
             for (int i=0; i<elementName.size(); i++)
             {
-                phoneData.add(new PhoneFeatureProperty(elementName.get(i), elementContent.get(i),elementAttribute.get(i)));
+                phoneData.add(new PhoneFeatureProperty(elementName.get(i), elementValue.get(i),elementAttribute.get(i)));
             }
         }
 

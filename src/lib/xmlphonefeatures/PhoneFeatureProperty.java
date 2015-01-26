@@ -30,8 +30,10 @@ public final class PhoneFeatureProperty implements Serializable
     private static final long serialVersionUID = 1L;
 
     private final StringProperty elementName = new SimpleStringProperty("");
-    private final StringProperty elementContent = new SimpleStringProperty("");
     private final StringProperty elementAttribute = new SimpleStringProperty("");
+    private final StringProperty elementValue = new SimpleStringProperty("");
+
+
 
     public PhoneFeatureProperty()
     {
@@ -42,13 +44,13 @@ public final class PhoneFeatureProperty implements Serializable
      * Constructor with initial data
      *
      * @param elementName the element name
-     * @param elmentContent the element content
+     * @param elmentValue the element value
      * @param attributes the element content
      */
-    public PhoneFeatureProperty(String elementName, String elmentContent, String attributes)
+    public PhoneFeatureProperty(String elementName, String elmentValue, String attributes)
     {
         setElementName(elementName);
-        setElementContent(elmentContent);
+        setElementValue(elmentValue);
         setElementAttribute(attributes);
     }
 
@@ -67,21 +69,6 @@ public final class PhoneFeatureProperty implements Serializable
         return elementName;
     }
 
-    public String getElementContent()
-    {
-        return elementContent.get();
-    }
-
-    public void setElementContent(String value)
-    {
-        elementContent.set(value);
-    }
-
-    public StringProperty elementContentProperty()
-    {
-        return elementContent;
-    }
-
     public String getElementAttribute()
     {
         return elementAttribute.get();
@@ -96,11 +83,26 @@ public final class PhoneFeatureProperty implements Serializable
     {
         return elementAttribute;
     }
+    
+        public String getElementValue() {
+        return elementValue.get();
+    }
+
+    public void setElementValue(String value) {
+        elementValue.set(value);
+    }
+
+    public StringProperty elementValueProperty() {
+        return elementValue;
+    }
 
     @Override
     public String toString()
     {
-        return "PhoneFeatureProperty{" + "elementName=" + elementName.get() + "elementContent= " + elementContent.get() + '}';
+        StringBuilder phoneFeatureString = new StringBuilder("");
+         phoneFeatureString.append("PhoneFeatureProperty{" + "elementName=").append(elementName.get()).append("elementContent= ").append(elementValue.get()).append("element attrubute=").append(elementAttribute.get()).append('}');
+         
+         return phoneFeatureString.toString();
     }
 
 }
