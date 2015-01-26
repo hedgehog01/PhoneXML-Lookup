@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -57,7 +58,7 @@ public final class FXMLDocumentController implements Initializable {
 
     //phone list table data
     private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
-    
+
     //phone feature table data
     private ObservableList<PhoneFeatureProperty> phoneFeaturePropertyData = FXCollections.observableArrayList();
 
@@ -80,11 +81,11 @@ public final class FXMLDocumentController implements Initializable {
     //Module name column
     @FXML
     private TableColumn<PhoneFeatureProperty, String> phoneFeatureModuleNameColumn;
-    
+
     //Module value column
     @FXML
     private TableColumn<PhoneFeatureProperty, String> phoneFeatureModuleValueColumn;
-    
+
     @FXML
     private TableColumn<PhoneFeatureProperty, String> phoneFeatureContentColumn;
 
@@ -104,13 +105,19 @@ public final class FXMLDocumentController implements Initializable {
     @FXML
     private TextArea phoneNodeTextArea;
 
+    @FXML
+    private CheckBox defaultSectionCheckBox;
+
+    @FXML
+    private CheckBox defaultOSSectionCheckBox;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //set up filename colomn
         xmlNameColumn.setCellValueFactory(cellData -> cellData.getValue().fileNameProperty());
         //set up phone name column
         phoneNameColumn.setCellValueFactory(cellData -> cellData.getValue().phoneNameProperty());
-        
+
         //set up phone feature table columns
         phoneFeatureModuleNameColumn.setCellValueFactory(cellData -> cellData.getValue().elementNameProperty());
         phoneFeatureContentColumn.setCellValueFactory(cellData -> cellData.getValue().elementAttributeProperty());
@@ -164,28 +171,34 @@ public final class FXMLDocumentController implements Initializable {
                 if ((allNodeElements != null) && (allNodeElements.length() > 0)) {
                     allNodeElements.setLength(0);
                 }
-                
+
                 //Add phone info to text area
                 //allNodeElements = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
                 Node phoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
-                if (phoneNode !=null)
-                {
-                  allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
-                  ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(phoneNode);
-                  ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(phoneNode);
-                  ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(phoneNode);
-                  setPhoneFeatureData (phoneTagNameArrayList,phoneTagValueArrayList,phoneAttributeList);
+                if (phoneNode != null) {
+                    allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
+                    ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(phoneNode);
+                    ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(phoneNode);
+                    ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(phoneNode);
+                    setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList);
                 }
-                
+
                 phoneNodeTextArea.setText("");
                 phoneNodeTextArea.setText(allNodeElements.toString());
-                
-                //Add phone info to phonefeature table view
-                //get phone info in array list
-                
 
-                
             }
+        });
+
+        //setup checkboxes
+        defaultSectionCheckBox.setOnAction((event) -> {
+            boolean selected = defaultSectionCheckBox.isSelected();
+            LOG.log(Level.INFO, "defaultSectionCheckBox selected: {0}", selected);
+        });
+
+        defaultOSSectionCheckBox.setOnAction((event) -> {
+            boolean selected = defaultOSSectionCheckBox.isSelected();
+            LOG.log(Level.INFO, "defaultOSSectionCheckBox selected: {0}", selected);
+            System.out.println("Checkbox");
         });
     }
 
@@ -239,12 +252,11 @@ public final class FXMLDocumentController implements Initializable {
         phoneNameTableView.setItems(phoneNamePropertyData);
 
     }
-    
-    private void setPhoneFeatureData (ArrayList<String> phoneTagNameList,ArrayList<String>phoneTagValueList, ArrayList<String> phoneAttributeList)
-    {
+
+    private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList) {
         phoneFeaturePropertyData.clear();
-        
-        phoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList,phoneTagValueList,phoneAttributeList);
+
+        phoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList);
         phoneFeatureTableView.setItems(phoneFeaturePropertyData);
     }
 

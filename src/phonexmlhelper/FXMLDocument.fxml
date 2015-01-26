@@ -37,8 +37,8 @@
                         </TableView>
                         <TextField layoutY="134.0" prefHeight="25.0" prefWidth="147.0" />
                         <TextField layoutX="150.0" layoutY="134.0" prefHeight="25.0" prefWidth="252.0" />
-                        <CheckBox layoutX="670.0" layoutY="33.0" mnemonicParsing="false" text="Default" />
-                        <CheckBox layoutX="670.0" layoutY="54.0" mnemonicParsing="false" text="Default OS" />
+                        <CheckBox fx:id="defaultSectionCheckBox" layoutX="670.0" layoutY="33.0" mnemonicParsing="false" text="Default" />
+                        <CheckBox fx:id="defaultOSSectionCheckBox" layoutX="670.0" layoutY="54.0" mnemonicParsing="false" text="Default OS" />
                      </children>
                   </AnchorPane>
             </content>
