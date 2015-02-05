@@ -103,6 +103,8 @@ public class ReadXML {
      *
      * @param XMLName the XML to parse (Full path)
      * @param tagName The main XMl tag
+     *
+     * 
      */
     public static void readXMLByName(String XMLName, String tagName) {
         try {
@@ -116,7 +118,6 @@ public class ReadXML {
                     + doc.getDocumentElement().getNodeName());
 
             NodeList nodeList = doc.getElementsByTagName(tagName);
-            //getAllNodeListElements(nodeList);
 
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
@@ -135,7 +136,8 @@ public class ReadXML {
 
     /*
      * private method that check Phone name and Guid name attribute
-     */
+     *
+    */
     private static void getNodeNameInfo(NodeList xmlChilderenNodes) {
         String phoneName = null;
         String phoneGuidName = null;
@@ -165,9 +167,10 @@ public class ReadXML {
             }
         }
     }
+    
 
     /**
-     * Method to search for specific Node by text in one of it's elements.
+     * Method to search for specific Node by text in one of it's elements - returns the node if found.
      *
      * @param XMLName the XML to get results from (full XML path)
      * @param mainElement the main XML element (PHONE)
@@ -195,12 +198,13 @@ public class ReadXML {
                         Element element = (Element) node;
 
                         NodeList xmlChilderenNodes = element.getChildNodes();
-                        //if text doesn't exist in the node remove from the list.
-                        if (!(getNodeByTagText(xmlChilderenNodes, tagText))) {
-                        } else if ((getNodeByTagText(xmlChilderenNodes, tagText))) {
-                            //phoneInfo = getAllNodeListElements(node);
+                        // check if text exist in the node if so it's node we want.
+                        
+                            
+                        if ((getNodeByTagText(xmlChilderenNodes, tagText))) {
                             phoneInfoNode = node;
                         }
+                        
                     }
                 }
 
@@ -242,7 +246,7 @@ public class ReadXML {
     }
 
     /**
-     * Method to return all a node Elements
+     * Method to return all a node Elements and attributes in StringBuilder object
      *
      * @param node the node to evaluate
      * @return StringBuilder containing element tag name + tag text
@@ -281,7 +285,7 @@ public class ReadXML {
     }
 
     /**
-     * Method to return all a node phone info & Attributes
+     * Method to return all a node phone tag names
      *
      * @param node the node to evaluate
      * @return ArrayList of String containing element of the phone info
@@ -308,7 +312,7 @@ public class ReadXML {
     }
 
     /**
-     * Method to return all a node phone info & Attributes
+     * Method to return all a node phone tag values
      *
      * @param node the node to evaluate
      * @return ArrayList of String containing element of the phone info
