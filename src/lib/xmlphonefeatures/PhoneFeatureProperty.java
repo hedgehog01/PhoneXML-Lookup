@@ -17,6 +17,8 @@
 package lib.xmlphonefeatures;
 
 import java.io.Serializable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -27,17 +29,16 @@ import javafx.beans.property.StringProperty;
 public final class PhoneFeatureProperty implements Serializable
 {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private final StringProperty elementName = new SimpleStringProperty("");
     private final StringProperty elementAttribute = new SimpleStringProperty("");
     private final StringProperty elementValue = new SimpleStringProperty("");
-
-
+    private final BooleanProperty defaultSection = new SimpleBooleanProperty(false);
 
     public PhoneFeatureProperty()
     {
-        this(null, null,null);
+        this(null, null, null);
     }
 
     /**
@@ -52,6 +53,22 @@ public final class PhoneFeatureProperty implements Serializable
         setElementName(elementName);
         setElementValue(elmentValue);
         setElementAttribute(attributes);
+    }
+    
+        /**
+     * Constructor with initial data
+     *
+     * @param elementName the element name
+     * @param elmentValue the element value
+     * @param attributes the element content
+     * @param defaultSection is the element from default section
+     */
+    public PhoneFeatureProperty(String elementName, String elmentValue, String attributes,boolean defaultSection)
+    {
+        setElementName(elementName);
+        setElementValue(elmentValue);
+        setElementAttribute(attributes);
+        setDefaultSection(defaultSection);
     }
 
     public String getElementName()
@@ -83,26 +100,44 @@ public final class PhoneFeatureProperty implements Serializable
     {
         return elementAttribute;
     }
-    
-        public String getElementValue() {
+
+    public String getElementValue()
+    {
         return elementValue.get();
     }
 
-    public void setElementValue(String value) {
+    public void setElementValue(String value)
+    {
         elementValue.set(value);
     }
 
-    public StringProperty elementValueProperty() {
+    public StringProperty elementValueProperty()
+    {
         return elementValue;
+    }
+
+    public boolean isDefaultSection()
+    {
+        return defaultSection.get();
+    }
+
+    public void setDefaultSection(boolean value)
+    {
+        defaultSection.set(value);
+    }
+
+    public BooleanProperty defaultSectionProperty()
+    {
+        return defaultSection;
     }
 
     @Override
     public String toString()
     {
         StringBuilder phoneFeatureString = new StringBuilder("");
-         phoneFeatureString.append("PhoneFeatureProperty{" + "elementName=").append(elementName.get()).append("elementContent= ").append(elementValue.get()).append("element attrubute=").append(elementAttribute.get()).append('}');
-         
-         return phoneFeatureString.toString();
+        phoneFeatureString.append("PhoneFeatureProperty{" + "elementName=").append(elementName.get()).append("elementContent= ").append(elementValue.get()).append("element attrubute=").append(elementAttribute.get()).append("default= ").append(defaultSection.get()).append('}');
+
+        return phoneFeatureString.toString();
     }
 
 }

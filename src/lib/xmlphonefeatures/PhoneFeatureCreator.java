@@ -29,11 +29,11 @@ public final class PhoneFeatureCreator {
     private static ObservableList<PhoneFeatureProperty> phoneData = FXCollections.observableArrayList();
 
     /**
-     *
-     * @param elementName
-     * @param elementValue
-     * @param elementAttribute
-     * @return
+     * method to create PhoneFeatureProperty's and add them to ObservableList
+     * @param elementName the element tag name
+     * @param elementValue the element tag value
+     * @param elementAttribute the element attribute
+     * @return list of elements in an ObservableList
      */
     public static ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementValue,ArrayList<String> elementAttribute) {
         if ((elementName!=null && elementValue!=null) && (elementName.size() == elementValue.size())) 
@@ -41,6 +41,25 @@ public final class PhoneFeatureCreator {
             for (int i=0; i<elementName.size(); i++)
             {
                 phoneData.add(new PhoneFeatureProperty(elementName.get(i), elementValue.get(i),elementAttribute.get(i)));
+            }
+        }
+
+        return phoneData;
+    }
+    
+        /**
+     * method to create PhoneFeatureProperty's and add them to ObservableList
+     * @param elementName the element tag name
+     * @param elementValue the element tag value
+     * @param elementAttribute the element attribute
+     * @return list of elements in an ObservableList
+     */
+    public static ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementValue,ArrayList<String> elementAttribute,boolean isDefault) {
+        if ((elementName!=null && elementValue!=null) && (elementName.size() == elementValue.size())) 
+        {
+            for (int i=0; i<elementName.size(); i++)
+            {
+                phoneData.add(new PhoneFeatureProperty(elementName.get(i), elementValue.get(i),elementAttribute.get(i),isDefault));
             }
         }
 

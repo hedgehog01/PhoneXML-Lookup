@@ -310,6 +310,7 @@ public class ReadXML {
         }
         return phoneInfoList;
     }
+    
 
     /**
      * Method to return all a node phone tag values

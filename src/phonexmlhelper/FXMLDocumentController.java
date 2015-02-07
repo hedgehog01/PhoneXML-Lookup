@@ -49,8 +49,10 @@ public final class FXMLDocumentController implements Initializable {
 
     private final String FOLDER_CHOOSER_TITLE = "Choose Directory";
     private final String MAIN_NODE_ELEMENT = "PHONE";
+    private final String DEFAULT_SECTION = "Default";
     private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
     private StringBuilder allNodeElements;
+    private Node defaultSectionNode;
 
     private String selectedXMLFilePath = "";
     //file name table data
@@ -124,7 +126,7 @@ public final class FXMLDocumentController implements Initializable {
         phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
 
         Clipboard clipboard = Clipboard.getSystemClipboard();
-        // add listner to your tableview selected itemp roperty of file list
+        // add listner to your tableview selected item property of file list
         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             // this method will be called whenever user selected row
 
@@ -147,6 +149,7 @@ public final class FXMLDocumentController implements Initializable {
                 //System.out.println ("first phone in the list: "+ phoneList.get(0));
                 //System.out.println ("second phone in the list: "+ phoneList.get(1));
                 setPhoneNamePropertyData(phoneList);
+                defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
 
             }
         });
@@ -180,8 +183,12 @@ public final class FXMLDocumentController implements Initializable {
                     ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(phoneNode);
                     ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(phoneNode);
                     ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(phoneNode);
+                    
+                    
+                    
                     setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList);
                 }
+                
 
                 phoneNodeTextArea.setText("");
                 phoneNodeTextArea.setText(allNodeElements.toString());
@@ -234,7 +241,7 @@ public final class FXMLDocumentController implements Initializable {
     }
 
     /*
-     Add the data to file list table
+     * method to add file list data to file list table
      */
     private void setFilePropertyData(ArrayList<String> fileList) {
         filePropertyData.removeAll();
@@ -245,6 +252,9 @@ public final class FXMLDocumentController implements Initializable {
 
     }
 
+    /*
+    * method to set the phone name into the phone name table
+    */
     private void setPhoneNamePropertyData(ArrayList<String> phoneNameList) {
         phoneNamePropertyData.clear();
 
@@ -253,6 +263,9 @@ public final class FXMLDocumentController implements Initializable {
 
     }
 
+    /*
+    * method to set the phone feature data into the phone feature table
+    */
     private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList) {
         phoneFeaturePropertyData.clear();
 
