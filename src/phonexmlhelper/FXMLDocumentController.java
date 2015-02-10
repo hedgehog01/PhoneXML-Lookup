@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import lib.FileHandler;
 import lib.FileProperty;
 import lib.FileProperyCreator;
+import lib.xml.utils.PhoneDataHandler;
 import lib.xml.utils.ReadXML;
 import lib.xmlphonefeatures.PhoneFeatureCreator;
 import lib.xmlphonefeatures.PhoneFeatureProperty;
@@ -94,6 +95,10 @@ public final class FXMLDocumentController implements Initializable {
     //Phone name column data
     @FXML
     private TableColumn<PhoneNameProperty, String> phoneNameColumn;
+    
+    //Phone default column data
+    @FXML
+    private TableColumn<PhoneFeatureProperty, Boolean> phoneDefaultColumn;
 
     @FXML
     private Label selectFolderLabel;
@@ -124,6 +129,7 @@ public final class FXMLDocumentController implements Initializable {
         phoneFeatureModuleNameColumn.setCellValueFactory(cellData -> cellData.getValue().elementNameProperty());
         phoneFeatureContentColumn.setCellValueFactory(cellData -> cellData.getValue().elementAttributeProperty());
         phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
+        phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
 
         Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selected item property of file list
@@ -150,7 +156,6 @@ public final class FXMLDocumentController implements Initializable {
                 //System.out.println ("second phone in the list: "+ phoneList.get(1));
                 setPhoneNamePropertyData(phoneList);
                 defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
-
             }
         });
 
@@ -178,15 +183,20 @@ public final class FXMLDocumentController implements Initializable {
                 //Add phone info to text area
                 //allNodeElements = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
                 Node phoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
-                if (phoneNode != null) {
+                if (phoneNode != null && defaultSectionNode != null) 
+                {
                     allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
                     ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(phoneNode);
                     ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(phoneNode);
                     ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(phoneNode);
                     
+                    ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
+                    ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
+                    ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
                     
                     
-                    setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList);
+                    
+                    setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList,defaultPhoneTagNameArrayList,defaultPhoneTagValueArrayList,defaultPhoneAttributeList );
                 }
                 
 
@@ -266,11 +276,35 @@ public final class FXMLDocumentController implements Initializable {
     /*
     * method to set the phone feature data into the phone feature table
     */
-    private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList) {
+    private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList,ArrayList<String> defaultPhoneTagNameList, ArrayList<String> defaultPhoneTagValueList, ArrayList<String> defaultPhoneAttributeList) {
+        
+        //System.out.println ("print of Default phone arraylists");
+        //printArrayLists (defaultPhoneTagNameList,defaultPhoneTagValueList);
+        //get default node property
+        ObservableList<PhoneFeatureProperty> defaultPhoneFeaturePropertyData = FXCollections.observableArrayList();
+        defaultPhoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(defaultPhoneTagNameList, defaultPhoneTagValueList, defaultPhoneAttributeList);
+        
+        //get phone node property
         phoneFeaturePropertyData.clear();
-
-        phoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList);
+        phoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList,false);
+        defaultPhoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList (defaultPhoneTagNameList,defaultPhoneTagValueList,defaultPhoneAttributeList,true);
+        //remove from default property elements already in the phone
+         ObservableList<PhoneFeatureProperty> updatedDefaultPhoneFeaturePropertyData = PhoneDataHandler.removeDupProperties(defaultPhoneFeaturePropertyData,phoneFeaturePropertyData);
+        
+        phoneFeaturePropertyData.addAll(updatedDefaultPhoneFeaturePropertyData);
+        
+        
+        
+        
         phoneFeatureTableView.setItems(phoneFeaturePropertyData);
+    }
+    
+    private void printArrayLists (ArrayList<String> defaultPhoneTagNameList, ArrayList<String> defaultPhoneTagValueList)
+    {
+        for (int i=0;i<defaultPhoneTagNameList.size();i++)
+        {
+            System.out.println (defaultPhoneTagNameList.get(i) + " " + defaultPhoneTagValueList.get(i));
+        }
     }
 
 }

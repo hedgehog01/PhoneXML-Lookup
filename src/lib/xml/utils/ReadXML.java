@@ -276,7 +276,7 @@ public class ReadXML {
 
                     sb.append(elementInfo);
 
-                    System.out.println(elementInfo);
+                    //System.out.println(elementInfo);
                 }
 
             }
@@ -302,7 +302,7 @@ public class ReadXML {
                 Node phoneNode = xmlChilderenNodes.item(i);
                 if (phoneNode.getNodeType() == Node.ELEMENT_NODE) {
                     String elementInfo = ("<" + phoneNode.getNodeName() + ">");
-                    System.out.println("Phone Tag Name: " + elementInfo);
+                    //System.out.println("Phone Tag Name: " + elementInfo);
                     phoneInfoList.add(elementInfo);
                 }
 
@@ -330,7 +330,7 @@ public class ReadXML {
                 Node phoneNode = xmlChilderenNodes.item(i);
                 if (phoneNode.getNodeType() == Node.ELEMENT_NODE) {
                     String elementInfo = (phoneNode.getTextContent());
-                    System.out.println("Phone Tag: " + elementInfo);
+                    //System.out.println("Phone Tag: " + elementInfo);
                     phoneInfoList.add(elementInfo);
 
                 }
@@ -373,7 +373,7 @@ public class ReadXML {
 
                     attributeList.add(elementInfo);
 
-                    System.out.println("element attribute: " + elementInfo);
+                    //System.out.println("element attribute: " + elementInfo);
                 }
 
             }

@@ -26,7 +26,7 @@ import javafx.collections.ObservableList;
  */
 public final class PhoneFeatureCreator {
 
-    private static ObservableList<PhoneFeatureProperty> phoneData = FXCollections.observableArrayList();
+    //private static ObservableList<PhoneFeatureProperty> phoneData = FXCollections.observableArrayList();
 
     /**
      * method to create PhoneFeatureProperty's and add them to ObservableList
@@ -36,6 +36,7 @@ public final class PhoneFeatureCreator {
      * @return list of elements in an ObservableList
      */
     public static ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementValue,ArrayList<String> elementAttribute) {
+        ObservableList<PhoneFeatureProperty> phoneData = FXCollections.observableArrayList();
         if ((elementName!=null && elementValue!=null) && (elementName.size() == elementValue.size())) 
         {
             for (int i=0; i<elementName.size(); i++)
@@ -55,6 +56,7 @@ public final class PhoneFeatureCreator {
      * @return list of elements in an ObservableList
      */
     public static ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementValue,ArrayList<String> elementAttribute,boolean isDefault) {
+        ObservableList<PhoneFeatureProperty> phoneData = FXCollections.observableArrayList();
         if ((elementName!=null && elementValue!=null) && (elementName.size() == elementValue.size())) 
         {
             for (int i=0; i<elementName.size(); i++)

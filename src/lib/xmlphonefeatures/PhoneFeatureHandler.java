@@ -18,7 +18,7 @@ package lib.xmlphonefeatures;
 
 /**
  *
- * @author Avishag
+ * @author Hedgehog01
  */
 public class PhoneFeatureHandler
 {

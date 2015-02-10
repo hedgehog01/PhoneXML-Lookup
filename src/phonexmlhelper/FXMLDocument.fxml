@@ -31,8 +31,9 @@
                         <TableView fx:id="phoneFeatureTableView" editable="true" layoutX="407.0" layoutY="165.0" prefHeight="481.0" prefWidth="836.0">
                           <columns>
                             <TableColumn fx:id="phoneFeatureModuleNameColumn" editable="false" prefWidth="339.0" sortable="false" text="Tag" />
-                              <TableColumn fx:id="phoneFeatureModuleValueColumn" prefWidth="285.0" text="Value" />
+                              <TableColumn fx:id="phoneFeatureModuleValueColumn" prefWidth="213.0" text="Value" />
                               <TableColumn fx:id="phoneFeatureContentColumn" prefWidth="211.0" sortable="false" text="Attribute" />
+                              <TableColumn fx:id="phoneDefaultColumn" editable="false" prefWidth="72.0" text="Default" />
                           </columns>
                         </TableView>
                         <TextField layoutY="134.0" prefHeight="25.0" prefWidth="147.0" />

@@ -31,6 +31,7 @@
 
 		<HelpTagUFEDComment>NoteGEN_EI_01,NoteGEN_EISamGSM_01</HelpTagUFEDComment>
 		<EvidenceImpl>EvidenceCollection_Android.dll</EvidenceImpl>
+		<HelpTagMMFailureURL Region="UFED">Retail_Forensic_Logical\help.htm?path=Android/Content_UFED/Help_Multimedia</HelpTagMMFailureURL>
 	<DBFolderList>
 {TYPE=EXCLUDE,FOLDER=sys,FOLDER=dev,FOLDER=proc/*/*,FOLDER=proc/iomem,FOLDER=*/recovery/fota/*,FOLDER=data/hwvefs,FOLDER=*.apk,FOLDER=*.jar,FOLDER=*.dex,FOLDER=*.so,FOLDER=*.fbl,FOLDER=*.dem,FOLDER=*.gro,FOLDER=*.odex,FOLDER=data/gps/glgpsctrl,FOLDER=mnt/sdcard/Android/data/com.google.android.apps.books/files/volumes/*,FOLDER=data/data/com.lge.camera/files/*,FOLDER=data/local/tspreq,FOLDER=data/huawei_hwvefs/*,FOLDER=.cust_backup/CPM_ENCRYPTED_FOLDER/*}
 	</DBFolderList>
