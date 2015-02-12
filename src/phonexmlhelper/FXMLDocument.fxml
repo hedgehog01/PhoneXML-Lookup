@@ -15,31 +15,35 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="647.0" prefWidth="1107.0">
                      <children>
-                        <TextField fx:id="folderPathTextField" editable="false" layoutX="150.0" layoutY="29.0" prefHeight="25.0" prefWidth="458.0" />
-                        <Button fx:id="selectFolderBtn" layoutX="14.0" layoutY="29.0" mnemonicParsing="false" onAction="#selectFolderButtonAction" prefHeight="25.0" prefWidth="129.0" text="Select XML Folder" />
-                        <TableView fx:id="fileListTableView" layoutY="165.0" prefHeight="482.0" prefWidth="149.0">
-                           <columns>
-                              <TableColumn editable="false" prefWidth="148.0" resizable="false" text="XML List" fx:id="xmlNameColumn" />
-                           </columns>
-                        </TableView>
-                        <Label fx:id="selectFolderLabel" layoutX="616.0" layoutY="33.0" prefHeight="17.0" prefWidth="254.0" />
-                        <TableView fx:id="phoneNameTableView" layoutX="150.0" layoutY="165.0" prefHeight="482.0" prefWidth="251.0">
-                          <columns>
-                            <TableColumn fx:id="phoneNameColumn" editable="false" prefWidth="250.0" text="Phone list" />
-                          </columns>
-                        </TableView>
-                        <TableView fx:id="phoneFeatureTableView" editable="true" layoutX="407.0" layoutY="165.0" prefHeight="481.0" prefWidth="836.0">
-                          <columns>
-                            <TableColumn fx:id="phoneFeatureModuleNameColumn" editable="false" prefWidth="339.0" sortable="false" text="Tag" />
-                              <TableColumn fx:id="phoneFeatureModuleValueColumn" prefWidth="213.0" text="Value" />
-                              <TableColumn fx:id="phoneFeatureContentColumn" prefWidth="211.0" sortable="false" text="Attribute" />
-                              <TableColumn fx:id="phoneDefaultColumn" editable="false" prefWidth="72.0" text="Default" />
-                          </columns>
-                        </TableView>
+                        <TextField fx:id="folderPathTextField" editable="false" layoutX="150.0" layoutY="42.0" prefHeight="25.0" prefWidth="458.0" AnchorPane.topAnchor="42.0" />
+                        <Button fx:id="selectFolderBtn" layoutX="14.0" layoutY="42.0" mnemonicParsing="false" onAction="#selectFolderButtonAction" prefHeight="25.0" prefWidth="129.0" text="Select XML Folder" AnchorPane.topAnchor="42.0" />
+                        <HBox layoutY="165.0" spacing="2.0" AnchorPane.bottomAnchor="141.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="165.0">
+                           <children>
+                              <TableView fx:id="fileListTableView" layoutY="165.0" prefHeight="482.0" prefWidth="149.0">
+                                 <columns>
+                                    <TableColumn editable="false" prefWidth="148.0" resizable="false" text="XML List" fx:id="xmlNameColumn" />
+                                 </columns>
+                              </TableView>
+                              <TableView fx:id="phoneNameTableView" layoutX="150.0" layoutY="165.0" prefHeight="482.0" prefWidth="251.0">
+                                <columns>
+                                  <TableColumn fx:id="phoneNameColumn" editable="false" prefWidth="250.0" text="Phone list" />
+                                </columns>
+                              </TableView>
+                              <TableView fx:id="phoneFeatureTableView" editable="true" layoutX="407.0" layoutY="165.0">
+                                <columns>
+                                  <TableColumn fx:id="phoneFeatureModuleNameColumn" editable="false" prefWidth="339.0" text="Tag" />
+                                    <TableColumn fx:id="phoneFeatureModuleValueColumn" prefWidth="213.0" text="Value" />
+                                    <TableColumn fx:id="phoneFeatureContentColumn" prefWidth="211.0" sortable="false" text="Attribute" />
+                                    <TableColumn fx:id="phoneDefaultColumn" editable="false" prefWidth="81.0" text="Default" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </HBox>
+                        <Label fx:id="selectFolderLabel" layoutX="149.0" layoutY="91.0" prefHeight="17.0" prefWidth="254.0" />
                         <TextField layoutY="134.0" prefHeight="25.0" prefWidth="147.0" />
                         <TextField layoutX="150.0" layoutY="134.0" prefHeight="25.0" prefWidth="252.0" />
                         <CheckBox fx:id="defaultSectionCheckBox" layoutX="670.0" layoutY="33.0" mnemonicParsing="false" text="Default" />
-                        <CheckBox fx:id="defaultOSSectionCheckBox" layoutX="670.0" layoutY="54.0" mnemonicParsing="false" text="Default OS" />
+                        <CheckBox fx:id="defaultOSSectionCheckBox" layoutX="670.0" layoutY="54.0" mnemonicParsing="false" text="Default OS" AnchorPane.topAnchor="54.0" />
                      </children>
                   </AnchorPane>
             </content>
