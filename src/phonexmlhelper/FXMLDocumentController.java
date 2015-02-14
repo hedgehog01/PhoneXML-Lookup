@@ -67,9 +67,7 @@ public final class FXMLDocumentController implements Initializable {
     //phone feature table data
     private ObservableList<PhoneFeatureProperty> phoneFeaturePropertyData = FXCollections.observableArrayList();
 
-    //the filtered sorted filename data
-    private SortedList<FileProperty> sortedFileNameData;
-    
+  
     @FXML
     private AnchorPane mainAnchor;
     
@@ -274,7 +272,7 @@ public final class FXMLDocumentController implements Initializable {
         
         
         
-               //====set up filtering of File Name===
+        //====set up filtering of File Name===
         // File Name filter - Wrap the ObservableList in a FilteredList (initially display all data).
         FilteredList<FileProperty> filteredFileNameData = new FilteredList<>(fileNamePropertyData, p -> true);
         
@@ -294,17 +292,13 @@ public final class FXMLDocumentController implements Initializable {
         });
          
          // Wrap the FilteredList in a SortedList. 
-        sortedFileNameData = new SortedList<>(filteredFileNameData);
+        SortedList<FileProperty> sortedFileNameData = new SortedList<>(filteredFileNameData);
         
         // Bind the SortedList comparator to the TableView comparator.
         sortedFileNameData.comparatorProperty().bind(fileListTableView.comparatorProperty());
-        // Add sorted (and filtered) data to the table.
-        //fileListTableView.setItems(sortedFileNameData);
         
         //=======End of filtered filename setup======
         
-        
-        //fileListTableView.setItems(fileNamePropertyData);
         fileListTableView.setItems(sortedFileNameData);
 
     }
@@ -316,7 +310,36 @@ public final class FXMLDocumentController implements Initializable {
         phoneNamePropertyData.clear();
 
         phoneNamePropertyData = PhoneNameCreator.createFilePropertyList(phoneNameList);
-        phoneNameTableView.setItems(phoneNamePropertyData);
+        
+        
+        //====set up filtering of Phone Name===
+        // Phone Name filter - Wrap the ObservableList in a FilteredList (initially display all data).
+        FilteredList<PhoneNameProperty> phoneNameFilteredList = new FilteredList<>(phoneNamePropertyData, p -> true);
+        
+        // File Name filter - Set the filter Predicate whenever the filter changes.
+         filteredModelTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            phoneNameFilteredList.setPredicate(phoneName -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare filename with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                return phoneName.getPhoneName().toLowerCase().indexOf(lowerCaseFilter) != -1; 
+            });
+        });
+         
+         // Wrap the FilteredList in a SortedList. 
+        SortedList<PhoneNameProperty> sortedPhoneNameData = new SortedList<>(phoneNameFilteredList);
+        
+        // Bind the SortedList comparator to the TableView comparator.
+        sortedPhoneNameData.comparatorProperty().bind(phoneNameTableView.comparatorProperty());
+        
+        //=======End of filtered phone name setup======
+        
+        phoneNameTableView.setItems(sortedPhoneNameData);
 
     }
 
