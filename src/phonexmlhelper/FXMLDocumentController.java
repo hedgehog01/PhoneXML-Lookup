@@ -197,16 +197,16 @@ public final class FXMLDocumentController implements Initializable {
                 if (phoneNode != null && defaultSectionNode != null) 
                 {
                     allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
+                    //Return specific phone section as String ArrayList's
                     ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(phoneNode);
                     ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(phoneNode);
                     ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(phoneNode);
                     
+                    //Return default phone section as String ArrayList's
                     ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
                     ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
                     ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
-                    
-                    
-                    
+
                     setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList,defaultPhoneTagNameArrayList,defaultPhoneTagValueArrayList,defaultPhoneAttributeList );
                 }
                 
