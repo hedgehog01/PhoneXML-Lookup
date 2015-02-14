@@ -40,8 +40,8 @@
                            </children>
                         </HBox>
                         <Label fx:id="selectFolderLabel" layoutX="149.0" layoutY="91.0" prefHeight="17.0" prefWidth="254.0" />
-                        <TextField layoutY="134.0" prefHeight="25.0" prefWidth="147.0" />
-                        <TextField layoutX="150.0" layoutY="134.0" prefHeight="25.0" prefWidth="252.0" />
+                        <TextField fx:id="filteredFileNameTextField" layoutY="134.0" prefHeight="25.0" prefWidth="147.0" />
+                        <TextField fx:id="filteredModelTextField" layoutX="150.0" layoutY="134.0" prefHeight="25.0" prefWidth="252.0" />
                         <CheckBox fx:id="defaultSectionCheckBox" layoutX="670.0" layoutY="33.0" mnemonicParsing="false" text="Default" />
                         <CheckBox fx:id="defaultOSSectionCheckBox" layoutX="670.0" layoutY="54.0" mnemonicParsing="false" text="Default OS" AnchorPane.topAnchor="54.0" />
                      </children>

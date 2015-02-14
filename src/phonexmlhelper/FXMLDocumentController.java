@@ -15,6 +15,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -57,7 +59,7 @@ public final class FXMLDocumentController implements Initializable {
 
     private String selectedXMLFilePath = "";
     //file name table data
-    private ObservableList<FileProperty> filePropertyData = FXCollections.observableArrayList();
+    private ObservableList<FileProperty> fileNamePropertyData = FXCollections.observableArrayList();
 
     //phone list table data
     private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
@@ -65,8 +67,17 @@ public final class FXMLDocumentController implements Initializable {
     //phone feature table data
     private ObservableList<PhoneFeatureProperty> phoneFeaturePropertyData = FXCollections.observableArrayList();
 
+    //the filtered sorted filename data
+    private SortedList<FileProperty> sortedFileNameData;
+    
     @FXML
     private AnchorPane mainAnchor;
+    
+    @FXML
+    private TextField filteredFileNameTextField;
+    
+    @FXML
+    private TextField filteredModelTextField;
 
     @FXML
     private TableView<FileProperty> fileListTableView;
@@ -130,7 +141,9 @@ public final class FXMLDocumentController implements Initializable {
         phoneFeatureContentColumn.setCellValueFactory(cellData -> cellData.getValue().elementAttributeProperty());
         phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
         phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
-
+        
+ 
+        
         Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selected item property of file list
         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
@@ -254,11 +267,45 @@ public final class FXMLDocumentController implements Initializable {
      * method to add file list data to file list table
      */
     private void setFilePropertyData(ArrayList<String> fileList) {
-        filePropertyData.removeAll();
-        filePropertyData.clear();
+        fileNamePropertyData.removeAll();
+        fileNamePropertyData.clear();
 
-        filePropertyData = FileProperyCreator.createFilePropertyList(fileList);
-        fileListTableView.setItems(filePropertyData);
+        fileNamePropertyData = FileProperyCreator.createFilePropertyList(fileList);
+        
+        
+        
+               //====set up filtering of File Name===
+        // File Name filter - Wrap the ObservableList in a FilteredList (initially display all data).
+        FilteredList<FileProperty> filteredFileNameData = new FilteredList<>(fileNamePropertyData, p -> true);
+        
+        // File Name filter - Set the filter Predicate whenever the filter changes.
+         filteredFileNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredFileNameData.setPredicate(fileName -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare filename with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                return fileName.getFileName().toLowerCase().indexOf(lowerCaseFilter) != -1; 
+            });
+        });
+         
+         // Wrap the FilteredList in a SortedList. 
+        sortedFileNameData = new SortedList<>(filteredFileNameData);
+        
+        // Bind the SortedList comparator to the TableView comparator.
+        sortedFileNameData.comparatorProperty().bind(fileListTableView.comparatorProperty());
+        // Add sorted (and filtered) data to the table.
+        //fileListTableView.setItems(sortedFileNameData);
+        
+        //=======End of filtered filename setup======
+        
+        
+        //fileListTableView.setItems(fileNamePropertyData);
+        fileListTableView.setItems(sortedFileNameData);
 
     }
 
