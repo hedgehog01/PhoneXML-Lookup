@@ -351,8 +351,7 @@ public final class FXMLDocumentController implements Initializable {
         //System.out.println ("print of Default phone arraylists");
         //printArrayLists (defaultPhoneTagNameList,defaultPhoneTagValueList);
         //get default node property
-        ObservableList<PhoneFeatureProperty> defaultPhoneFeaturePropertyData = FXCollections.observableArrayList();
-        defaultPhoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(defaultPhoneTagNameList, defaultPhoneTagValueList, defaultPhoneAttributeList);
+        ObservableList<PhoneFeatureProperty> defaultPhoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(defaultPhoneTagNameList, defaultPhoneTagValueList, defaultPhoneAttributeList);
         
         //get phone node property
         phoneFeaturePropertyData.clear();
@@ -362,10 +361,7 @@ public final class FXMLDocumentController implements Initializable {
          ObservableList<PhoneFeatureProperty> updatedDefaultPhoneFeaturePropertyData = PhoneDataHandler.removeDupProperties(defaultPhoneFeaturePropertyData,phoneFeaturePropertyData);
         
         phoneFeaturePropertyData.addAll(updatedDefaultPhoneFeaturePropertyData);
-        
-        
-        
-        
+
         phoneFeatureTableView.setItems(phoneFeaturePropertyData);
     }
     
