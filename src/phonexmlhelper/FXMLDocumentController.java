@@ -243,7 +243,7 @@ public final class FXMLDocumentController implements Initializable
                     ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
                     ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
                     ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
-
+                    
                     setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList);
                 }
 
