@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.input.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -7,9 +9,26 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="676.0" prefWidth="1251.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phonexmlhelper.FXMLDocumentController">
+<AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="752.0" prefWidth="1246.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phonexmlhelper.FXMLDocumentController">
    <children>
-      <TabPane layoutX="351.0" layoutY="238.0" prefHeight="817.0" prefWidth="1251.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="-141.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#doExit" text="Exit">
+                     <accelerator>
+                        <KeyCodeCombination alt="ANY" code="Q" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <TabPane layoutY="25.0" prefHeight="731.0" prefWidth="1254.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="-4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-8.0" AnchorPane.topAnchor="25.0">
         <tabs>
           <Tab text="XML List">
             <content>
@@ -17,7 +36,7 @@
                      <children>
                         <TextField fx:id="folderPathTextField" editable="false" layoutX="150.0" layoutY="42.0" prefHeight="25.0" prefWidth="458.0" AnchorPane.topAnchor="42.0" />
                         <Button fx:id="selectFolderBtn" layoutX="14.0" layoutY="42.0" mnemonicParsing="false" onAction="#selectFolderButtonAction" prefHeight="25.0" prefWidth="129.0" text="Select XML Folder" AnchorPane.topAnchor="42.0" />
-                        <HBox layoutY="165.0" spacing="2.0" AnchorPane.bottomAnchor="141.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="165.0">
+                        <HBox layoutY="165.0" prefHeight="534.0" prefWidth="1246.0" spacing="2.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="165.0">
                            <children>
                               <TableView fx:id="fileListTableView" layoutY="165.0" prefHeight="482.0" prefWidth="149.0">
                                  <columns>
@@ -29,7 +48,7 @@
                                   <TableColumn fx:id="phoneNameColumn" editable="false" prefWidth="250.0" text="Phone list" />
                                 </columns>
                               </TableView>
-                              <TableView fx:id="phoneFeatureTableView" editable="true" layoutX="407.0" layoutY="165.0">
+                              <TableView fx:id="phoneFeatureTableView" editable="true" layoutX="407.0" layoutY="165.0" prefHeight="532.0" prefWidth="850.0">
                                 <columns>
                                   <TableColumn fx:id="phoneFeatureModuleNameColumn" editable="false" prefWidth="339.0" text="Tag" />
                                     <TableColumn fx:id="phoneFeatureModuleValueColumn" prefWidth="213.0" text="Value" />

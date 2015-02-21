@@ -176,6 +176,7 @@ public class ReadXML {
      * @param mainElement the main XML element (PHONE)
      * @param tagText the text in the tag to find by (MUST BE LONGER THAN 2
      * CHARS)
+     * @return the phone Node or null if not found
      */
     public static Node getAllNodeElements(String XMLName, String mainElement, String tagText) {
         //StringBuilder phoneInfo = new StringBuilder();
@@ -293,7 +294,7 @@ public class ReadXML {
     public static ArrayList<String> getNodePhoneTagNameList(Node node) {
         ArrayList<String> phoneInfoList = new ArrayList<>();
 
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
 
             NodeList xmlChilderenNodes = element.getChildNodes();
@@ -321,7 +322,7 @@ public class ReadXML {
     public static ArrayList<String> getNodePhoneTagValueList(Node node) {
         ArrayList<String> phoneInfoList = new ArrayList<>();
 
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
 
             NodeList xmlChilderenNodes = element.getChildNodes();
@@ -350,7 +351,7 @@ public class ReadXML {
     public static ArrayList<String> getNodePhoneAttributeList(Node node) {
         ArrayList<String> attributeList = new ArrayList<>();
 
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
 
             NodeList xmlChilderenNodes = element.getChildNodes();
