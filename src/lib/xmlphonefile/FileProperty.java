@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lib;
+package lib.xmlphonefile;
 
 import java.io.Serializable;
 import javafx.beans.property.SimpleStringProperty;

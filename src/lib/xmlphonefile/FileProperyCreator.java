@@ -14,39 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package lib;
+package lib.xmlphonefile;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *
  * @author Hedgehog01
  */
-public class FileHandler
+public final class FileProperyCreator
 {
-
-    public static ArrayList<String> getFileList(String folderPath)
+    private static ObservableList<FileProperty> filePropertyData = FXCollections.observableArrayList();
+    
+    /**
+     * Method to return list of FileProperty objects
+     * @param files an ArrayList (String) of files
+     * @return an ObservableList (FileProperty) with the FileProperty object representing the file list
+     */
+    public static ObservableList<FileProperty> createFilePropertyList (ArrayList<String> files)
     {
-        ArrayList<String> fileListArray = new ArrayList<>();
-        File folder = new File(folderPath);
-        File[] fileList = folder.listFiles(new FilenameFilter()
+        for (String file : files)
         {
-            @Override
-            public boolean accept(File fileList, String name)
-            {
-                return name.toLowerCase().endsWith(".xml");
-            }
-        });
-        for (File file : fileList)
-        {
-            if (file.isFile())
-            {
-                //System.out.println(file.getName());
-                fileListArray.add(file.getName());
-            }
+            filePropertyData.add(new FileProperty(file));
         }
-        return fileListArray;
+        
+        return filePropertyData;
     }
+    
+    
 }
