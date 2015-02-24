@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -26,7 +27,9 @@ public class PhoneXMLHelper extends Application
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
-        stage.setTitle("Phone XML Helper");
+        stage.setTitle("Phone Lookup");
+         // set icon
+        stage.getIcons().add(new Image("resources/images/app_icon.png"));
         stage.show();
     }
 
