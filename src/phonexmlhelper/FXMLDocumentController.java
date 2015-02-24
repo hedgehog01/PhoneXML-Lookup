@@ -50,8 +50,7 @@ import org.w3c.dom.Node;
  *
  * @author Hedgehog01
  */
-public final class FXMLDocumentController implements Initializable
-{
+public final class FXMLDocumentController implements Initializable {
 
     private final String FOLDER_CHOOSER_TITLE = "Choose Directory";
     private final String MAIN_NODE_ELEMENT = "PHONE";
@@ -137,8 +136,7 @@ public final class FXMLDocumentController implements Initializable
     private CheckBox defaultOSSectionCheckBox;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb)
-    {
+    public void initialize(URL url, ResourceBundle rb) {
         //set up filename colomn
         xmlNameColumn.setCellValueFactory(cellData -> cellData.getValue().fileNameProperty());
         //set up phone name column
@@ -152,13 +150,11 @@ public final class FXMLDocumentController implements Initializable
 
         Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selected item property of file list
-        fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
-        {
+        fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             // this method will be called whenever user selected row
 
             @Override
-            public void changed(ObservableValue observale, Object oldValue, Object newValue)
-            {
+            public void changed(ObservableValue observale, Object oldValue, Object newValue) {
                 //copy selection to clipboard
 
                 FileProperty selectedFile = (FileProperty) newValue;
@@ -206,13 +202,11 @@ public final class FXMLDocumentController implements Initializable
         });
 
         // add listner to tableview selected item property of phone list
-        phoneNameTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
-        {
+        phoneNameTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             // this method will be called whenever user selected row
 
             @Override
-            public void changed(ObservableValue observale, Object oldValue, Object newValue)
-            {
+            public void changed(ObservableValue observale, Object oldValue, Object newValue) {
                 PhoneNameProperty selectedFile = (PhoneNameProperty) newValue;
                 ClipboardContent content = new ClipboardContent();
                 // make sure you override toString in UserClass
@@ -224,16 +218,14 @@ public final class FXMLDocumentController implements Initializable
                 LOG.log(Level.INFO, "File selected in file list table: {0}", selectedXMLFilePath);
                 LOG.log(Level.INFO, "Phone selected: {0}", selectedPhone);
 
-                if ((allNodeElements != null) && (allNodeElements.length() > 0))
-                {
+                if ((allNodeElements != null) && (allNodeElements.length() > 0)) {
                     allNodeElements.setLength(0);
                 }
 
                 //Add phone info to text area
                 Node phoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
                 //if (phoneNode != null && defaultSectionNode != null)
-                if (phoneNode != null)
-                {
+                if (phoneNode != null) {
                     allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
                     //Return specific phone section as String ArrayList's
                     ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(phoneNode);
@@ -244,7 +236,7 @@ public final class FXMLDocumentController implements Initializable
                     ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
                     ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
                     ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
-                    
+
                     setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList);
                 }
 
@@ -255,55 +247,57 @@ public final class FXMLDocumentController implements Initializable
         });
 
         //setup checkboxes
-        defaultSectionCheckBox.setOnAction((event) ->
-        {
+        defaultSectionCheckBox.setOnAction((event) -> {
             defaultSectionCheckBoxselected = defaultSectionCheckBox.isSelected();
             LOG.log(Level.INFO, "defaultSectionCheckBox selected: {0}", defaultSectionCheckBoxselected);
-            if (defaultSectionCheckBoxselected)
-            {
+            if (defaultSectionCheckBoxselected) {
                 LOG.log(Level.INFO, "Parsing default section Node");
                 defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
-            } else
-            {
+            } else {
                 defaultSectionNode = null;
             }
 
         });
 
-        defaultOSSectionCheckBox.setOnAction((event) ->
-        {
+        defaultOSSectionCheckBox.setOnAction((event) -> {
             defaultOSSectionCheckBoxselected = defaultOSSectionCheckBox.isSelected();
             LOG.log(Level.INFO, "defaultOSSectionCheckBox selected: {0}", defaultOSSectionCheckBoxselected);
-            if (defaultOSSectionCheckBoxselected)
-            {
+            if (defaultOSSectionCheckBoxselected) {
                 LOG.log(Level.INFO, "Parsing default OS section Nodes");
                 androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
                 iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
-            } else
-            {
+            } else {
                 androidDefaultOSSection = null;
                 iOSDefaultOSSection = null;
             }
 
         });
+        
+        //load files from folder path saved in prefrences
+        if (PrefrencesHandler.getFolderPath() != null)
+        {
+          
+            String savedFolderPath = PrefrencesHandler.getFolderPath().getPath();
+            LOG.log(Level.INFO, "Laoding files useing default folder: {0}", savedFolderPath);
+            folderPathTextField.setText(savedFolderPath);
+            getFileList(savedFolderPath);
+        }
     }
 
     @FXML
-    private void selectFolderButtonAction(ActionEvent event)
-    {
+    private void selectFolderButtonAction(ActionEvent event) {
         Stage currentStage = (Stage) mainAnchor.getScene().getWindow();
-        
+        final DirectoryChooser dirChoose = new DirectoryChooser();
         //attempt to get saved folder location from prefrences
         File lastFolderSelected = PrefrencesHandler.getFolderPath();
-        LOG.log(Level.INFO, "Saved file path retrieved {0}",lastFolderSelected.getPath());
-        final File initialDir = new File (lastFolderSelected.getPath());
-        final DirectoryChooser dirChoose = new DirectoryChooser();
-        dirChoose.setInitialDirectory(initialDir);
+        LOG.log(Level.INFO, "Saved file path retrieved");
+        if (lastFolderSelected != null) {
+            final File initialDir = new File(lastFolderSelected.getPath());
+            dirChoose.setInitialDirectory(initialDir);
+        }
+
         dirChoose.setTitle(FOLDER_CHOOSER_TITLE);
 
-        //final File initialDir = new File("C:\\Users\\Hedgehog01\\Documents\\NetBeansProjects");
-        //final File initialDir = new File("C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones");
-        //dirChoose.setInitialDirectory(initialDir);
         dirChoose.setTitle("Select XML Folder");
 
         //open Dialog
@@ -311,23 +305,27 @@ public final class FXMLDocumentController implements Initializable
         //save folder path to prefrences
         LOG.log(Level.INFO, "attempting to save folder path to prefrences");
         PrefrencesHandler.setPersonFilePath(folderPath);
-        
-        
-        String filePathStr = folderPath.getAbsolutePath();
+
+        String filePathStr = folderPath.getPath();
 
         LOG.log(Level.INFO, "Folder path selected is: {0}", filePathStr);
 
         folderPathTextField.setText(filePathStr);
 
         LOG.log(Level.INFO, "attempt getting list of files in the folder");
+        getFileList(filePathStr);
 
-        ArrayList<String> fileList = FileHandler.getFileList(filePathStr);
-        if (!fileList.isEmpty())
-        {
+    }
+
+    /*
+    * method to load the files in the folder
+    */
+    private void getFileList(String folderPath) {
+        ArrayList<String> fileList = FileHandler.getFileList(folderPath);
+        if (!fileList.isEmpty()) {
             selectFolderLabel.setText("");
             setFilePropertyData(fileList);
-        } else
-        {
+        } else {
             selectFolderLabel.setText("No XML files found...");
         }
 
@@ -336,8 +334,7 @@ public final class FXMLDocumentController implements Initializable
     /*
      * method to add file list data to file list table
      */
-    private void setFilePropertyData(ArrayList<String> fileList)
-    {
+    private void setFilePropertyData(ArrayList<String> fileList) {
         fileNamePropertyData.removeAll();
         fileNamePropertyData.clear();
 
@@ -348,13 +345,10 @@ public final class FXMLDocumentController implements Initializable
         FilteredList<FileProperty> filteredFileNameData = new FilteredList<>(fileNamePropertyData, p -> true);
 
         // File Name filter - Set the filter Predicate whenever the filter changes.
-        filteredFileNameTextField.textProperty().addListener((observable, oldValue, newValue) ->
-        {
-            filteredFileNameData.setPredicate(fileName ->
-            {
+        filteredFileNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredFileNameData.setPredicate(fileName -> {
                 // If filter text is empty, display all persons.
-                if (newValue == null || newValue.isEmpty())
-                {
+                if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
@@ -379,8 +373,7 @@ public final class FXMLDocumentController implements Initializable
     /*
      * method to set the phone name into the phone name table
      */
-    private void setPhoneNamePropertyData(ArrayList<String> phoneNameList)
-    {
+    private void setPhoneNamePropertyData(ArrayList<String> phoneNameList) {
         phoneNamePropertyData.clear();
 
         phoneNamePropertyData = PhoneNameCreator.createFilePropertyList(phoneNameList);
@@ -390,13 +383,10 @@ public final class FXMLDocumentController implements Initializable
         FilteredList<PhoneNameProperty> phoneNameFilteredList = new FilteredList<>(phoneNamePropertyData, p -> true);
 
         // File Name filter - Set the filter Predicate whenever the filter changes.
-        filteredModelTextField.textProperty().addListener((observable, oldValue, newValue) ->
-        {
-            phoneNameFilteredList.setPredicate(phoneName ->
-            {
+        filteredModelTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            phoneNameFilteredList.setPredicate(phoneName -> {
                 // If filter text is empty, display all persons.
-                if (newValue == null || newValue.isEmpty())
-                {
+                if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
@@ -421,8 +411,7 @@ public final class FXMLDocumentController implements Initializable
     /*
      * method to set the phone feature data into the phone feature table
      */
-    private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, ArrayList<String> defaultPhoneTagNameList, ArrayList<String> defaultPhoneTagValueList, ArrayList<String> defaultPhoneAttributeList)
-    {
+    private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, ArrayList<String> defaultPhoneTagNameList, ArrayList<String> defaultPhoneTagValueList, ArrayList<String> defaultPhoneAttributeList) {
 
         //System.out.println ("print of Default phone arraylists");
         //printArrayLists (defaultPhoneTagNameList,defaultPhoneTagValueList);
@@ -441,17 +430,14 @@ public final class FXMLDocumentController implements Initializable
         phoneFeatureTableView.setItems(phoneFeaturePropertyData);
     }
 
-    private void printArrayLists(ArrayList<String> defaultPhoneTagNameList, ArrayList<String> defaultPhoneTagValueList)
-    {
-        for (int i = 0; i < defaultPhoneTagNameList.size(); i++)
-        {
+    private void printArrayLists(ArrayList<String> defaultPhoneTagNameList, ArrayList<String> defaultPhoneTagValueList) {
+        for (int i = 0; i < defaultPhoneTagNameList.size(); i++) {
             System.out.println(defaultPhoneTagNameList.get(i) + " " + defaultPhoneTagValueList.get(i));
         }
     }
 
     @FXML
-    private void doExit()
-    {
+    private void doExit() {
         Platform.exit();
     }
 
