@@ -33,6 +33,7 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import lib.prefrences.PrefrencesHandler;
 import lib.xmlphonefile.FileHandler;
 import lib.xmlphonefile.FileProperty;
 import lib.xmlphonefile.FileProperyCreator;
@@ -291,8 +292,15 @@ public final class FXMLDocumentController implements Initializable
     private void selectFolderButtonAction(ActionEvent event)
     {
         Stage currentStage = (Stage) mainAnchor.getScene().getWindow();
+        
+        //attempt to get saved folder location from prefrences
+        File lastFolderSelected = PrefrencesHandler.getFolderPath();
+        LOG.log(Level.INFO, "Saved file path retrieved {0}",lastFolderSelected.getPath());
+        final File initialDir = new File (lastFolderSelected.getPath());
         final DirectoryChooser dirChoose = new DirectoryChooser();
+        dirChoose.setInitialDirectory(initialDir);
         dirChoose.setTitle(FOLDER_CHOOSER_TITLE);
+
         //final File initialDir = new File("C:\\Users\\Hedgehog01\\Documents\\NetBeansProjects");
         //final File initialDir = new File("C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones");
         //dirChoose.setInitialDirectory(initialDir);
@@ -300,7 +308,11 @@ public final class FXMLDocumentController implements Initializable
 
         //open Dialog
         final File folderPath = dirChoose.showDialog(currentStage);
-
+        //save folder path to prefrences
+        LOG.log(Level.INFO, "attempting to save folder path to prefrences");
+        PrefrencesHandler.setPersonFilePath(folderPath);
+        
+        
         String filePathStr = folderPath.getAbsolutePath();
 
         LOG.log(Level.INFO, "Folder path selected is: {0}", filePathStr);
