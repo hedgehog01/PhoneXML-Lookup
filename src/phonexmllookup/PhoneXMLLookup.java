@@ -27,7 +27,7 @@ public class PhoneXMLLookup extends Application
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
-        stage.setTitle("Phone Lookup");
+        stage.setTitle("Phone XML Lookup");
          // set icon
         stage.getIcons().add(new Image("resources/images/app_icon.png"));
         stage.show();
