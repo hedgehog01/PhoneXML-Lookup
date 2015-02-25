@@ -16,22 +16,25 @@
  */
 package lib.xmlphonename;
 
-import java.util.ArrayList;
-import lib.xml.utils.ReadXML;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
  *
  * @author nathanr
  */
-public final class PhoneNameHandler {
-    
-    private static final String MAIN_ELEMENT = "PHONE";
-    private static final String PHONE_NAME = "Name";
-    
-    public static ArrayList<String> getPhoneNames(String xmlPath)
-    {
-        ArrayList<String> list = ReadXML.getAllXMLTagTextByName(xmlPath, MAIN_ELEMENT, PHONE_NAME);
-                
-        return list;
+@RunWith(Suite.class)
+@Suite.SuiteClasses({lib.xmlphonename.PhoneNameCreatorTest.class, lib.xmlphonename.PhoneNameHandlerTest.class, lib.xmlphonename.PhoneNamePropertyTest.class})
+public class XmlphonenameSuite {
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
     }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+    
 }

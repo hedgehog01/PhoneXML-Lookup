@@ -23,7 +23,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  *
