@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package phonexmlhelper;
+package phonexmllookup;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +16,7 @@ import javafx.stage.Stage;
  *
  * @author Hedgehog01
  */
-public class PhoneXMLHelper extends Application
+public class PhoneXMLLookup extends Application
 {
     
     @Override
