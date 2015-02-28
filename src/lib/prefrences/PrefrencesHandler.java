@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 /**
- *
+ * Class to handle preferences
  * @author nathanr
  */
 public final class PrefrencesHandler 
@@ -30,7 +30,7 @@ public final class PrefrencesHandler
     private static final Logger LOG = Logger.getLogger(PrefrencesHandler.class.getName());
 
     /**
-     * Returns the folder preference
+     * Returns the saved folder path preference
      *
      * @return the folder location saved in the preferences
      */

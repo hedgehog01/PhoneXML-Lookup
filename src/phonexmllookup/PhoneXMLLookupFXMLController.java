@@ -208,11 +208,12 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
             @Override
             public void changed(ObservableValue observale, Object oldValue, Object newValue) {
                 PhoneNameProperty selectedFile = (PhoneNameProperty) newValue;
+                /*
                 ClipboardContent content = new ClipboardContent();
                 // make sure you override toString in UserClass
                 content.putString(selectedFile.getPhoneName());
                 clipboard.setContent(content);
-
+                */
                 //get XML path
                 String selectedPhone = selectedFile.getPhoneName();
                 LOG.log(Level.INFO, "File selected in file list table: {0}", selectedXMLFilePath);
@@ -416,8 +417,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
      */
     private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, ArrayList<String> defaultPhoneTagNameList, ArrayList<String> defaultPhoneTagValueList, ArrayList<String> defaultPhoneAttributeList) {
 
-        //System.out.println ("print of Default phone arraylists");
-        //printArrayLists (defaultPhoneTagNameList,defaultPhoneTagValueList);
         //get default node property
         ObservableList<PhoneFeatureProperty> defaultPhoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(defaultPhoneTagNameList, defaultPhoneTagValueList, defaultPhoneAttributeList);
 
@@ -433,12 +432,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
         phoneFeatureTableView.setItems(phoneFeaturePropertyData);
     }
 
-    private void printArrayLists(ArrayList<String> defaultPhoneTagNameList, ArrayList<String> defaultPhoneTagValueList) {
-        for (int i = 0; i < defaultPhoneTagNameList.size(); i++) {
-            System.out.println(defaultPhoneTagNameList.get(i) + " " + defaultPhoneTagValueList.get(i));
-        }
-    }
-
+    /*
+     *method to exit the application 
+     */
     @FXML
     private void doExit() {
         Platform.exit();
