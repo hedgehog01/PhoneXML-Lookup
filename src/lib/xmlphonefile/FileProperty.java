@@ -28,7 +28,7 @@ public final class FileProperty implements Serializable
     
     /**
      * Constructor - sets file name
-     * @param fileName 
+     * @param fileName the file name
      */
     public FileProperty(String fileName)
     {

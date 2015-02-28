@@ -5,6 +5,7 @@
  */
 package phonexmllookup;
 
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,11 +22,11 @@ public class PhoneXMLLookup extends Application
     
     /**
      * Launches the main stage
-     * @param stage the main stage
-     * @throws Exception 
+     * @param stage the main stage 
+     * @throws java.io.IOException 
      */
     @Override
-    public void start(Stage stage) throws Exception
+    public void start(Stage stage) throws IOException
     {
         Parent root = FXMLLoader.load(getClass().getResource("PhoneXMLLookupFXML.fxml"));
         
