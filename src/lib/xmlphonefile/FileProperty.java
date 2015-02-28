@@ -10,7 +10,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- *
+ * Class that represent a file property
  * @author Hedgehog01
  */
 public final class FileProperty implements Serializable
@@ -19,35 +19,53 @@ public final class FileProperty implements Serializable
     private final StringProperty fileName = new SimpleStringProperty("");
 
     /**
-     * Default constructor
+     * Default constructor - set file name property to be empty
      */
     public FileProperty()
     {
         setFileName("");
     }
-
+    
+    /**
+     * Constructor - sets file name
+     * @param fileName 
+     */
     public FileProperty(String fileName)
     {
         setFileName(fileName);
     }
 
     
-    
+    /**
+     * method to return the file name
+     * @return the file name
+     */
     public String getFileName()
     {
         return fileName.get();
     }
-
+/**
+     * method to set the file name
+     * @param value the file name to set
+     */
     public void setFileName(String value)
     {
         fileName.set(value);
     }
 
+    /**
+     * method to return the file name property
+     * @return the file name property
+     */
     public StringProperty fileNameProperty()
     {
         return fileName;
     }
 
+    /**
+     * method to print the file name
+     * @return the file name as String
+     */
     @Override
     public String toString()
     {

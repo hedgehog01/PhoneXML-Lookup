@@ -32,7 +32,7 @@ public final class PrefrencesHandler
     /**
      * Returns the folder preference
      *
-     * @return the folder location
+     * @return the folder location saved in the preferences
      */
     public static File getFolderPath() 
     {
@@ -49,11 +49,11 @@ public final class PrefrencesHandler
     }
 
     /**
-     * Sets the file path of the currently loaded file.
+     * Sets the folder path of the currently selected folder.
      *
-     * @param file the file or null to remove the path
+     * @param file the folder location or null to remove the path
      */
-    public static void setPersonFilePath(File file) {
+    public static void setFolderPath(File file) {
         Preferences prefs = Preferences.userNodeForPackage(PrefrencesHandler.class);
         if (file != null) {
             LOG.log(Level.INFO, "file path prefrences set to: {0}", file.getPath());

@@ -47,10 +47,10 @@ import lib.xmlphonename.PhoneNameProperty;
 import org.w3c.dom.Node;
 
 /**
- *
+ * The controller class for the PhoneXMLLookupFXML fxml file
  * @author Hedgehog01
  */
-public final class FXMLDocumentController implements Initializable {
+public final class PhoneXMLLookupFXMLController implements Initializable {
 
     private final String FOLDER_CHOOSER_TITLE = "Choose Directory";
     private final String MAIN_NODE_ELEMENT = "PHONE";
@@ -58,7 +58,7 @@ public final class FXMLDocumentController implements Initializable {
     private final String OS_DEFAULT = "_OS_Default";
     private final String ANDROID = "Android";
     private final String IOS = "iOS";
-    private static final Logger LOG = Logger.getLogger(FXMLDocumentController.class.getName());
+    private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
     private Node androidDefaultOSSection;
@@ -224,7 +224,6 @@ public final class FXMLDocumentController implements Initializable {
 
                 //Add phone info to text area
                 Node phoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
-                //if (phoneNode != null && defaultSectionNode != null)
                 if (phoneNode != null) {
                     allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
                     //Return specific phone section as String ArrayList's
@@ -284,6 +283,9 @@ public final class FXMLDocumentController implements Initializable {
         }
     }
 
+    /*
+    * method to get the user selected folder
+    */
     @FXML
     private void selectFolderButtonAction(ActionEvent event) {
         Stage currentStage = (Stage) mainAnchor.getScene().getWindow();
@@ -304,7 +306,7 @@ public final class FXMLDocumentController implements Initializable {
         final File folderPath = dirChoose.showDialog(currentStage);
         //save folder path to prefrences
         LOG.log(Level.INFO, "attempting to save folder path to prefrences");
-        PrefrencesHandler.setPersonFilePath(folderPath);
+        PrefrencesHandler.setFolderPath(folderPath);
 
         String filePathStr = folderPath.getPath();
 
@@ -326,6 +328,7 @@ public final class FXMLDocumentController implements Initializable {
             selectFolderLabel.setText("");
             setFilePropertyData(fileList);
         } else {
+            setFilePropertyData(fileList);
             selectFolderLabel.setText("No XML files found...");
         }
 

@@ -23,7 +23,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * Class to handle read related operations on XML files
  * @author nathanr
  */
 public class ReadXML {
@@ -31,11 +31,12 @@ public class ReadXML {
     private static final Logger LOG = Logger.getLogger(ReadXML.class.getName());
 
     /**
-     * Method to print all specific text in tags in the XML
+     * Method to return all XML tag text from specific tags in the XML
      *
      * @param XMLName the XML to get results from (full XML path)
      * @param mainElement the main XML element (PHONE)
      * @param tagName the tag to get results from
+     * @return list of all tag text from the requested tags 
      */
     public static ArrayList<String> getAllXMLTagTextByName(String XMLName, String mainElement, String tagName) {
         //the list to be returned
@@ -97,77 +98,6 @@ public class ReadXML {
         }
         return tagText;
     }
-
-    /**
-     * Method to print all XML elements under main node
-     *
-     * @param XMLName the XML to parse (Full path)
-     * @param tagName The main XMl tag
-     *
-     * 
-     */
-    public static void readXMLByName(String XMLName, String tagName) {
-        try {
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = docFactory.newDocumentBuilder();
-            Document doc = builder.parse(XMLName);
-
-            // normalize text representation
-            doc.getDocumentElement().normalize();
-            System.out.println("Root element of the doc is "
-                    + doc.getDocumentElement().getNodeName());
-
-            NodeList nodeList = doc.getElementsByTagName(tagName);
-
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) node;
-
-                    NodeList xmlChilderenNodes = element.getChildNodes();
-                    getNodeNameInfo(xmlChilderenNodes);
-                }
-            }
-
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
-            LOG.log(Level.SEVERE, "Exception:{0}", ex);
-        }
-    }
-
-    /*
-     * private method that check Phone name and Guid name attribute
-     *
-    */
-    private static void getNodeNameInfo(NodeList xmlChilderenNodes) {
-        String phoneName = null;
-        String phoneGuidName = null;
-        for (int j = 0; j < xmlChilderenNodes.getLength(); j++) {
-            Node n = xmlChilderenNodes.item(j);
-            if (n.getNodeType() == Node.ELEMENT_NODE) {
-                Element name = (Element) n;
-                if (name.getAttribute("name").isEmpty()) {
-                    System.out.println(name.getTagName() + " " + name.getTextContent());
-                }
-                if (name.getTagName().equals("Guid")) {
-                    phoneGuidName = name.getAttribute("name");
-                }
-                if (name.getTagName().equals("Name")) {
-                    phoneName = name.getTextContent();
-                }
-
-                if ((phoneName != null) && (phoneGuidName != null) && (phoneName.equals(phoneGuidName) && (j == xmlChilderenNodes.getLength() - 2))) {
-
-                    System.out.println("Guid name and phone name are equal");
-                    phoneName = null;
-                    phoneGuidName = null;
-
-                }
-                //System.out.println(name.getTagName() + " " + name.getTextContent() + " attribute: " + name.getAttribute("name"));
-
-            }
-        }
-    }
-    
 
     /**
      * Method to search for specific Node by text in one of it's elements - returns the node if found.
@@ -247,10 +177,10 @@ public class ReadXML {
     }
 
     /**
-     * Method to return all a node Elements and attributes in StringBuilder object
+     * Method to return all a node Elements and attributes as StringBuilder object
      *
      * @param node the node to evaluate
-     * @return StringBuilder containing element tag name + tag text
+     * @return StringBuilder containing element tag name + tag text +element attributes
      */
     public static StringBuilder getAllNodeListElements(Node node) {
         StringBuilder sb = new StringBuilder();
@@ -289,7 +219,7 @@ public class ReadXML {
      * Method to return all a node phone tag names
      *
      * @param node the node to evaluate
-     * @return ArrayList of String containing element of the phone info
+     * @return ArrayList of String containing XML element tag names
      */
     public static ArrayList<String> getNodePhoneTagNameList(Node node) {
         ArrayList<String> phoneInfoList = new ArrayList<>();
@@ -317,7 +247,7 @@ public class ReadXML {
      * Method to return all a node phone tag values
      *
      * @param node the node to evaluate
-     * @return ArrayList of String containing element of the phone info
+     * @return ArrayList of String containing element XML tag values
      */
     public static ArrayList<String> getNodePhoneTagValueList(Node node) {
         ArrayList<String> phoneInfoList = new ArrayList<>();
@@ -345,7 +275,7 @@ public class ReadXML {
      * Method to return all a node phone Attributes
      *
      * @param node the node to evaluate
-     * @return ArrayList of String containing element attributes if exists and
+     * @return ArrayList of String containing XML element attributes if exists and
      * empty if not
      */
     public static ArrayList<String> getNodePhoneAttributeList(Node node) {
@@ -381,7 +311,12 @@ public class ReadXML {
         }
         return attributeList;
     }
-
+    
+    /**
+     * method to print all XML elements and attributes
+     * @param xmlPath the full path to the XML
+     * @param mainElement the main element of the XML (PHONE)
+     */
     public static void printElementsAndAttributes(String xmlPath, String mainElement) {
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();

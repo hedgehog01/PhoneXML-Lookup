@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import lib.xml.utils.ReadXML;
 
 /**
- *
+ * Class that handles getting phone names
  * @author nathanr
  */
 public final class PhoneNameHandler {
@@ -28,6 +28,11 @@ public final class PhoneNameHandler {
     private static final String MAIN_ELEMENT = "PHONE";
     private static final String PHONE_NAME = "Name";
     
+    /**
+     * method to get the list of phones in an XML
+     * @param xmlPath the full path the the XML to be searched
+     * @return an ArrayList of phone names (String)
+     */
     public static ArrayList<String> getPhoneNames(String xmlPath)
     {
         ArrayList<String> list = ReadXML.getAllXMLTagTextByName(xmlPath, MAIN_ELEMENT, PHONE_NAME);

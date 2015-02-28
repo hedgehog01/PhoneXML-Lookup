@@ -21,7 +21,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- *
+ * Class that represent a phone name property
  * @author nathanr
  */
 public final class PhoneNameProperty implements Serializable{
@@ -34,24 +34,43 @@ public final class PhoneNameProperty implements Serializable{
     public PhoneNameProperty() {
     }
 
-    
+    /**
+     * Constructor - sets phone name
+     * @param phoneName the phone name
+     */
     public PhoneNameProperty(String phoneName) {
         setPhoneName(phoneName);
         
     }
 
+    /**
+     * method to return the phone name
+     * @return the phone name
+     */
     public String getPhoneName() {
         return phoneName.get();
     }
 
+    /**
+     * method to set the phone name
+     * @param value the phone name
+     */
     public void setPhoneName(String value) {
         phoneName.set(value);
     }
 
+    /**
+     * method to return the phone name property
+     * @return the phone name property
+     */
     public StringProperty phoneNameProperty() {
         return phoneName;
     }
 
+    /**
+     * method to return the phone name String 
+     * @return the phone name String
+     */
     @Override
     public String toString() {
         return "XMLPhoneNameProperty{" + "phoneName=" + phoneName.get() + '}';

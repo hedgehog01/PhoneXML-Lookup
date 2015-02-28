@@ -21,7 +21,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- *
+ * Class to handle creation of file name list
  * @author Hedgehog01
  */
 public final class FileProperyCreator

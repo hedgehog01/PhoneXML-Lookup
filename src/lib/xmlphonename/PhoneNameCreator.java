@@ -20,28 +20,30 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-
 /**
- *
+ * Class to handle creating list of phone Names
  * @author nathanr
  */
-public final class PhoneNameCreator {
-    
-     private static ObservableList<PhoneNameProperty> xmlPhonePropertyNameData = FXCollections.observableArrayList();
-     
-         /**
+public final class PhoneNameCreator
+{
+
+    private static ObservableList<PhoneNameProperty> xmlPhonePropertyNameData = FXCollections.observableArrayList();
+
+    /**
      * Method to return list of FileProperty objects
+     *
      * @param files an ArrayList (String) of files
-     * @return an ObservableList (FileProperty) with the FileProperty object representing the file list
+     * @return an ObservableList (FileProperty) with the FileProperty object
+     * representing the file list
      */
-    public static ObservableList<PhoneNameProperty> createFilePropertyList (ArrayList<String> files)
+    public static ObservableList<PhoneNameProperty> createFilePropertyList(ArrayList<String> files)
     {
         for (String file : files)
         {
             xmlPhonePropertyNameData.add(new PhoneNameProperty(file));
         }
-        
+
         return xmlPhonePropertyNameData;
     }
-    
+
 }

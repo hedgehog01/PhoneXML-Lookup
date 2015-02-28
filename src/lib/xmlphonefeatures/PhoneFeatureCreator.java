@@ -21,12 +21,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- *
- * @author Avishag
+ *Class to handle creation of PhoneFeature properties as Observable lists
+ * @author Nathanr
  */
 public final class PhoneFeatureCreator {
 
-    //private static ObservableList<PhoneFeatureProperty> phoneData = FXCollections.observableArrayList();
+
 
     /**
      * method to create PhoneFeatureProperty's and add them to ObservableList
@@ -53,6 +53,7 @@ public final class PhoneFeatureCreator {
      * @param elementName the element tag name
      * @param elementValue the element tag value
      * @param elementAttribute the element attribute
+     * @param isDefault indicates if the element is from Default section or not
      * @return list of elements in an ObservableList
      */
     public static ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementValue,ArrayList<String> elementAttribute,boolean isDefault) {

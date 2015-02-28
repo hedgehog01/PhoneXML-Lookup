@@ -44,32 +44,17 @@ public class ReadXMLTest {
     /**
      * Test of getAllXMLTagTextByName method, of class ReadXML.
      */
-    @Ignore
+    
     @Test
     public void testGetAllXMLTagTextByName() {
         System.out.println("getAllXMLTagTextByName");
         String XMLName = "SamsungGSM.xml";
         String mainElement = "PHONE";
         String tagName = "Name";
-        ArrayList<String> expResult = null;
-        ArrayList<String> result = ReadXML.getAllXMLTagTextByName(XMLName, mainElement, tagName);
+        String expResult = "YP-GB70 Yepp Galaxy S Player";
+        ArrayList<String> testArray = ReadXML.getAllXMLTagTextByName(XMLName, mainElement, tagName);
+        String result = testArray.get(3);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of readXMLByName method, of class ReadXML.
-     */
-    @Ignore
-    @Test
-    public void testReadXMLByName() {
-        System.out.println("readXMLByName");
-        String XMLName = "SamsungGSM.xml";
-        String tagName = "GT-I9192 Galaxy S4 Mini Duos";
-        ReadXML.readXMLByName(XMLName, tagName);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
 
 
@@ -136,6 +121,7 @@ public class ReadXMLTest {
     /**
      * Test of getAllNodeElements method, of class ReadXML.
      */
+    @Ignore
     @Test
     public void testGetAllNodeElements() {
         System.out.println("getAllNodeElements");
@@ -143,10 +129,12 @@ public class ReadXMLTest {
         String mainElement = "PHONE";
         String tagText = "GT-P6800 Galaxy Tab 7.7";
         Node expResult = null;
-        Node result = ReadXML.getAllNodeElements(XMLName, mainElement, tagText);
+        Node tempNode = ReadXML.getAllNodeElements(XMLName, mainElement, tagText);
+        String result = tempNode.getFirstChild().getNodeName();
+        
+        System.out.println ("Result: " + result);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
 

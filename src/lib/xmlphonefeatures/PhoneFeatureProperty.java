@@ -23,7 +23,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- *
+ * Class that represents a Phone Feature Property
  * @author Hedgehog01
  */
 public final class PhoneFeatureProperty implements Serializable
@@ -36,13 +36,16 @@ public final class PhoneFeatureProperty implements Serializable
     private final StringProperty elementValue = new SimpleStringProperty("");
     private final BooleanProperty defaultSection = new SimpleBooleanProperty(false);
 
+    /**
+     * Default constructor - sets all class instances to null
+     */
     public PhoneFeatureProperty()
     {
         this(null, null, null);
     }
 
     /**
-     * Constructor with initial data
+     * Constructor for setting property values
      *
      * @param elementName the element name
      * @param elmentValue the element value
@@ -55,8 +58,8 @@ public final class PhoneFeatureProperty implements Serializable
         setElementAttribute(attributes);
     }
     
-        /**
-     * Constructor with initial data
+    /**
+     * Constructor for setting property values
      *
      * @param elementName the element name
      * @param elmentValue the element value
@@ -71,66 +74,118 @@ public final class PhoneFeatureProperty implements Serializable
         setDefaultSection(defaultSection);
     }
 
+    /**
+     * method to get the element name
+     * @return the element name
+     */
     public String getElementName()
     {
         return elementName.get();
     }
 
+    /**
+     * method to set the element name
+     * @param value the element name
+     */
     public void setElementName(String value)
     {
         elementName.set(value);
     }
 
+    /**
+     * method to return the element name property
+     * @return the element name property
+     */
     public StringProperty elementNameProperty()
     {
         return elementName;
     }
 
+    /**
+     * method to return the element attribute
+     * @return the element attribute
+     */
     public String getElementAttribute()
     {
         return elementAttribute.get();
     }
 
+    /**
+     * method to set the element attribute
+     * @param value the element attribute
+     */
     public void setElementAttribute(String value)
     {
         elementAttribute.set(value);
     }
 
+    /**
+     * method to return the element attribute property
+     * @return the element attribute property
+     */
     public StringProperty elementAttributeProperty()
     {
         return elementAttribute;
     }
 
+    /**
+     * method to return the element value
+     * @return the element value
+     */
     public String getElementValue()
     {
         return elementValue.get();
     }
 
+    /**
+     * method to set the element value
+     * @param value the element value
+     */
     public void setElementValue(String value)
     {
         elementValue.set(value);
     }
 
+    /**
+     * method to return the element value property
+     * @return the element value property
+     */
     public StringProperty elementValueProperty()
     {
         return elementValue;
     }
 
+    /**
+     * method to return the default section value
+     * @return the default section value (boolean)
+     */
     public boolean isDefaultSection()
     {
         return defaultSection.get();
     }
 
+    /**
+     * method to set the default section value
+     * @param value the default section value
+     */
     public void setDefaultSection(boolean value)
     {
         defaultSection.set(value);
     }
 
+    /**
+     * method to return the default section property
+     * @return the default section property
+     */
     public BooleanProperty defaultSectionProperty()
     {
         return defaultSection;
     }
 
+    /**
+     * method to print the property as String
+     * @return the property as String
+     */
     @Override
     public String toString()
     {

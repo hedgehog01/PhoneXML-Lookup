@@ -21,12 +21,17 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 /**
- *
+ * Class to handle file operations
  * @author Hedgehog01
  */
-public class FileHandler
+public final class FileHandler
 {
 
+    /**
+     * method to return a list of files with .xml extention in a given folder
+     * @param folderPath the folder path to search in
+     * @return the list of XML files in the folder
+     */
     public static ArrayList<String> getFileList(String folderPath)
     {
         ArrayList<String> fileListArray = new ArrayList<>();

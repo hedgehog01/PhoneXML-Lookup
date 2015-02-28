@@ -17,7 +17,6 @@
 package lib.xml.utils;
 
 import java.util.Iterator;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,7 +24,7 @@ import lib.xmlphonefeatures.PhoneFeatureProperty;
 
 
 /**
- *
+ * Class to handle operations on phone data
  *
  * @author Hedgehog01
  */
@@ -34,7 +33,12 @@ public class PhoneDataHandler
     private static final Logger LOG = Logger.getLogger(PhoneDataHandler.class.getName());
     
     
-    
+    /**
+     * Method to remove duplicate data from default phone data property data if exists in another phone property data
+     * @param defaultPhoneFeaturePropertyData the default property data that should be manipulated
+     * @param phoneFeaturePropertyData the phone to compare the default data to
+     * @return the updated default property data with removed duplicates
+     */
     public static ObservableList<PhoneFeatureProperty> removeDupProperties(ObservableList<PhoneFeatureProperty> defaultPhoneFeaturePropertyData, ObservableList<PhoneFeatureProperty> phoneFeaturePropertyData)
     {     
         ObservableList<PhoneFeatureProperty> updatedDefaultProperty = FXCollections.observableArrayList();
@@ -42,7 +46,7 @@ public class PhoneDataHandler
 
         
         //remove tags from default that already exists in phone
-        for (Iterator<PhoneFeatureProperty> itPhone =phoneFeaturePropertyData.iterator() ;itPhone.hasNext();)
+        for (Iterator<PhoneFeatureProperty> itPhone = phoneFeaturePropertyData.iterator() ;itPhone.hasNext();)
         {
             String phoneTagName = itPhone.next().getElementName();
             
