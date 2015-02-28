@@ -148,33 +148,50 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
         phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
         phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
 
-        Clipboard clipboard = Clipboard.getSystemClipboard();
+        //Clipboard clipboard = Clipboard.getSystemClipboard();
+        
         // add listner to your tableview selected item property of file list
         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             // this method will be called whenever user selected row
 
             @Override
             public void changed(ObservableValue observale, Object oldValue, Object newValue) {
+                
+                //make sure new value is not null (in case folder with no data selected)
+                FileProperty selectedFile;
+                if (newValue!=null)
+                {
+                    selectedFile = (FileProperty) newValue;
+                }
+                else 
+                {
+                    selectedFile = new FileProperty();
+                }
+                
                 //copy selection to clipboard
-
-                FileProperty selectedFile = (FileProperty) newValue;
                 /*
                  ClipboardContent content = new ClipboardContent();
                  // make sure you override toString in UserClass
                  content.putString(selectedFile.toString());
                  clipboard.setContent(content);
                  */
-
+                
                 //get XML path
+                
                 LOG.log(Level.INFO, "File selected: {0}", selectedFile.getFileName());
                 String xmlPath = (folderPathTextField.getText() + "\\" + selectedFile.getFileName());
                 LOG.log(Level.INFO, "Full XML path: {0}", xmlPath);
                 selectedXMLFilePath = xmlPath;
 
                 //get list of phones in the specific XML
-                ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
-                setPhoneNamePropertyData(phoneList);
-
+                if (xmlPath.contains(".xml"))
+                {
+                    ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
+                    setPhoneNamePropertyData(phoneList);
+                }
+                
+                
+ 
                 /*
                  //get default section node if default section checkbox selected
                  if (defaultSectionCheckBoxselected)
@@ -215,7 +232,13 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
                 clipboard.setContent(content);
                 */
                 //get XML path
-                String selectedPhone = selectedFile.getPhoneName();
+                
+                String selectedPhone = "";
+                if (selectedFile.getPhoneName() != null)
+                {
+                    selectedPhone = selectedFile.getPhoneName();
+                }
+                    
                 LOG.log(Level.INFO, "File selected in file list table: {0}", selectedXMLFilePath);
                 LOG.log(Level.INFO, "Phone selected: {0}", selectedPhone);
 
@@ -224,7 +247,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
                 }
 
                 //Add phone info to text area
-                Node phoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+                Node phoneNode = null;
+                if (selectedXMLFilePath.contains(".xml"))
+                     phoneNode= ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
                 if (phoneNode != null) {
                     allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
                     //Return specific phone section as String ArrayList's
@@ -329,10 +354,21 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
             selectFolderLabel.setText("");
             setFilePropertyData(fileList);
         } else {
-            setFilePropertyData(fileList);
+            removeAllTableData();
+            
             selectFolderLabel.setText("No XML files found...");
         }
 
+    }
+    
+    /*
+    * private method to remove all data loaded in UI
+    */
+    private void removeAllTableData()
+    {
+        fileNamePropertyData.clear();
+        phoneNamePropertyData.clear();
+        phoneFeaturePropertyData.clear();
     }
 
     /*
