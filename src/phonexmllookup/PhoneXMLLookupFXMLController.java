@@ -6,6 +6,7 @@
 package phonexmllookup;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -20,7 +21,11 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -45,6 +50,7 @@ import lib.xmlphonename.PhoneNameCreator;
 import lib.xmlphonename.PhoneNameHandler;
 import lib.xmlphonename.PhoneNameProperty;
 import org.w3c.dom.Node;
+import phonexmllookup.about.PhoneXMLLookupAboutWindowController;
 
 /**
  * The controller class for the PhoneXMLLookupFXML fxml file
@@ -66,6 +72,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
     private Node iOSDefaultOSSection;
     private boolean defaultSectionCheckBoxselected;
     private boolean defaultOSSectionCheckBoxselected;
+    
+    //about window settings
+    private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
+    private final boolean ABOUT_WIN_SET_RESIZABLE = false;
+    private final String ABOUT_WIN_STAGE_TITLE = "About";
 
     private String selectedXMLFilePath = "";
     //file name table data
@@ -462,6 +473,41 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
         phoneFeaturePropertyData.addAll(updatedDefaultPhoneFeaturePropertyData);
 
         phoneFeatureTableView.setItems(phoneFeaturePropertyData);
+    }
+    
+    @FXML
+    private boolean loadAboutWindow()
+    {
+        boolean loadScreen = false;
+        try
+        {
+            Stage currentStage = (Stage) phoneNameTableView.getScene().getWindow();
+            //currentStage.hide();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            String filePath = "/phonexmllookup/about/PhoneXMLLookupAboutWindow.fxml";
+            URL location = PhoneXMLLookupAboutWindowController.class.getResource(filePath);
+            fxmlLoader.setLocation(location);
+            fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+            Parent root = fxmlLoader.load(location.openStream());
+            PhoneXMLLookupAboutWindowController aboutWindowController = (PhoneXMLLookupAboutWindowController) fxmlLoader.getController();
+            //PhoneXMLLookupAboutWindowController.setUserData(userUUID, collectionUUID,coinTableData);
+
+            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
+            Stage aboutWindowStage = new Stage();
+            Scene scene = new Scene(root);
+            aboutWindowStage.setScene(scene);
+            aboutWindowStage.setAlwaysOnTop(ABOUT_WIN_ALWAYS_ON_TOP);
+            aboutWindowStage.setResizable(ABOUT_WIN_SET_RESIZABLE);
+            aboutWindowStage.setTitle(ABOUT_WIN_STAGE_TITLE);
+            aboutWindowStage.initOwner(currentStage); //Make sure main stage is the parent of add coin stage so minimizing and maximizing the main will minimize the child
+            aboutWindowStage.show();
+
+            loadScreen = true;
+        } catch (IOException ex)
+        {
+            Logger.getLogger(PhoneXMLLookupAboutWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return loadScreen;
     }
 
     /*
