@@ -48,6 +48,7 @@ import org.w3c.dom.Node;
 
 /**
  * The controller class for the PhoneXMLLookupFXML fxml file
+ *
  * @author Hedgehog01
  */
 public final class PhoneXMLLookupFXMLController implements Initializable {
@@ -149,25 +150,21 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
         phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
 
         //Clipboard clipboard = Clipboard.getSystemClipboard();
-        
         // add listner to your tableview selected item property of file list
         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             // this method will be called whenever user selected row
 
             @Override
             public void changed(ObservableValue observale, Object oldValue, Object newValue) {
-                
+
                 //make sure new value is not null (in case folder with no data selected)
                 FileProperty selectedFile;
-                if (newValue!=null)
-                {
+                if (newValue != null) {
                     selectedFile = (FileProperty) newValue;
-                }
-                else 
-                {
+                } else {
                     selectedFile = new FileProperty();
                 }
-                
+
                 //copy selection to clipboard
                 /*
                  ClipboardContent content = new ClipboardContent();
@@ -175,23 +172,16 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
                  content.putString(selectedFile.toString());
                  clipboard.setContent(content);
                  */
-                
                 //get XML path
-                
                 LOG.log(Level.INFO, "File selected: {0}", selectedFile.getFileName());
                 String xmlPath = (folderPathTextField.getText() + "\\" + selectedFile.getFileName());
                 LOG.log(Level.INFO, "Full XML path: {0}", xmlPath);
                 selectedXMLFilePath = xmlPath;
 
                 //get list of phones in the specific XML
-                if (xmlPath.contains(".xml"))
-                {
-                    ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
-                    setPhoneNamePropertyData(phoneList);
-                }
-                
-                
- 
+                ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
+                setPhoneNamePropertyData(phoneList);
+
                 /*
                  //get default section node if default section checkbox selected
                  if (defaultSectionCheckBoxselected)
@@ -224,21 +214,31 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
 
             @Override
             public void changed(ObservableValue observale, Object oldValue, Object newValue) {
-                PhoneNameProperty selectedFile = (PhoneNameProperty) newValue;
+                PhoneNameProperty selectedFile;
+                if (newValue != null) {
+                    LOG.log(Level.INFO, "new phone selected is: {0}", newValue);
+                    selectedFile = (PhoneNameProperty) newValue;
+                } else {
+                    LOG.log(Level.INFO, "new phone is null");
+                    //phoneNameTableView.getSelectionModel().selectFirst();
+                    //selectedFile = phoneNameTableView.getSelectionModel().getSelectedItem();
+                    selectedFile = null;
+                    //LOG.log(Level.INFO, "no phone selected setting default to first phone: {0}", selectedFile.getPhoneName());
+                }
+
                 /*
-                ClipboardContent content = new ClipboardContent();
-                // make sure you override toString in UserClass
-                content.putString(selectedFile.getPhoneName());
-                clipboard.setContent(content);
-                */
+                 ClipboardContent content = new ClipboardContent();
+                 // make sure you override toString in UserClass
+                 content.putString(selectedFile.getPhoneName());
+                 clipboard.setContent(content);
+                 */
                 //get XML path
-                
+                LOG.log(Level.INFO, "selectedFile: {0}", newValue);
                 String selectedPhone = "";
-                if (selectedFile.getPhoneName() != null)
-                {
+                if (selectedFile != null) {
                     selectedPhone = selectedFile.getPhoneName();
                 }
-                    
+
                 LOG.log(Level.INFO, "File selected in file list table: {0}", selectedXMLFilePath);
                 LOG.log(Level.INFO, "Phone selected: {0}", selectedPhone);
 
@@ -248,8 +248,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
 
                 //Add phone info to text area
                 Node phoneNode = null;
-                if (selectedXMLFilePath.contains(".xml"))
-                     phoneNode= ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+                if (selectedXMLFilePath.contains(".xml")) {
+                    phoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+                }
                 if (phoneNode != null) {
                     allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
                     //Return specific phone section as String ArrayList's
@@ -297,11 +298,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
             }
 
         });
-        
+
         //load files from folder path saved in prefrences
-        if (PrefrencesHandler.getFolderPath() != null)
-        {
-          
+        if (PrefrencesHandler.getFolderPath() != null) {
+
             String savedFolderPath = PrefrencesHandler.getFolderPath().getPath();
             LOG.log(Level.INFO, "Laoding files useing default folder: {0}", savedFolderPath);
             folderPathTextField.setText(savedFolderPath);
@@ -310,8 +310,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
     }
 
     /*
-    * method to get the user selected folder
-    */
+     * method to get the user selected folder
+     */
     @FXML
     private void selectFolderButtonAction(ActionEvent event) {
         Stage currentStage = (Stage) mainAnchor.getScene().getWindow();
@@ -346,8 +346,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
     }
 
     /*
-    * method to load the files in the folder
-    */
+     * method to load the files in the folder
+     */
     private void getFileList(String folderPath) {
         ArrayList<String> fileList = FileHandler.getFileList(folderPath);
         if (!fileList.isEmpty()) {
@@ -355,17 +355,16 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
             setFilePropertyData(fileList);
         } else {
             removeAllTableData();
-            
+
             selectFolderLabel.setText("No XML files found...");
         }
 
     }
-    
+
     /*
-    * private method to remove all data loaded in UI
-    */
-    private void removeAllTableData()
-    {
+     * private method to remove all data loaded in UI
+     */
+    private void removeAllTableData() {
         fileNamePropertyData.clear();
         phoneNamePropertyData.clear();
         phoneFeaturePropertyData.clear();
@@ -415,7 +414,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
      */
     private void setPhoneNamePropertyData(ArrayList<String> phoneNameList) {
         phoneNamePropertyData.clear();
-
+        filteredModelTextField.clear();
         phoneNamePropertyData = PhoneNameCreator.createFilePropertyList(phoneNameList);
 
         //====set up filtering of Phone Name===

@@ -113,7 +113,7 @@ public class ReadXML {
         Node phoneInfoNode = null;
 
         //Make sure search text is not
-        if (tagText.length() > 2) {
+        if (tagText !=null && tagText.length() > 2) {
             try {
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = docFactory.newDocumentBuilder();
@@ -144,7 +144,7 @@ public class ReadXML {
             }
 
         } else {
-            System.out.println("Text to be search was too short");
+            System.out.println("Text to be search was too short or null");
         }
         return phoneInfoNode;
     }
