@@ -33,6 +33,8 @@ import javafx.scene.text.TextFlow;
  * @author nathanr
  */
 public class PhoneXMLLookupAboutWindowController implements Initializable {
+    
+    private final String buildVersion = "0.0.1";
 
     @FXML
     private Label titleLabel;
@@ -45,7 +47,7 @@ public class PhoneXMLLookupAboutWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        titleLabel.setText("PhoneXML Lookup");
+        titleLabel.setText("PhoneXML Lookup - " + buildVersion);
         titleLabel.setAlignment(Pos.CENTER);
         aboutTextArea.setEditable(false);
         
@@ -56,5 +58,6 @@ public class PhoneXMLLookupAboutWindowController implements Initializable {
         
         
     }
+    
 
 }

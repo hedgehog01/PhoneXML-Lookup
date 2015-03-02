@@ -19,6 +19,7 @@ import javafx.stage.Stage;
  */
 public class PhoneXMLLookup extends Application
 {
+
     
     /**
      * Launches the main stage
@@ -38,6 +39,8 @@ public class PhoneXMLLookup extends Application
         stage.getIcons().add(new Image("resources/images/app_icon.png"));
         stage.show();
     }
+    
+
 
     /**
      * @param args the command line arguments
