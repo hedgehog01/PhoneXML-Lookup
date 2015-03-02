@@ -220,10 +220,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
                     selectedFile = (PhoneNameProperty) newValue;
                 } else {
                     LOG.log(Level.INFO, "new phone is null");
-                    //phoneNameTableView.getSelectionModel().selectFirst();
-                    //selectedFile = phoneNameTableView.getSelectionModel().getSelectedItem();
                     selectedFile = null;
-                    //LOG.log(Level.INFO, "no phone selected setting default to first phone: {0}", selectedFile.getPhoneName());
                 }
 
                 /*
