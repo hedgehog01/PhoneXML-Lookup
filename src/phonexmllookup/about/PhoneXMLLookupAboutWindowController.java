@@ -18,7 +18,14 @@ package phonexmllookup.about;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /**
  * FXML Controller class
@@ -27,12 +34,27 @@ import javafx.fxml.Initializable;
  */
 public class PhoneXMLLookupAboutWindowController implements Initializable {
 
+    @FXML
+    private Label titleLabel;
+    @FXML
+    private TextArea aboutTextArea;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+        
+        titleLabel.setText("PhoneXML Lookup");
+        titleLabel.setAlignment(Pos.CENTER);
+        aboutTextArea.setEditable(false);
+        
+        String msgS1 = "This software if in beta testing.\nIf you have any suggestion or issues, \nplease contact Nathan Randelman\nnathan.randelman@cellebrite.com";
+        Hyperlink link = new Hyperlink("nathan.randelman@cellebrite.com");
+       
+        aboutTextArea.setText(msgS1 );
+        
+        
+    }
+
 }
