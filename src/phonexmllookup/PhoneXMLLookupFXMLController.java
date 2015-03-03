@@ -159,7 +159,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
         phoneFeatureContentColumn.setCellValueFactory(cellData -> cellData.getValue().elementAttributeProperty());
         phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
         phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
-
+        
+        
         //Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selected item property of file list
         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
@@ -270,8 +271,19 @@ public final class PhoneXMLLookupFXMLController implements Initializable {
                     ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
                     ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
                     ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
+                    
+                    //return Android OS Default phone section as String ArrayList
+                    ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
+                    ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(androidDefaultOSSection);
+                    ArrayList<String> androidDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(androidDefaultOSSection);
+                    
+                    //return iOS OS Default phone section as String ArrayList
+                    ArrayList<String> iOSDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(iOSDefaultOSSection);
+                    ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(iOSDefaultOSSection);
+                    ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
 
                     setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList);
+                    phoneDefaultColumn.setSortType(TableColumn.SortType.ASCENDING);
                 }
 
                 phoneNodeTextArea.setText("");
