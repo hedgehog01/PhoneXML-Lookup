@@ -53,16 +53,18 @@ public final class PhoneFeatureCreator {
      * @param elementName the element tag name
      * @param elementValue the element tag value
      * @param elementAttribute the element attribute
+     * @param elementDefaultType the element default type (OS default, regular default etc)
      * @param isDefault indicates if the element is from Default section or not
      * @return list of elements in an ObservableList
      */
-    public static ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementValue,ArrayList<String> elementAttribute,boolean isDefault) {
+    public static ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementValue,ArrayList<String> elementAttribute,String elementDefaultType,boolean isDefault) {
         ObservableList<PhoneFeatureProperty> phoneData = FXCollections.observableArrayList();
         if ((elementName!=null && elementValue!=null) && (elementName.size() == elementValue.size())) 
         {
             for (int i=0; i<elementName.size(); i++)
             {
-                phoneData.add(new PhoneFeatureProperty(elementName.get(i), elementValue.get(i),elementAttribute.get(i),isDefault));
+                phoneData.add(new PhoneFeatureProperty(elementName.get(i), elementValue.get(i),elementAttribute.get(i),elementDefaultType,isDefault));
+                
             }
         }
 

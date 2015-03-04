@@ -24,6 +24,7 @@ import javafx.beans.property.StringProperty;
 
 /**
  * Class that represents a Phone Feature Property
+ *
  * @author Hedgehog01
  */
 public final class PhoneFeatureProperty implements Serializable
@@ -35,6 +36,7 @@ public final class PhoneFeatureProperty implements Serializable
     private final StringProperty elementAttribute = new SimpleStringProperty("");
     private final StringProperty elementValue = new SimpleStringProperty("");
     private final BooleanProperty defaultSection = new SimpleBooleanProperty(false);
+    private final StringProperty defaultType = new SimpleStringProperty("");
 
     /**
      * Default constructor - sets all class instances to null
@@ -57,25 +59,28 @@ public final class PhoneFeatureProperty implements Serializable
         setElementValue(elmentValue);
         setElementAttribute(attributes);
     }
-    
+
     /**
      * Constructor for setting property values
      *
      * @param elementName the element name
      * @param elmentValue the element value
      * @param attributes the element content
+     * @param defaultType the element default type (OS default, regular default etc)
      * @param defaultSection is the element from default section
      */
-    public PhoneFeatureProperty(String elementName, String elmentValue, String attributes,boolean defaultSection)
+    public PhoneFeatureProperty(String elementName, String elmentValue, String attributes,String defaultType, boolean defaultSection)
     {
         setElementName(elementName);
         setElementValue(elmentValue);
         setElementAttribute(attributes);
+        setDefaultType(defaultType);
         setDefaultSection(defaultSection);
     }
 
     /**
      * method to get the element name
+     *
      * @return the element name
      */
     public String getElementName()
@@ -85,6 +90,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to set the element name
+     *
      * @param value the element name
      */
     public void setElementName(String value)
@@ -94,6 +100,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to return the element name property
+     *
      * @return the element name property
      */
     public StringProperty elementNameProperty()
@@ -103,6 +110,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to return the element attribute
+     *
      * @return the element attribute
      */
     public String getElementAttribute()
@@ -112,6 +120,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to set the element attribute
+     *
      * @param value the element attribute
      */
     public void setElementAttribute(String value)
@@ -121,6 +130,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to return the element attribute property
+     *
      * @return the element attribute property
      */
     public StringProperty elementAttributeProperty()
@@ -130,6 +140,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to return the element value
+     *
      * @return the element value
      */
     public String getElementValue()
@@ -139,6 +150,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to set the element value
+     *
      * @param value the element value
      */
     public void setElementValue(String value)
@@ -148,6 +160,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to return the element value property
+     *
      * @return the element value property
      */
     public StringProperty elementValueProperty()
@@ -157,6 +170,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to return the default section value
+     *
      * @return the default section value (boolean)
      */
     public boolean isDefaultSection()
@@ -166,6 +180,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to set the default section value
+     *
      * @param value the default section value
      */
     public void setDefaultSection(boolean value)
@@ -175,6 +190,7 @@ public final class PhoneFeatureProperty implements Serializable
 
     /**
      * method to return the default section property
+     *
      * @return the default section property
      */
     public BooleanProperty defaultSectionProperty()
@@ -183,7 +199,36 @@ public final class PhoneFeatureProperty implements Serializable
     }
 
     /**
+     * method to get the default type
+     * @return the default type
+     */
+    public String getDefaultType()
+    {
+        return defaultType.get();
+    }
+
+    /**
+     * method to set the default type
+     * @param value the default type
+     */
+    public void setDefaultType(String value)
+    {
+        defaultType.set(value);
+    }
+
+    /**
+     * method to return the default type property
+     *
+     * @return the default type property
+     */
+    public StringProperty defaultTypeProperty()
+    {
+        return defaultType;
+    }
+
+    /**
      * method to print the property as String
+     *
      * @return the property as String
      */
     @Override

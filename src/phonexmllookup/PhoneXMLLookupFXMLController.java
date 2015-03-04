@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,6 +65,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String MAIN_NODE_ELEMENT = "PHONE";
     private final String DEFAULT_SECTION = "Default";
     private final String OS_DEFAULT = "_OS_Default";
+    private final String NOT_DEFAULT = "X";
     private final String ANDROID = "Android";
     private final String IOS = "iOS";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
@@ -276,7 +278,19 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 {
 
                     //clear phone data
-                    LOG.log(Level.INFO, "clearing phone feature data table");
+                    if (oldValue != newValue)
+                    {
+                        LOG.log(Level.INFO, "clearing phone feature data table due to new phone selected");
+                        if (oldValue != null)
+                        {
+                            LOG.log(Level.INFO, "Old value is: {0}", oldValue.toString());
+                        }
+                        if (newValue != null)
+                        {
+                            LOG.log(Level.INFO, "new value is: {0}", newValue.toString());
+                        }
+                    }
+
                     phoneFeaturePropertyData.clear();
 
                     allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
@@ -285,7 +299,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(phoneNode);
                     ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(phoneNode);
                     LOG.log(Level.INFO, "Adding phone info to phone feature table");
-                    setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, false);
+                    setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false);
                     phoneDefaultColumn.setSortType(TableColumn.SortType.ASCENDING);
                 }
 
@@ -309,19 +323,19 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
                 ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
 
-                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, true);
-                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, true);
+                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
+                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
 
             } else
             {
                 LOG.log(Level.INFO, "default section unselected - removing default section Node");
-                defaultSectionNode = null;
+                defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
                 ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
                 ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
                 ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
 
-                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, true);
-                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, true);
+                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
+                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
             }
 
         });
@@ -345,13 +359,13 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(iOSDefaultOSSection);
                 ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
 
-                setPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, true);
-                setPhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, true);
+                setPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true);
+                setPhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true);
             } else
             {
                 LOG.log(Level.INFO, "default OS section unselected - removing default section Node");
-                androidDefaultOSSection = null;
-                iOSDefaultOSSection = null;
+                androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
+                iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
                 //return Android OS Default phone section as String ArrayList
                 ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
                 ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(androidDefaultOSSection);
@@ -362,8 +376,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(iOSDefaultOSSection);
                 ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
 
-                setPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, true);
-                setPhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, true);
+                removePhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true);
+                removePhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true);
 
             }
 
@@ -535,19 +549,39 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     /*
      * method to set the phone feature data into the phone feature table
      */
-    private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, boolean defaultSection)
+    private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection)
     {
 
         //get default node property
         //ObservableList<PhoneFeatureProperty> defaultPhoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(defaultPhoneTagNameList, defaultPhoneTagValueList, defaultPhoneAttributeList);
-
         //get phone node property
-        LOG.log (Level.INFO, "get phone feature data as property");
-        phoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultSection);
+        LOG.log(Level.INFO, "get phone feature data as property");
+        phoneFeaturePropertyData.addAll(PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection));
         //defaultPhoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(defaultPhoneTagNameList, defaultPhoneTagValueList, defaultPhoneAttributeList, true);
         //remove from default property elements already in the phone
         //ObservableList<PhoneFeatureProperty> updatedDefaultPhoneFeaturePropertyData = PhoneDataHandler.removeDupProperties(defaultPhoneFeaturePropertyData, phoneFeaturePropertyData);
         phoneFeatureTableView.setItems(phoneFeaturePropertyData);
+    }
+
+    private void removePhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection)
+    {
+        LOG.log(Level.INFO, "remove phone feature data");
+
+        ObservableList<PhoneFeatureProperty> phonesDataToRemove = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection);
+
+        LOG.log(Level.INFO, "phonesDataToRemove size: {0}", phonesDataToRemove.size());
+
+        //remove tags from default that already exists in phone
+        for (Iterator<PhoneFeatureProperty> itPhone = phonesDataToRemove.iterator(); itPhone.hasNext();)
+        {
+            String phoneTagName = itPhone.next().getElementName();
+
+            LOG.log(Level.INFO, "removeing Phone tag for default: {0}", defaultType);
+            //phoneFeaturePropertyData.removeIf(tag -> (tag.getElementName().equals(phoneTagName)));
+            phoneFeaturePropertyData.removeIf(tag -> tag.getDefaultType().equals(defaultType));
+            //phoneFeatureTableView.setItems(phoneFeaturePropertyData);
+
+        }
     }
 
     @FXML
