@@ -551,12 +551,16 @@ public final class PhoneXMLLookupFXMLController implements Initializable
      */
     private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection)
     {
-
-        //get default node property
-        //ObservableList<PhoneFeatureProperty> defaultPhoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(defaultPhoneTagNameList, defaultPhoneTagValueList, defaultPhoneAttributeList);
+        //create list from the inputed strings
+        ObservableList<PhoneFeatureProperty> phoneFeatureTempData = FXCollections.observableArrayList();
+        
+        // if the list is default section, remove duplicated tags
+        
+        
+        PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection);
         //get phone node property
         LOG.log(Level.INFO, "get phone feature data as property");
-        phoneFeaturePropertyData.addAll(PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection));
+        phoneFeaturePropertyData.addAll(phoneFeatureTempData);
         //defaultPhoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(defaultPhoneTagNameList, defaultPhoneTagValueList, defaultPhoneAttributeList, true);
         //remove from default property elements already in the phone
         //ObservableList<PhoneFeatureProperty> updatedDefaultPhoneFeaturePropertyData = PhoneDataHandler.removeDupProperties(defaultPhoneFeaturePropertyData, phoneFeaturePropertyData);

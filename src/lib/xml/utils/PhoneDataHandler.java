@@ -28,7 +28,7 @@ import lib.xmlphonefeatures.PhoneFeatureProperty;
  *
  * @author Hedgehog01
  */
-public class PhoneDataHandler
+public final class PhoneDataHandler
 {
     private static final Logger LOG = Logger.getLogger(PhoneDataHandler.class.getName());
     
@@ -49,14 +49,43 @@ public class PhoneDataHandler
         for (Iterator<PhoneFeatureProperty> itPhone = phoneFeaturePropertyData.iterator() ;itPhone.hasNext();)
         {
             String phoneTagName = itPhone.next().getElementName();
+            //String phoneTagDefaultType = itPhone.next().getDefaultType();
             
             //LOG.log(Level.INFO, "Phone tag Name: {0}",phoneTagName);
             updatedDefaultProperty.removeIf(tag -> tag.getElementName().equals(phoneTagName));
-            
+            //updatedDefaultProperty.removeIf(tag -> tag.getElementName().equals(phoneTagName) || (tag.getElementName().equals(phoneTagName) && tag.getDefaultType().contains("_OS_Default")));
         }
 
         return updatedDefaultProperty;
 
+    }
+    
+    /**
+     * method to remove default tags in case default OS added
+     * @param defaultOSPhoneFeaturePropertyData the default OS section
+     * @param phoneFeaturePropertyData the selected phone
+     * @return the selected phone without tags from default section that already appear in the default OS section
+     */
+    public static ObservableList<PhoneFeatureProperty> removeDupDefaultProperties(ObservableList<PhoneFeatureProperty> defaultOSPhoneFeaturePropertyData, ObservableList<PhoneFeatureProperty> phoneFeaturePropertyData)
+    {
+         ObservableList<PhoneFeatureProperty> updatedDefaultOSProperty = FXCollections.observableArrayList();
+        updatedDefaultOSProperty.addAll(defaultOSPhoneFeaturePropertyData);
+
+        
+        //remove tags from phone that already exists in default
+        for (Iterator<PhoneFeatureProperty> itPhone = phoneFeaturePropertyData.iterator() ;itPhone.hasNext();)
+        {
+            String phoneTagName = itPhone.next().getElementName();
+            String phoneTagDefaultType = itPhone.next().getDefaultType();
+            
+            //LOG.log(Level.INFO, "Phone tag Name: {0}",phoneTagName);
+            
+            updatedDefaultOSProperty.removeIf(tag -> tag.getElementName().equals(phoneTagName) );
+        }
+        
+        
+
+        return updatedDefaultOSProperty;
     }
     
     
