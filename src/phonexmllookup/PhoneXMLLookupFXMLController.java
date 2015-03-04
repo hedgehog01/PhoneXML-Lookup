@@ -334,8 +334,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
                 ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
 
-                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
-                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
+                removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
+                removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
             }
 
         });
@@ -566,13 +566,13 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private void removePhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection)
     {
         LOG.log(Level.INFO, "remove phone feature data");
-
-        ObservableList<PhoneFeatureProperty> phonesDataToRemove = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection);
+        ObservableList<PhoneFeatureProperty> phonesDataToRemove = FXCollections.observableArrayList();
+        phonesDataToRemove.addAll(PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection));
 
         LOG.log(Level.INFO, "phonesDataToRemove size: {0}", phonesDataToRemove.size());
 
         //remove tags from default that already exists in phone
-        for (Iterator<PhoneFeatureProperty> itPhone = phonesDataToRemove.iterator(); itPhone.hasNext();)
+        for (Iterator<PhoneFeatureProperty> itPhone = phoneFeaturePropertyData.iterator(); itPhone.hasNext();)
         {
             String phoneTagName = itPhone.next().getElementName();
 
