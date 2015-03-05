@@ -553,11 +553,23 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     {
         //create list from the inputed strings
         ObservableList<PhoneFeatureProperty> phoneFeatureTempData;
-        
-        // if the list is default section, remove duplicated tags
-        
-        
         phoneFeatureTempData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection);
+        // if the list is default section, remove duplicated tags 
+        //take care of Default section - remove tags already in phone and Default OS
+        if (defaultSection && (defaultType.equals(DEFAULT_SECTION)|| defaultType.contains(OS_DEFAULT)) && (phoneFeaturePropertyData.size() > 0))
+        {
+            phoneFeatureTempData = PhoneDataHandler.removeDupProperties(phoneFeatureTempData, phoneFeaturePropertyData);
+        }
+        
+        /// take care of OS default section
+        if (defaultSection && (defaultType.contains(OS_DEFAULT)) && phoneFeaturePropertyData.size() > 0)
+        {
+            phoneFeatureTempData = PhoneDataHandler.removeDupDefaultProperties(phoneFeatureTempData, phoneFeaturePropertyData);
+        }
+        
+        //take care of default OS section
+        
+        
         //get phone node property
         LOG.log(Level.INFO, "get phone feature data as property");
         phoneFeaturePropertyData.addAll(phoneFeatureTempData);
@@ -572,14 +584,15 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         LOG.log(Level.INFO, "remove phone feature data");
         ObservableList<PhoneFeatureProperty> phonesDataToRemove = FXCollections.observableArrayList();
         phonesDataToRemove.addAll(PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection));
-
+        ObservableList<PhoneFeatureProperty> tempPhoneFeaturePropertyData = FXCollections.observableArrayList();
+        tempPhoneFeaturePropertyData.addAll(phoneFeaturePropertyData);
         LOG.log(Level.INFO, "phonesDataToRemove size: {0}", phonesDataToRemove.size());
 
         //remove tags from default that already exists in phone
-        for (Iterator<PhoneFeatureProperty> itPhone = phoneFeaturePropertyData.iterator(); itPhone.hasNext();)
+        for (Iterator<PhoneFeatureProperty> itPhone = tempPhoneFeaturePropertyData.iterator(); itPhone.hasNext();)
         {
             String phoneTagName = itPhone.next().getElementName();
-
+            
             LOG.log(Level.INFO, "removeing Phone tag for default: {0}", defaultType);
             //phoneFeaturePropertyData.removeIf(tag -> (tag.getElementName().equals(phoneTagName)));
             phoneFeaturePropertyData.removeIf(tag -> tag.getDefaultType().equals(defaultType));

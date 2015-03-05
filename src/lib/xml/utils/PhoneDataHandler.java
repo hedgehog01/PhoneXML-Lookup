@@ -30,6 +30,8 @@ import lib.xmlphonefeatures.PhoneFeatureProperty;
  */
 public final class PhoneDataHandler
 {
+    private final static String OS_DEFAULT = "_OS_Default";
+    private final static String DEFAULT_SECTION = "Default";
     private static final Logger LOG = Logger.getLogger(PhoneDataHandler.class.getName());
     
     
@@ -50,9 +52,10 @@ public final class PhoneDataHandler
         {
             String phoneTagName = itPhone.next().getElementName();
             //String phoneTagDefaultType = itPhone.next().getDefaultType();
+            //String phoneTagDefaultType = itPhone.next().getDefaultType();
             
             //LOG.log(Level.INFO, "Phone tag Name: {0}",phoneTagName);
-            updatedDefaultProperty.removeIf(tag -> tag.getElementName().equals(phoneTagName));
+            updatedDefaultProperty.removeIf(tag -> tag.getElementName().equals(phoneTagName)&& (!(tag.getDefaultType().contains(OS_DEFAULT))));
             //updatedDefaultProperty.removeIf(tag -> tag.getElementName().equals(phoneTagName) || (tag.getElementName().equals(phoneTagName) && tag.getDefaultType().contains("_OS_Default")));
         }
 
@@ -76,11 +79,11 @@ public final class PhoneDataHandler
         for (Iterator<PhoneFeatureProperty> itPhone = phoneFeaturePropertyData.iterator() ;itPhone.hasNext();)
         {
             String phoneTagName = itPhone.next().getElementName();
-            String phoneTagDefaultType = itPhone.next().getDefaultType();
+            //String phoneTagDefaultType = itPhone.next().getDefaultType();
             
             //LOG.log(Level.INFO, "Phone tag Name: {0}",phoneTagName);
             
-            updatedDefaultOSProperty.removeIf(tag -> tag.getElementName().equals(phoneTagName) );
+            updatedDefaultOSProperty.removeIf(tag -> tag.getElementName().equals(phoneTagName));
         }
         
         
