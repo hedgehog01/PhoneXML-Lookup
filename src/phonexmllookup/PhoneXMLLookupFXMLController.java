@@ -101,16 +101,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private TextField filteredModelTextField;
 
     @FXML
-    private TextField filteredTagTextField;
+    private TextField filteredTagNameTextField;
 
-    @FXML
-    private TextField filteredValueTextField;
-
-    @FXML
-    private TextField filteredAttributeTextField;
-
-    @FXML
-    private TextField filteredDefaultTextField;
 
     @FXML
     private TableView<FileProperty> fileListTableView;
@@ -583,12 +575,18 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         LOG.log(Level.INFO, "get phone feature data as property");
         phoneFeaturePropertyData.addAll(phoneFeatureTempData);
 
-        //====set up filtering of Phone Feature tag name data===
+        //set sorted tag name
+        phoneFeatureTableView.setItems(getSortedTagNameList());
+    }
+    
+    private SortedList<PhoneFeatureProperty> getSortedTagNameList()
+    {
+         //====set up filtering of Phone Feature tag name data===
         // Phone Feature tag name filter - Wrap the ObservableList in a FilteredList (initially display all data).
         FilteredList<PhoneFeatureProperty> phoneTagNameFilteredList = new FilteredList<>(phoneFeaturePropertyData, p -> true);
 
         // Phone Feature filter - Set the filter Predicate whenever the filter changes.
-        filteredTagTextField.textProperty().addListener((observable, oldValue, newValue) ->
+        filteredTagNameTextField.textProperty().addListener((observable, oldValue, newValue) ->
         {
             phoneTagNameFilteredList.setPredicate(phoneTagName ->
             {
@@ -612,7 +610,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         sortedPhoneTagNameData.comparatorProperty().bind(phoneFeatureTableView.comparatorProperty());
 
         //=======End of filtered phone name setup======
-        phoneFeatureTableView.setItems(sortedPhoneTagNameData);
+        
+        return sortedPhoneTagNameData;
     }
 
     private void removePhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection)
