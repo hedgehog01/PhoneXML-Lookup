@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="752.0" prefWidth="1246.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phonexmllookup.PhoneXMLLookupFXMLController">
+<AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1275.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phonexmllookup.PhoneXMLLookupFXMLController">
    <children>
       <MenuBar prefHeight="25.0" prefWidth="1246.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
@@ -36,7 +36,7 @@
                      <children>
                         <TextField fx:id="folderPathTextField" editable="false" layoutX="150.0" layoutY="42.0" prefHeight="25.0" prefWidth="458.0" AnchorPane.topAnchor="42.0" />
                         <Button fx:id="selectFolderBtn" layoutX="14.0" layoutY="42.0" mnemonicParsing="false" onAction="#selectFolderButtonAction" prefHeight="25.0" prefWidth="129.0" text="Select XML Folder" AnchorPane.topAnchor="42.0" />
-                        <HBox layoutY="165.0" prefHeight="534.0" prefWidth="1246.0" spacing="2.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="165.0">
+                        <HBox layoutY="165.0" prefHeight="546.0" prefWidth="1275.0" spacing="2.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="165.0">
                            <children>
                               <TableView fx:id="fileListTableView" layoutY="165.0" prefHeight="482.0" prefWidth="149.0">
                                  <columns>
@@ -48,21 +48,25 @@
                                   <TableColumn fx:id="phoneNameColumn" editable="false" prefWidth="250.0" text="Phone list" />
                                 </columns>
                               </TableView>
-                              <TableView fx:id="phoneFeatureTableView" editable="true" layoutX="407.0" layoutY="165.0" prefHeight="532.0" prefWidth="850.0">
+                              <TableView fx:id="phoneFeatureTableView" editable="true" layoutX="407.0" layoutY="165.0" prefHeight="552.0" prefWidth="868.0">
                                 <columns>
-                                  <TableColumn fx:id="phoneFeatureModuleNameColumn" editable="false" prefWidth="339.0" text="Tag" />
-                                    <TableColumn fx:id="phoneFeatureModuleValueColumn" prefWidth="213.0" text="Value" />
-                                    <TableColumn fx:id="phoneFeatureContentColumn" prefWidth="211.0" sortable="false" text="Attribute" />
-                                    <TableColumn fx:id="phoneDefaultColumn" editable="false" prefWidth="81.0" sortType="DESCENDING" text="Default" />
+                                  <TableColumn fx:id="phoneFeatureModuleNameColumn" editable="false" prefWidth="234.0" text="Tag" />
+                                    <TableColumn fx:id="phoneFeatureModuleValueColumn" editable="false" prefWidth="428.0" text="Value" />
+                                    <TableColumn fx:id="phoneFeatureContentColumn" editable="false" prefWidth="134.0" text="Attribute" />
+                                    <TableColumn fx:id="phoneDefaultColumn" editable="false" prefWidth="71.0" text="Default" />
                                 </columns>
                               </TableView>
                            </children>
                         </HBox>
-                        <Label fx:id="selectFolderLabel" layoutX="149.0" layoutY="91.0" prefHeight="17.0" prefWidth="254.0" />
-                        <TextField fx:id="filteredFileNameTextField" layoutY="134.0" prefHeight="25.0" prefWidth="147.0" />
-                        <TextField fx:id="filteredModelTextField" layoutX="150.0" layoutY="134.0" prefHeight="25.0" prefWidth="252.0" />
+                        <Label fx:id="selectFolderLabel" layoutX="152.0" layoutY="78.0" prefHeight="17.0" prefWidth="254.0" />
+                        <TextField fx:id="filteredFileNameTextField" layoutX="5.0" layoutY="134.0" prefHeight="25.0" prefWidth="146.0" promptText="Search XML..." />
+                        <TextField fx:id="filteredModelTextField" layoutX="161.0" layoutY="134.0" prefHeight="25.0" prefWidth="236.0" promptText="Search phone..." />
                         <CheckBox fx:id="defaultSectionCheckBox" layoutX="670.0" layoutY="33.0" mnemonicParsing="false" text="Default" />
                         <CheckBox fx:id="defaultOSSectionCheckBox" layoutX="670.0" layoutY="54.0" mnemonicParsing="false" text="Default OS" AnchorPane.topAnchor="54.0" />
+                        <TextField fx:id="filteredTagTextField" layoutX="411.0" layoutY="134.0" prefHeight="25.0" prefWidth="229.0" promptText="Search tag..." />
+                        <TextField fx:id="filteredValueTextField" layoutX="646.0" layoutY="134.0" prefHeight="25.0" prefWidth="230.0" promptText="Search value..." />
+                        <TextField fx:id="filteredAttributeTextField" layoutX="1070.0" layoutY="134.0" prefHeight="25.0" prefWidth="117.0" promptText="Search attribute..." />
+                        <TextField fx:id="filteredDefaultTextField" layoutX="1210.0" layoutY="134.0" prefHeight="25.0" prefWidth="56.0" promptText="Default" />
                      </children>
                   </AnchorPane>
             </content>

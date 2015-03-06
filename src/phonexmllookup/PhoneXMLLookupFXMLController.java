@@ -101,6 +101,18 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private TextField filteredModelTextField;
 
     @FXML
+    private TextField filteredTagTextField;
+
+    @FXML
+    private TextField filteredValueTextField;
+
+    @FXML
+    private TextField filteredAttributeTextField;
+
+    @FXML
+    private TextField filteredDefaultTextField;
+
+    @FXML
     private TableView<FileProperty> fileListTableView;
 
     @FXML
@@ -517,7 +529,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         // Phone Name filter - Wrap the ObservableList in a FilteredList (initially display all data).
         FilteredList<PhoneNameProperty> phoneNameFilteredList = new FilteredList<>(phoneNamePropertyData, p -> true);
 
-        // File Name filter - Set the filter Predicate whenever the filter changes.
+        // Phone Name filter - Set the filter Predicate whenever the filter changes.
         filteredModelTextField.textProperty().addListener((observable, oldValue, newValue) ->
         {
             phoneNameFilteredList.setPredicate(phoneName ->
@@ -556,27 +568,51 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         phoneFeatureTempData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection);
         // if the list is default section, remove duplicated tags 
         //take care of Default section - remove tags already in phone and Default OS
-        if (defaultSection && (defaultType.equals(DEFAULT_SECTION)|| defaultType.contains(OS_DEFAULT)) && (phoneFeaturePropertyData.size() > 0))
+        if (defaultSection && (defaultType.equals(DEFAULT_SECTION) || defaultType.contains(OS_DEFAULT)) && (phoneFeaturePropertyData.size() > 0))
         {
             phoneFeatureTempData = PhoneDataHandler.removeDupProperties(phoneFeatureTempData, phoneFeaturePropertyData);
         }
-        
+
         /// take care of OS default section
         if (defaultSection && (defaultType.contains(OS_DEFAULT)) && phoneFeaturePropertyData.size() > 0)
         {
             phoneFeatureTempData = PhoneDataHandler.removeDupDefaultProperties(phoneFeatureTempData, phoneFeaturePropertyData);
         }
-        
-        //take care of default OS section
-        
-        
-        //get phone node property
+
+        //get phone feature property
         LOG.log(Level.INFO, "get phone feature data as property");
         phoneFeaturePropertyData.addAll(phoneFeatureTempData);
-        //defaultPhoneFeaturePropertyData = PhoneFeatureCreator.createPhoneFeatureList(defaultPhoneTagNameList, defaultPhoneTagValueList, defaultPhoneAttributeList, true);
-        //remove from default property elements already in the phone
-        //ObservableList<PhoneFeatureProperty> updatedDefaultPhoneFeaturePropertyData = PhoneDataHandler.removeDupProperties(defaultPhoneFeaturePropertyData, phoneFeaturePropertyData);
-        phoneFeatureTableView.setItems(phoneFeaturePropertyData);
+
+        //====set up filtering of Phone Feature tag name data===
+        // Phone Feature tag name filter - Wrap the ObservableList in a FilteredList (initially display all data).
+        FilteredList<PhoneFeatureProperty> phoneTagNameFilteredList = new FilteredList<>(phoneFeaturePropertyData, p -> true);
+
+        // Phone Feature filter - Set the filter Predicate whenever the filter changes.
+        filteredTagTextField.textProperty().addListener((observable, oldValue, newValue) ->
+        {
+            phoneTagNameFilteredList.setPredicate(phoneTagName ->
+            {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty())
+                {
+                    return true;
+                }
+
+                // Compare filename with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                return phoneTagName.getElementName().toLowerCase().indexOf(lowerCaseFilter) != -1;
+            });
+        });
+
+        // Wrap the FilteredList in a SortedList. 
+        SortedList<PhoneFeatureProperty> sortedPhoneTagNameData = new SortedList<>(phoneTagNameFilteredList);
+
+        // Bind the SortedList comparator to the TableView comparator.
+        sortedPhoneTagNameData.comparatorProperty().bind(phoneFeatureTableView.comparatorProperty());
+
+        //=======End of filtered phone name setup======
+        phoneFeatureTableView.setItems(sortedPhoneTagNameData);
     }
 
     private void removePhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection)
@@ -592,7 +628,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         for (Iterator<PhoneFeatureProperty> itPhone = tempPhoneFeaturePropertyData.iterator(); itPhone.hasNext();)
         {
             String phoneTagName = itPhone.next().getElementName();
-            
+
             LOG.log(Level.INFO, "removeing Phone tag for default: {0}", defaultType);
             //phoneFeaturePropertyData.removeIf(tag -> (tag.getElementName().equals(phoneTagName)));
             phoneFeaturePropertyData.removeIf(tag -> tag.getDefaultType().equals(defaultType));
