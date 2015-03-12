@@ -304,7 +304,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(phoneNode);
                     LOG.log(Level.INFO, "Adding phone info to phone feature table");
                     setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false);
-                    phoneDefaultColumn.setSortType(TableColumn.SortType.ASCENDING);
+                    
                 }
 
                 phoneNodeTextArea.setText("");
@@ -341,6 +341,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
                 removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
             }
+            phoneDefaultColumn.setSortType(TableColumn.SortType.ASCENDING);
 
         });
 
