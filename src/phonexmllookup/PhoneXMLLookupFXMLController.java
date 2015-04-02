@@ -69,6 +69,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String ANDROID = "Android";
     private final String IOS = "iOS";
     private final String OSTYPETAGNAME = "OSType";
+    private final String PHONE_NAME_TAG = "Name";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
@@ -694,9 +695,20 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         boolean isCorrectOS = false;
         if (phoneNode != null && osDefaultNode != null)
         {
-            String phoneOS = ReadXML.getNodePhoneTagValue (phoneNode,OSTYPETAGNAME);
-            LOG.log(Level.INFO, "Phone OSType tag value: {0}",phoneOS );
-            isCorrectOS = true;
+            String phoneOSType = ReadXML.getNodePhoneTagValue (phoneNode,OSTYPETAGNAME);
+            String defaultTagName = ReadXML.getNodePhoneTagValue (osDefaultNode,PHONE_NAME_TAG);
+            LOG.log(Level.INFO, "Phone OSType tag value: {0}",phoneOSType );
+            LOG.log(Level.INFO, "Default OS Name tag value: {0}",defaultTagName );
+            if (defaultTagName.contains(phoneOSType))
+            {
+                LOG.log(Level.INFO, "default OS & phone OS type match");
+                isCorrectOS = true;
+            }
+            else
+            {
+                LOG.log(Level.INFO, "default OS & phone OS type do NOT match");
+            }
+            
         }
         return isCorrectOS;
     }

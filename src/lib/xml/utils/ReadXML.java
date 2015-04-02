@@ -363,7 +363,7 @@ public class ReadXML {
      */
     public static String getNodePhoneTagValue(Node node, String tagName) {
         //ArrayList<String> phoneInfoList = new ArrayList<>();
-        String tagValue = "";
+        String tagValue = "NONE";
 
         if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
@@ -373,9 +373,11 @@ public class ReadXML {
 
                 Node phoneNode = xmlChilderenNodes.item(i);
                 if (phoneNode.getNodeType() == Node.ELEMENT_NODE && phoneNode.getNodeName().equals(tagName)) {
-                    tagValue = phoneNode.getNodeValue();
-                    LOG.log(Level.INFO, "tag name: {0}, tag value: {0}",tagValue );
-                    //System.out.println("Phone Tag: " + elementInfo);
+                    tagValue = phoneNode.getTextContent();
+                   
+                    LOG.log(Level.INFO, "tag name: {0}",phoneNode.getNodeName() );
+                    LOG.log(Level.INFO, "tag value: {0}",tagValue );
+                    System.out.println("Phone OSType value: " + tagValue);
                 }
             }
         }
