@@ -36,8 +36,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -70,11 +68,13 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String NOT_DEFAULT = "X";
     private final String ANDROID = "Android";
     private final String IOS = "iOS";
+    private final String OSTYPETAGNAME = "OSType";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
     private Node androidDefaultOSSection;
     private Node iOSDefaultOSSection;
+    private Node currentPhoneNode = null;
     private boolean defaultSectionCheckBoxselected;
     private boolean defaultOSSectionCheckBoxselected;
 
@@ -178,7 +178,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             @Override
             public void changed(ObservableValue observale, Object oldValue, Object newValue)
             {
-
+                //uncheck default checkboxes
+                defaultOSSectionCheckBox.setSelected(false);
+                defaultSectionCheckBox.setSelected(false);
+                
                 //make sure new value is not null (in case folder with no data selected)
                 FileProperty selectedFile;
                 if (newValue != null)
@@ -240,6 +243,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             @Override
             public void changed(ObservableValue observale, Object oldValue, Object newValue)
             {
+                //uncheck default checkboxes
+                defaultOSSectionCheckBox.setSelected(false);
+                defaultSectionCheckBox.setSelected(false);
+                
                 PhoneNameProperty selectedFile;
                 if (newValue != null)
                 {
@@ -274,12 +281,12 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 }
 
                 //Add phone info to text area
-                Node phoneNode = null;
+                
                 if (selectedXMLFilePath.contains(".xml"))
                 {
-                    phoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+                    currentPhoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
                 }
-                if (phoneNode != null)
+                if (currentPhoneNode != null)
                 {
 
                     //clear phone data
@@ -298,11 +305,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
                     phoneFeaturePropertyData.clear();
 
-                    allNodeElements = ReadXML.getAllNodeListElements(phoneNode);
+                    allNodeElements = ReadXML.getAllNodeListElements(currentPhoneNode);
                     //Return specific phone section as String ArrayList's
-                    ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(phoneNode);
-                    ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(phoneNode);
-                    ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(phoneNode);
+                    ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(currentPhoneNode);
+                    ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(currentPhoneNode);
+                    ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(currentPhoneNode);
                     LOG.log(Level.INFO, "Adding phone info to phone feature table");
                     setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false);
 
@@ -350,7 +357,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         {
             defaultOSSectionCheckBoxselected = defaultOSSectionCheckBox.isSelected();
             LOG.log(Level.INFO, "defaultOSSectionCheckBox selected: {0}", defaultOSSectionCheckBoxselected);
-            if (defaultOSSectionCheckBoxselected)
+            if (defaultOSSectionCheckBoxselected && isPhoneCorrectOS(currentPhoneNode, androidDefaultOSSection))
             {
                 LOG.log(Level.INFO, "Parsing default OS section Nodes");
                 androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
@@ -369,6 +376,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 setPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList,androidDefaultOSPhoneTagValueArrayList ,androidDefaultOSPhoneAttributeList , ANDROID + OS_DEFAULT, true);
             } else
             {
+                defaultOSSectionCheckBox.setSelected(false);
                 LOG.log(Level.INFO, "default OS section unselected - removing default section Node");
                 androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
                 iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
@@ -676,6 +684,21 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             Logger.getLogger(PhoneXMLLookupAboutWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return loadScreen;
+    }
+    
+    /*
+    * method to return if the selected phone is of the same OS as the Default OS
+    */
+    private boolean isPhoneCorrectOS (Node phoneNode,Node osDefaultNode)
+    {
+        boolean isCorrectOS = false;
+        if (phoneNode != null && osDefaultNode != null)
+        {
+            String phoneOS = ReadXML.getNodePhoneTagValue (phoneNode,OSTYPETAGNAME);
+            LOG.log(Level.INFO, "Phone OSType tag value: {0}",phoneOS );
+            isCorrectOS = true;
+        }
+        return isCorrectOS;
     }
 
     /*

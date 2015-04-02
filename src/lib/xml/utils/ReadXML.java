@@ -353,4 +353,34 @@ public class ReadXML {
         return sb.toString();
 
     }
+    
+    /**
+     * Method to return value of specific tag in a phone node (return first found)
+     *
+     * @param node the node to evaluate
+     * @param tagName the tag to get the value of
+     * @return String containing the value in the specific tag
+     */
+    public static String getNodePhoneTagValue(Node node, String tagName) {
+        //ArrayList<String> phoneInfoList = new ArrayList<>();
+        String tagValue = "";
+
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+            Element element = (Element) node;
+
+            NodeList xmlChilderenNodes = element.getChildNodes();
+            for (int i = 0; i < xmlChilderenNodes.getLength(); i++) {
+
+                Node phoneNode = xmlChilderenNodes.item(i);
+                if (phoneNode.getNodeType() == Node.ELEMENT_NODE && phoneNode.getNodeName().equals(tagName)) {
+                    tagValue = phoneNode.getNodeValue();
+                    LOG.log(Level.INFO, "tag name: {0}, tag value: {0}",tagValue );
+                    //System.out.println("Phone Tag: " + elementInfo);
+                }
+            }
+        }
+        return tagValue;
+    }
+    
+    
 }
