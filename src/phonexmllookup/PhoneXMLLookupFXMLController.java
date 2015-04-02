@@ -182,7 +182,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 //uncheck default checkboxes
                 defaultOSSectionCheckBox.setSelected(false);
                 defaultSectionCheckBox.setSelected(false);
-                
+
                 //make sure new value is not null (in case folder with no data selected)
                 FileProperty selectedFile;
                 if (newValue != null)
@@ -247,7 +247,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 //uncheck default checkboxes
                 defaultOSSectionCheckBox.setSelected(false);
                 defaultSectionCheckBox.setSelected(false);
-                
+
                 PhoneNameProperty selectedFile;
                 if (newValue != null)
                 {
@@ -282,7 +282,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 }
 
                 //Add phone info to text area
-                
                 if (selectedXMLFilePath.contains(".xml"))
                 {
                     currentPhoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
@@ -358,44 +357,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         {
             defaultOSSectionCheckBoxselected = defaultOSSectionCheckBox.isSelected();
             LOG.log(Level.INFO, "defaultOSSectionCheckBox selected: {0}", defaultOSSectionCheckBoxselected);
-            if (defaultOSSectionCheckBoxselected && isPhoneCorrectOS(currentPhoneNode, androidDefaultOSSection))
-            {
-                LOG.log(Level.INFO, "Parsing default OS section Nodes");
-                androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
-                iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
-                //return Android OS Default phone section as String ArrayList
-                ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
-                ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(androidDefaultOSSection);
-                ArrayList<String> androidDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(androidDefaultOSSection);
-
-                //return iOS OS Default phone section as String ArrayList
-                ArrayList<String> iOSDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(iOSDefaultOSSection);
-                ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(iOSDefaultOSSection);
-                ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
-
-                //setPhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList,iOSDefaultOSPhoneTagValueArrayList , iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true);
-                setPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList,androidDefaultOSPhoneTagValueArrayList ,androidDefaultOSPhoneAttributeList , ANDROID + OS_DEFAULT, true);
-            } else
-            {
-                defaultOSSectionCheckBox.setSelected(false);
-                LOG.log(Level.INFO, "default OS section unselected - removing default section Node");
-                androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
-                iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
-                //return Android OS Default phone section as String ArrayList
-                ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
-                ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(androidDefaultOSSection);
-                ArrayList<String> androidDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(androidDefaultOSSection);
-
-                //return iOS OS Default phone section as String ArrayList
-                ArrayList<String> iOSDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(iOSDefaultOSSection);
-                ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(iOSDefaultOSSection);
-                ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
-
-                removePhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true);
-                //removePhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true);
-
-            }
-
+            setDefaultOS();
         });
 
         //load files from folder path saved in prefrences
@@ -686,31 +648,74 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         }
         return loadScreen;
     }
-    
+
     /*
-    * method to return if the selected phone is of the same OS as the Default OS
-    */
-    private boolean isPhoneCorrectOS (Node phoneNode,Node osDefaultNode)
+     * method to return if the selected phone is of the same OS as the Default OS
+     */
+    private boolean isPhoneCorrectOS(Node phoneNode, Node osDefaultNode)
     {
         boolean isCorrectOS = false;
         if (phoneNode != null && osDefaultNode != null)
         {
-            String phoneOSType = ReadXML.getNodePhoneTagValue (phoneNode,OSTYPETAGNAME);
-            String defaultTagName = ReadXML.getNodePhoneTagValue (osDefaultNode,PHONE_NAME_TAG);
-            LOG.log(Level.INFO, "Phone OSType tag value: {0}",phoneOSType );
-            LOG.log(Level.INFO, "Default OS Name tag value: {0}",defaultTagName );
+            String phoneOSType = ReadXML.getNodePhoneTagValue(phoneNode, OSTYPETAGNAME);
+            String defaultTagName = ReadXML.getNodePhoneTagValue(osDefaultNode, PHONE_NAME_TAG);
+            LOG.log(Level.INFO, "Phone OSType tag value: {0}", phoneOSType);
+            LOG.log(Level.INFO, "Default OS Name tag value: {0}", defaultTagName);
             if (defaultTagName.contains(phoneOSType))
             {
                 LOG.log(Level.INFO, "default OS & phone OS type match");
                 isCorrectOS = true;
-            }
-            else
+            } else
             {
                 LOG.log(Level.INFO, "default OS & phone OS type do NOT match");
             }
-            
+
         }
         return isCorrectOS;
+    }
+
+    /*
+     * method to set default OS if valid or remove if not
+     */
+    private void setDefaultOS()
+    {
+        if (defaultOSSectionCheckBoxselected && isPhoneCorrectOS(currentPhoneNode, androidDefaultOSSection))
+        {
+            LOG.log(Level.INFO, "Parsing default OS section Nodes");
+            androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
+            iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
+            //return Android OS Default phone section as String ArrayList
+            ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
+            ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(androidDefaultOSSection);
+            ArrayList<String> androidDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(androidDefaultOSSection);
+
+            //return iOS OS Default phone section as String ArrayList
+            ArrayList<String> iOSDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(iOSDefaultOSSection);
+            ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(iOSDefaultOSSection);
+            ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
+
+            //setPhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList,iOSDefaultOSPhoneTagValueArrayList , iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true);
+            setPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true);
+        } else
+        {
+            defaultOSSectionCheckBox.setSelected(false);
+            LOG.log(Level.INFO, "default OS section unselected - removing default section Node");
+            androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
+            iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
+            //return Android OS Default phone section as String ArrayList
+            ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
+            ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(androidDefaultOSSection);
+            ArrayList<String> androidDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(androidDefaultOSSection);
+
+            //return iOS OS Default phone section as String ArrayList
+            ArrayList<String> iOSDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(iOSDefaultOSSection);
+            ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(iOSDefaultOSSection);
+            ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
+
+            removePhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true);
+            //removePhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true);
+
+        }
     }
 
     /*
