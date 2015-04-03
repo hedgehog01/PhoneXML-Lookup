@@ -34,7 +34,8 @@ import javafx.scene.text.TextFlow;
  */
 public class PhoneXMLLookupAboutWindowController implements Initializable {
     
-    private final String buildVersion = "0.0.1";
+    private final String BUILD_VERSION = "0.0.2";
+    private final String ABOUT_MESSAGE = "This software if in beta testing.\nIf you have any suggestion or issues, \nplease contact Nathan Randelman\nnathan.randelman@cellebrite.com";
 
     @FXML
     private Label titleLabel;
@@ -47,14 +48,14 @@ public class PhoneXMLLookupAboutWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        titleLabel.setText("PhoneXML Lookup - " + buildVersion);
+        titleLabel.setText("PhoneXML Lookup - " + BUILD_VERSION);
         titleLabel.setAlignment(Pos.CENTER);
         aboutTextArea.setEditable(false);
         
-        String msgS1 = "This software if in beta testing.\nIf you have any suggestion or issues, \nplease contact Nathan Randelman\nnathan.randelman@cellebrite.com";
+        
         Hyperlink link = new Hyperlink("nathan.randelman@cellebrite.com");
        
-        aboutTextArea.setText(msgS1 );
+        aboutTextArea.setText(ABOUT_MESSAGE );
         
         
     }
