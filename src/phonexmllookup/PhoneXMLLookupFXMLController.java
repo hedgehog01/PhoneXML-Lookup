@@ -326,38 +326,14 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         {
             defaultSectionCheckBoxselected = defaultSectionCheckBox.isSelected();
             LOG.log(Level.INFO, "defaultSectionCheckBox selected: {0}", defaultSectionCheckBoxselected);
-            if (defaultSectionCheckBoxselected)
-            {
-                LOG.log(Level.INFO, "Parsing default section Node");
-                defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
-                //Return default phone section as String ArrayList's
-                ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
-                ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
-                ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
-
-                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
-                setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
-
-            } else
-            {
-                LOG.log(Level.INFO, "default section unselected - removing default section Node");
-                defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
-                ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
-                ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
-                ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
-
-                removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
-                removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
-            }
-            phoneDefaultColumn.setSortType(TableColumn.SortType.ASCENDING);
-
+            setDefaultSection();
         });
 
         defaultOSSectionCheckBox.setOnAction((event) ->
         {
             defaultOSSectionCheckBoxselected = defaultOSSectionCheckBox.isSelected();
             LOG.log(Level.INFO, "defaultOSSectionCheckBox selected: {0}", defaultOSSectionCheckBoxselected);
-            setDefaultOS();
+            setDefaultOSSection();
         });
 
         //load files from folder path saved in prefrences
@@ -677,7 +653,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     /*
      * method to set default OS if valid or remove if not
      */
-    private void setDefaultOS()
+    private void setDefaultOSSection()
     {
         if (defaultOSSectionCheckBoxselected && isPhoneCorrectOS(currentPhoneNode, androidDefaultOSSection))
         {
@@ -715,6 +691,36 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             removePhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true);
             //removePhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true);
 
+        }
+    }
+
+    /*
+     * method to set default if valid or remove if not
+     */
+    private void setDefaultSection()
+    {
+        if (defaultSectionCheckBoxselected)
+        {
+            LOG.log(Level.INFO, "Parsing default section Node");
+            defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
+            //Return default phone section as String ArrayList's
+            ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
+            ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
+            ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
+
+            setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
+            setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
+
+        } else
+        {
+            LOG.log(Level.INFO, "default section unselected - removing default section Node");
+            defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
+            ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
+            ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
+            ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
+
+            removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
+            removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
         }
     }
 
