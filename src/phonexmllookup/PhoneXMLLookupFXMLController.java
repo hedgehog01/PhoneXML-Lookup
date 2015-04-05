@@ -70,6 +70,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String IOS = "iOS";
     private final String OSTYPETAGNAME = "OSType";
     private final String PHONE_NAME_TAG = "Name";
+    private final String NO_XML_SELECTED_TITLE = "No XML selected";
+    private final String NO_XML_SELECTED_BODY = "Please select an XML and try again...";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
@@ -301,6 +303,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                         {
                             LOG.log(Level.INFO, "new value is: {0}", newValue.toString());
                         }
+
                     }
 
                     phoneFeaturePropertyData.clear();
@@ -324,16 +327,37 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         //setup checkboxes
         defaultSectionCheckBox.setOnAction((event) ->
         {
-            defaultSectionCheckBoxselected = defaultSectionCheckBox.isSelected();
-            LOG.log(Level.INFO, "defaultSectionCheckBox selected: {0}", defaultSectionCheckBoxselected);
-            setDefaultSection();
+            //make sure xml selected to avoid null
+            if (!selectedXMLFilePath.equals(""))
+            {
+                defaultSectionCheckBoxselected = defaultSectionCheckBox.isSelected();
+                LOG.log(Level.INFO, "defaultSectionCheckBox selected: {0}", defaultSectionCheckBoxselected);
+                setDefaultSection();
+            } else
+            {
+                LOG.log(Level.INFO, "No XML selected...");
+                defaultSectionCheckBox.setSelected(false);
+                showErrorMessage(NO_XML_SELECTED_TITLE, NO_XML_SELECTED_BODY);
+            }
+
         });
 
         defaultOSSectionCheckBox.setOnAction((event) ->
         {
-            defaultOSSectionCheckBoxselected = defaultOSSectionCheckBox.isSelected();
-            LOG.log(Level.INFO, "defaultOSSectionCheckBox selected: {0}", defaultOSSectionCheckBoxselected);
-            setDefaultOSSection();
+            //make sure xml selected to avoid null
+            if (!selectedXMLFilePath.equals(""))
+            {
+                defaultOSSectionCheckBoxselected = defaultOSSectionCheckBox.isSelected();
+                LOG.log(Level.INFO, "defaultOSSectionCheckBox selected: {0}", defaultOSSectionCheckBoxselected);
+                setDefaultOSSection();
+            } else
+            {
+                LOG.log(Level.INFO, "No XML selected...");
+                defaultOSSectionCheckBox.setSelected(false);
+                showErrorMessage(NO_XML_SELECTED_TITLE, NO_XML_SELECTED_BODY);
+
+            }
+
         });
 
         //load files from folder path saved in prefrences
@@ -655,11 +679,14 @@ public final class PhoneXMLLookupFXMLController implements Initializable
      */
     private void setDefaultOSSection()
     {
+        //get default OS sections
+        androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
+        iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
+        
         if (defaultOSSectionCheckBoxselected && isPhoneCorrectOS(currentPhoneNode, androidDefaultOSSection))
         {
             LOG.log(Level.INFO, "Parsing default OS section Nodes");
-            androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
-            iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
+
             //return Android OS Default phone section as String ArrayList
             ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
             ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(androidDefaultOSSection);
@@ -676,8 +703,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         {
             defaultOSSectionCheckBox.setSelected(false);
             LOG.log(Level.INFO, "default OS section unselected - removing default section Node");
-            androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
-            iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
+            
             //return Android OS Default phone section as String ArrayList
             ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
             ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(androidDefaultOSSection);
@@ -709,7 +735,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
 
             setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
-            setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
 
         } else
         {
@@ -720,8 +745,20 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
 
             removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
-            removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
         }
+    }
+
+    /*
+     * method to show error messages
+     */
+    private void showErrorMessage(String title, String body)
+    {
+        LOG.log(Level.INFO, "Error message initiated. Error Title: {0}", title);
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(body);
+        alert.showAndWait();
     }
 
     /*
