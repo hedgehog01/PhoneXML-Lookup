@@ -212,29 +212,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
                 setPhoneNamePropertyData(phoneList);
 
-                /*
-                 //get default section node if default section checkbox selected
-                 if (defaultSectionCheckBoxselected)
-                 {
-                 defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
-                 }
-                 else
-                 {
-                 defaultSectionNode = null;
-                 }
-
-                 //get default OS section nodes if OS default section checkbox selected
-                 if (defaultOSSectionCheckBoxselected)
-                 {
-                 androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
-                 iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
-                 }
-                 else
-                 {
-                 androidDefaultOSSection = null;
-                 iOSDefaultOSSection = null;
-                 }
-                 */
             }
         });
 
@@ -246,9 +223,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             @Override
             public void changed(ObservableValue observale, Object oldValue, Object newValue)
             {
-                //uncheck default checkboxes
-                defaultOSSectionCheckBox.setSelected(false);
-                defaultSectionCheckBox.setSelected(false);
 
                 PhoneNameProperty selectedFile;
                 if (newValue != null)
@@ -316,6 +290,18 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     LOG.log(Level.INFO, "Adding phone info to phone feature table");
                     setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false);
 
+                    //set default OS & default on by default
+                    //Default OS
+                    defaultOSSectionCheckBox.setSelected(true);
+                    defaultSectionCheckBox.setSelected(true);
+                    defaultOSSectionCheckBoxselected = defaultOSSectionCheckBox.isSelected();
+                    LOG.log(Level.INFO, "defaultOSSectionCheckBox turned on automaticlly: {0}", defaultOSSectionCheckBoxselected);
+                    setDefaultOSSection();
+
+                    //Default section
+                    defaultSectionCheckBoxselected = defaultSectionCheckBox.isSelected();
+                    LOG.log(Level.INFO, "defaultSectionCheckBox turned on automaticlly: {0}", defaultSectionCheckBoxselected);
+                    setDefaultSection();
                 }
 
                 phoneNodeTextArea.setText("");
@@ -352,7 +338,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 //get phone OS type
                 String phoneOSType = ReadXML.getNodePhoneTagValue(currentPhoneNode, OSTYPETAGNAME);
                 LOG.log(Level.INFO, "phone OSType is: {0}", phoneOSType);
-                setDefaultOSSection(phoneOSType);
+                setDefaultOSSection();
             } else
             {
                 LOG.log(Level.INFO, "No XML selected...");
@@ -652,40 +638,41 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         return loadScreen;
     }
 
-    
     /*
      * method to return if the selected phone is of the same OS as the Default OS
      */
     /*
-    private boolean isPhoneCorrectOS(Node phoneNode, Node osDefaultNode)
-    {
-        boolean isCorrectOS = false;
-        if (phoneNode != null && osDefaultNode != null)
-        {
-            String phoneOSType = ReadXML.getNodePhoneTagValue(phoneNode, OSTYPETAGNAME);
-            String defaultTagName = ReadXML.getNodePhoneTagValue(osDefaultNode, PHONE_NAME_TAG);
-            LOG.log(Level.INFO, "Phone OSType tag value: {0}", phoneOSType);
-            LOG.log(Level.INFO, "Default OS Name tag value: {0}", defaultTagName);
-            if (defaultTagName.contains(phoneOSType))
-            {
-                LOG.log(Level.INFO, "default OS & phone OS type match");
-                isCorrectOS = true;
-            } else
-            {
-                LOG.log(Level.INFO, "default OS & phone OS type do NOT match");
-            }
+     private boolean isPhoneCorrectOS(Node phoneNode, Node osDefaultNode)
+     {
+     boolean isCorrectOS = false;
+     if (phoneNode != null && osDefaultNode != null)
+     {
+     String phoneOSType = ReadXML.getNodePhoneTagValue(phoneNode, OSTYPETAGNAME);
+     String defaultTagName = ReadXML.getNodePhoneTagValue(osDefaultNode, PHONE_NAME_TAG);
+     LOG.log(Level.INFO, "Phone OSType tag value: {0}", phoneOSType);
+     LOG.log(Level.INFO, "Default OS Name tag value: {0}", defaultTagName);
+     if (defaultTagName.contains(phoneOSType))
+     {
+     LOG.log(Level.INFO, "default OS & phone OS type match");
+     isCorrectOS = true;
+     } else
+     {
+     LOG.log(Level.INFO, "default OS & phone OS type do NOT match");
+     }
 
-        }
-        return isCorrectOS;
-    }
-    */
+     }
+     return isCorrectOS;
+     }
+     */
 
     /*
      * method to set default OS if valid or remove if not
      * @param defaultOSSelected is the OS that is to be retrieved from OS defaults
      */
-    private void setDefaultOSSection(String defaultOSSelected)
+    private void setDefaultOSSection()
     {
+        String defaultOSSelected = ReadXML.getNodePhoneTagValue(currentPhoneNode, OSTYPETAGNAME);
+        LOG.log(Level.INFO, "phone OSType is: {0}", defaultOSSelected);
         //get default OS sections
         if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(ANDROID))
         {
