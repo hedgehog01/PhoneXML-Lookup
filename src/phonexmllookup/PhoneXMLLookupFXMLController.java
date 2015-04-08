@@ -652,9 +652,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         return loadScreen;
     }
 
+    
     /*
      * method to return if the selected phone is of the same OS as the Default OS
      */
+    /*
     private boolean isPhoneCorrectOS(Node phoneNode, Node osDefaultNode)
     {
         boolean isCorrectOS = false;
@@ -676,6 +678,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         }
         return isCorrectOS;
     }
+    */
 
     /*
      * method to set default OS if valid or remove if not
