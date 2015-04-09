@@ -211,7 +211,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 //get list of phones in the specific XML
                 ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
                 setPhoneNamePropertyData(phoneList);
-
+                //Default old OS removal     
+                iOSDefaultOSSection = null;
+                androidDefaultOSSection = null;
             }
         });
 
@@ -291,14 +293,14 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false);
 
                     //set default OS & default on by default
-                    //Default OS
+                    //set new default OS
                     defaultOSSectionCheckBox.setSelected(true);
-                    defaultSectionCheckBox.setSelected(true);
                     defaultOSSectionCheckBoxselected = defaultOSSectionCheckBox.isSelected();
                     LOG.log(Level.INFO, "defaultOSSectionCheckBox turned on automaticlly: {0}", defaultOSSectionCheckBoxselected);
                     setDefaultOSSection();
 
                     //Default section
+                    defaultSectionCheckBox.setSelected(true);
                     defaultSectionCheckBoxselected = defaultSectionCheckBox.isSelected();
                     LOG.log(Level.INFO, "defaultSectionCheckBox turned on automaticlly: {0}", defaultSectionCheckBoxselected);
                     setDefaultSection();
