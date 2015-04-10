@@ -676,7 +676,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         String defaultOSSelected = ReadXML.getNodePhoneTagValue(currentPhoneNode, OSTYPETAGNAME);
         LOG.log(Level.INFO, "phone OSType is: {0}", defaultOSSelected);
         //get default OS sections
-        if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(ANDROID))
+        if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(ANDROID) && (ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT) != null) )
         {
             LOG.log(Level.INFO, "Get default OS section Node: {0} (Should be Android)", defaultOSSelected);
             androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
@@ -688,7 +688,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
             //set the default Android OS section
             setPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true);
-        } else if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(IOS))
+        } else if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(IOS) && (ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT)!=null))
         {
             LOG.log(Level.INFO, "Get default OS section Node: {0} (Should be iOS)", defaultOSSelected);
             iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
