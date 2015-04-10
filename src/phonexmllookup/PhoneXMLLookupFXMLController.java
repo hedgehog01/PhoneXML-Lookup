@@ -70,6 +70,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String IOS = "iOS";
     private final String OSTYPETAGNAME = "OSType";
     private final String PHONE_NAME_TAG = "Name";
+    private final String TAG_SOURCE_PHONE = "Phone";
+    private final String TAG_SOURCE_DEFAULT = "Default";
+    private final String TAG_SOURCE_DEFAULT_OS = "Default OS";
     private final String NO_XML_SELECTED_TITLE = "No XML selected";
     private final String NO_XML_SELECTED_BODY = "Please select an XML and try again...";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
@@ -139,6 +142,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     //Phone default column data
     @FXML
     private TableColumn<PhoneFeatureProperty, Boolean> phoneDefaultColumn;
+    
+    //Phone tag origin column
+    @FXML
+    private TableColumn<PhoneFeatureProperty, String> phoneFeatureTagOriginColumn;
 
     @FXML
     private Label selectFolderLabel;
@@ -171,6 +178,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         phoneFeatureContentColumn.setCellValueFactory(cellData -> cellData.getValue().elementAttributeProperty());
         phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
         phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
+        phoneFeatureTagOriginColumn.setCellValueFactory(cellData -> cellData.getValue().tagOriginProperty());
 
         //Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selected item property of file list
@@ -290,7 +298,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(currentPhoneNode);
                     ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(currentPhoneNode);
                     LOG.log(Level.INFO, "Adding phone info to phone feature table");
-                    setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false);
+                    setPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false,TAG_SOURCE_PHONE);
 
                     //set default OS & default on by default
                     //set new default OS
@@ -308,7 +316,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
                 phoneNodeTextArea.setText("");
                 phoneNodeTextArea.setText(allNodeElements.toString());
-
+                
             }
         });
 
@@ -523,11 +531,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     /*
      * method to set the phone feature data into the phone feature table
      */
-    private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection)
+    private void setPhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection, String tagSource)
     {
         //create list from the inputed strings
         ObservableList<PhoneFeatureProperty> phoneFeatureTempData;
-        phoneFeatureTempData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection);
+        phoneFeatureTempData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection,tagSource);
         // if the list is default section, remove duplicated tags 
         //take care of Default section - remove tags already in phone and Default OS
         if (defaultSection && (defaultType.equals(DEFAULT_SECTION)) && (phoneFeaturePropertyData.size() > 0))
@@ -583,11 +591,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         return sortedPhoneTagNameData;
     }
 
-    private void removePhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection)
+    private void removePhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection, String tagSource)
     {
         LOG.log(Level.INFO, "remove phone feature data");
         ObservableList<PhoneFeatureProperty> phonesDataToRemove = FXCollections.observableArrayList();
-        phonesDataToRemove.addAll(PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection));
+        phonesDataToRemove.addAll(PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection,tagSource));
         ObservableList<PhoneFeatureProperty> tempPhoneFeaturePropertyData = FXCollections.observableArrayList();
         tempPhoneFeaturePropertyData.addAll(phoneFeaturePropertyData);
         LOG.log(Level.INFO, "phonesDataToRemove size: {0}", phonesDataToRemove.size());
@@ -687,7 +695,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             ArrayList<String> androidDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(androidDefaultOSSection);
 
             //set the default Android OS section
-            setPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true);
+            setPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true,TAG_SOURCE_DEFAULT_OS);
         } else if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(IOS) && (ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT)!=null))
         {
             LOG.log(Level.INFO, "Get default OS section Node: {0} (Should be iOS)", defaultOSSelected);
@@ -699,7 +707,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
 
             //set the default Android OS section
-            setPhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true);
+            setPhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true,TAG_SOURCE_DEFAULT_OS);
         } else
         {
             LOG.log(Level.INFO, "Mo match found for OSType: {0} or checkbox unchecked", defaultOSSelected);
@@ -715,8 +723,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(iOSDefaultOSSection);
             ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
 
-            removePhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true);
-            removePhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true);
+            removePhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true,TAG_SOURCE_DEFAULT_OS);
+            removePhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true,TAG_SOURCE_DEFAULT_OS);
         }
     }
 
@@ -734,7 +742,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
             ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
 
-            setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
+            setPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true,TAG_SOURCE_DEFAULT);
 
         } else
         {
@@ -744,7 +752,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
             ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
 
-            removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true);
+            removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true,TAG_SOURCE_DEFAULT);
         }
     }
 

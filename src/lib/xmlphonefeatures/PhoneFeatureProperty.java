@@ -37,7 +37,9 @@ public final class PhoneFeatureProperty implements Serializable
     private final StringProperty elementValue = new SimpleStringProperty("");
     private final BooleanProperty defaultSection = new SimpleBooleanProperty(false);
     private final StringProperty defaultType = new SimpleStringProperty("");
+    private final StringProperty tagOrigin = new SimpleStringProperty("");
 
+   
     /**
      * Default constructor - sets all class instances to null
      */
@@ -68,14 +70,16 @@ public final class PhoneFeatureProperty implements Serializable
      * @param attributes the element content
      * @param defaultType the element default type (OS default, regular default etc)
      * @param defaultSection is the element from default section
+     * @param tagSource is the tag source (Phone, Default, Default OS)
      */
-    public PhoneFeatureProperty(String elementName, String elmentValue, String attributes,String defaultType, boolean defaultSection)
+    public PhoneFeatureProperty(String elementName, String elmentValue, String attributes,String defaultType, boolean defaultSection, String tagSource)
     {
         setElementName(elementName);
         setElementValue(elmentValue);
         setElementAttribute(attributes);
         setDefaultType(defaultType);
         setDefaultSection(defaultSection);
+        setTagOrigin(tagSource);
     }
 
     /**
@@ -225,6 +229,33 @@ public final class PhoneFeatureProperty implements Serializable
     {
         return defaultType;
     }
+    
+    /**
+     * method to return tag origin
+     * @return the tag origin
+     */
+    public String getTagOrigin()
+    {
+        return tagOrigin.get();
+    }
+
+    /**
+     * method to set tag origin
+     * @param value the tag origin
+     */
+    public void setTagOrigin(String value)
+    {
+        tagOrigin.set(value);
+    }
+
+    /**
+     * method to return the tag origin property
+     * @return the tag origin property
+     */
+    public StringProperty tagOriginProperty()
+    {
+        return tagOrigin;
+    }
 
     /**
      * method to print the property as String
@@ -235,7 +266,7 @@ public final class PhoneFeatureProperty implements Serializable
     public String toString()
     {
         StringBuilder phoneFeatureString = new StringBuilder("");
-        phoneFeatureString.append("PhoneFeatureProperty{" + "elementName=").append(elementName.get()).append("elementContent= ").append(elementValue.get()).append("element attrubute=").append(elementAttribute.get()).append("default= ").append(defaultSection.get()).append('}');
+        phoneFeatureString.append("PhoneFeatureProperty{" + "elementName=").append(elementName.get()).append("elementContent= ").append(elementValue.get()).append("element attrubute=").append(elementAttribute.get()).append("default= ").append(defaultSection.get()).append("tag origin= ").append('}');
 
         return phoneFeatureString.toString();
     }

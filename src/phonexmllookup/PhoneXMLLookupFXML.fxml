@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1275.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phonexmllookup.PhoneXMLLookupFXMLController">
+<AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="775.0" prefWidth="1412.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="phonexmllookup.PhoneXMLLookupFXMLController">
    <children>
       <MenuBar prefHeight="25.0" prefWidth="1246.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
@@ -46,8 +46,9 @@
                            <columns>
                               <TableColumn fx:id="phoneFeatureModuleNameColumn" editable="false" prefWidth="234.0" text="Tag" />
                               <TableColumn fx:id="phoneFeatureModuleValueColumn" editable="false" prefWidth="428.0" text="Value" />
-                              <TableColumn fx:id="phoneFeatureContentColumn" editable="false" prefWidth="134.0" text="Attribute" />
-                              <TableColumn fx:id="phoneDefaultColumn" editable="false" prefWidth="71.0" text="Default" />
+                              <TableColumn fx:id="phoneFeatureContentColumn" editable="false" prefWidth="163.0" text="Attribute" />
+                              <TableColumn fx:id="phoneFeatureTagOriginColumn" prefWidth="112.0" text="Tag Origin" />
+                              <TableColumn fx:id="phoneDefaultColumn" editable="false" prefWidth="66.0" text="Default" />
                            </columns>
                         </TableView>
                         <TableView fx:id="phoneNameTableView" layoutX="154.0" layoutY="150.0" prefHeight="553.0" prefWidth="251.0" AnchorPane.bottomAnchor="13.0" AnchorPane.topAnchor="150.0">
