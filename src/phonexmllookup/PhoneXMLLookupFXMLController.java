@@ -179,6 +179,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
         phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
         phoneFeatureTagOriginColumn.setCellValueFactory(cellData -> cellData.getValue().tagOriginProperty());
+        
 
         //Clipboard clipboard = Clipboard.getSystemClipboard();
         // add listner to your tableview selected item property of file list
@@ -316,6 +317,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
                 phoneNodeTextArea.setText("");
                 phoneNodeTextArea.setText(allNodeElements.toString());
+                
+                //set default sort to tag origin column
+                phoneFeatureTagOriginColumn.setSortType(TableColumn.SortType.ASCENDING);
+                phoneFeatureTableView.getSortOrder().add(phoneFeatureTagOriginColumn);
                 
             }
         });
@@ -586,7 +591,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
         // Bind the SortedList comparator to the TableView comparator.
         sortedPhoneTagNameData.comparatorProperty().bind(phoneFeatureTableView.comparatorProperty());
-
+        
         //=======End of filtered phone name setup======
         return sortedPhoneTagNameData;
     }
