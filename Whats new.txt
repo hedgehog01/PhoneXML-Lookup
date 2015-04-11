@@ -1,1 +1,6 @@
-Whats new - Version 0.0.2
+PhoneXML Lookup - Version 0.0.2
+Whats new:
+1. Default & Default OS sections selected by default (if available)
+2. New icon
+3. Bug fixes
+4. Updated installer

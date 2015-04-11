@@ -25,6 +25,8 @@ OutputBaseFilename=PhoneXML_Lookup_setup
 SetupIconFile=C:\Users\Hedgehog01\Documents\NetBeansProjects\PhoneXML-Lookup\src\resources\images\installer_images2.ico
 Compression=lzma
 SolidCompression=yes
+DisableDirPage=auto
+DisableProgramGroupPage=auto
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
