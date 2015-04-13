@@ -73,6 +73,55 @@
                      </children></AnchorPane>
             </content>
           </Tab>
+            <Tab text="Search by tag value">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="347.0" layoutY="37.0" mnemonicParsing="false" text="Search" />
+                        <TextField layoutX="14.0" layoutY="37.0" prefHeight="25.0" prefWidth="326.0" promptText="Enter tag value..." />
+                        <Label layoutX="15.0" layoutY="14.0" prefHeight="17.0" prefWidth="108.0" text="Enter tag value" />
+                        <Label layoutX="423.0" layoutY="41.0" text="Number of phones found:" />
+                        <Label layoutX="582.0" layoutY="41.0" />
+                        <TableView layoutX="14.0" layoutY="96.0" prefHeight="157.0" prefWidth="702.0">
+                          <columns>
+                            <TableColumn prefWidth="331.0" text="XML" />
+                            <TableColumn minWidth="0.0" prefWidth="370.0" text="Model" />
+                          </columns>
+                        </TableView>
+                        <TableView fx:id="phoneFeatureTableView1" editable="true" layoutX="15.0" layoutY="256.0" prefHeight="453.0" prefWidth="700.0">
+                           <columns>
+                              <TableColumn fx:id="phoneFeatureModuleNameColumn1" editable="false" prefWidth="231.0" text="Tag" />
+                              <TableColumn fx:id="phoneFeatureModuleValueColumn1" editable="false" prefWidth="316.0" text="Value" />
+                              <TableColumn fx:id="phoneFeatureContentColumn1" editable="false" prefWidth="152.0" text="Attribute" />
+                           </columns>
+                        </TableView>
+                        <TableView fx:id="phoneFeatureTableView11" editable="true" layoutX="720.0" layoutY="256.0" prefHeight="453.0" prefWidth="678.0">
+                           <columns>
+                              <TableColumn fx:id="phoneFeatureModuleNameColumn11" editable="false" prefWidth="206.0" text="Tag" />
+                              <TableColumn fx:id="phoneFeatureModuleValueColumn11" editable="false" prefWidth="347.0" text="Value" />
+                              <TableColumn fx:id="phoneFeatureContentColumn11" editable="false" prefWidth="124.0" text="Attribute" />
+                           </columns>
+                        </TableView>
+                        <TableView layoutX="719.0" layoutY="96.0" prefHeight="157.0" prefWidth="678.0">
+                           <columns>
+                              <TableColumn prefWidth="355.0" text="XML" />
+                              <TableColumn minWidth="6.0" prefWidth="322.0" text="Model" />
+                           </columns>
+                        </TableView>
+                        <Label layoutX="281.0" layoutY="65.0" prefHeight="27.0" prefWidth="133.0" text="Select Phone 1:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="1007.0" layoutY="65.0" prefHeight="27.0" prefWidth="130.0" text="Select Phone 2:">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>
