@@ -1,6 +1,15 @@
 PhoneXML Lookup - Version 0.0.2
+
+Before installing please make sure to uninstall the previous version!
+
 Whats new:
 1. Default & Default OS sections selected by default (if available)
-2. New icon
-3. Bug fixes
-4. Updated installer
+2. Sort now corrected to show default areas on top by default
+3. Better Default section handling
+3. New icon
+4. Bug fixes
+5. Updated installer
+
+For any issues or ideas send email to Nathan Randelman.
+
+Enjoy!
