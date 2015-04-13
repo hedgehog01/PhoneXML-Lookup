@@ -8,6 +8,7 @@ package lib.xml.utils;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,9 +25,11 @@ import org.xml.sax.SAXException;
 
 /**
  * Class to handle read related operations on XML files
+ *
  * @author nathanr
  */
-public class ReadXML {
+public class ReadXML
+{
 
     private static final Logger LOG = Logger.getLogger(ReadXML.class.getName());
 
@@ -36,12 +39,14 @@ public class ReadXML {
      * @param XMLName the XML to get results from (full XML path)
      * @param mainElement the main XML element (PHONE)
      * @param tagName the tag to get results from
-     * @return list of all tag text from the requested tags 
+     * @return list of all tag text from the requested tags
      */
-    public static ArrayList<String> getAllXMLTagTextByName(String XMLName, String mainElement, String tagName) {
+    public static ArrayList<String> getAllXMLTagTextByName(String XMLName, String mainElement, String tagName)
+    {
         //the list to be returned
         ArrayList<String> list = new ArrayList<>();
-        try {
+        try
+        {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = docFactory.newDocumentBuilder();
             Document doc = builder.parse(XMLName);
@@ -52,19 +57,24 @@ public class ReadXML {
                     + doc.getDocumentElement().getNodeName());
 
             NodeList nodeList = doc.getElementsByTagName(mainElement);
-            for (int i = 0; i < nodeList.getLength(); i++) {
+            for (int i = 0; i < nodeList.getLength(); i++)
+            {
                 Node node = nodeList.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                if (node.getNodeType() == Node.ELEMENT_NODE)
+                {
                     Element element = (Element) node;
 
                     NodeList xmlChilderenNodes = element.getChildNodes();
                     //String phoneName = getNodeTextInfo(xmlChilderenNodes, tagName);
                     //list.add(phoneName);
-                    for (int j = 0; j < xmlChilderenNodes.getLength(); j++) {
+                    for (int j = 0; j < xmlChilderenNodes.getLength(); j++)
+                    {
                         Node n = xmlChilderenNodes.item(j);
-                        if (n.getNodeType() == Node.ELEMENT_NODE) {
+                        if (n.getNodeType() == Node.ELEMENT_NODE)
+                        {
                             Element name = (Element) n;
-                            if (name.getTagName().equals(tagName) && !(name.hasAttributes())) {
+                            if (name.getTagName().equals(tagName) && !(name.hasAttributes()))
+                            {
                                 list.add(name.getTextContent());
                                 System.out.println("Adding " + name.getTextContent());
                             }
@@ -73,7 +83,8 @@ public class ReadXML {
 
                 }
             }
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
+        } catch (ParserConfigurationException | SAXException | IOException ex)
+        {
             LOG.log(Level.SEVERE, "Exception:{0}", ex);
         }
 
@@ -83,13 +94,17 @@ public class ReadXML {
     /*
      * private method that prints all tag text info from specific tag in all XML
      */
-    private static String getNodeTextInfo(NodeList xmlChilderenNodes, String tagName) {
+    private static String getNodeTextInfo(NodeList xmlChilderenNodes, String tagName)
+    {
         String tagText = "";
-        for (int i = 0; i < xmlChilderenNodes.getLength(); i++) {
+        for (int i = 0; i < xmlChilderenNodes.getLength(); i++)
+        {
             Node n = xmlChilderenNodes.item(i);
-            if (n.getNodeType() == Node.ELEMENT_NODE) {
+            if (n.getNodeType() == Node.ELEMENT_NODE)
+            {
                 Element name = (Element) n;
-                if (name.getTagName().equals(tagName)) {
+                if (name.getTagName().equals(tagName))
+                {
                     tagText = name.getTextContent();
                     System.out.println("Adding " + tagText);
                 }
@@ -99,22 +114,57 @@ public class ReadXML {
         return tagText;
     }
 
+    public ArrayList<Node> getAllNodesByTagValue(ArrayList<String> fileList, String mainElement, String tagValue, String xmlType)
+    {
+        ArrayList<Node> phoneList = new ArrayList<>();
+        LOG.log(Level.INFO, "getting all nodes for value: {0}, and XML type: {1}", new Object[]
+        {
+            tagValue, xmlType
+        });
+        if (fileList != null && !(fileList.isEmpty()))
+        {
+            //check if XML requested is dump or logical XML
+            if (fileList.contains(xmlType))
+            {
+                for (int i = 0; i < fileList.size(); i++)
+                {
+                    LOG.log(Level.INFO, "File read: {0}", fileList.get(i));
+                    phoneList.add(getAllNodeElements(fileList.get(i), mainElement, tagValue));
+                }
+            } else
+            {
+                for (int i = 0; i < fileList.size(); i++)
+                {
+                    LOG.log(Level.INFO, "File read: {0}", fileList.get(i));
+                    phoneList.add(getAllNodeElements(fileList.get(i), mainElement, tagValue));
+                }
+            }
+        }
+
+        LOG.log(Level.INFO, "Number of nodes found: {0}", phoneList.size());
+        return phoneList;
+    }
+
     /**
-     * Method to search for specific Node by text in one of it's elements - returns the node if found.
+     * Method to search for specific Node by text in one of it's elements -
+     * returns the node if found.
      *
      * @param XMLName the XML to get results from (full XML path)
      * @param mainElement the main XML element (PHONE)
-     * @param tagText the text in the tag to find by (MUST BE LONGER THAN 2
+     * @param tagValue the text in the tag to find by (MUST BE LONGER THAN 2
      * CHARS)
      * @return the phone Node or null if not found
      */
-    public static Node getAllNodeElements(String XMLName, String mainElement, String tagText) {
+    public static Node getAllNodeElements(String XMLName, String mainElement, String tagValue)
+    {
         //StringBuilder phoneInfo = new StringBuilder();
         Node phoneInfoNode = null;
 
         //Make sure search text is not
-        if (tagText !=null && tagText.length() > 2) {
-            try {
+        if (tagValue != null && tagValue.length() > 2)
+        {
+            try
+            {
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = docFactory.newDocumentBuilder();
                 Document doc = builder.parse(XMLName);
@@ -123,27 +173,31 @@ public class ReadXML {
                 doc.getDocumentElement().normalize();
 
                 NodeList nodeList = doc.getElementsByTagName(mainElement);
-                for (int i = 0; i < nodeList.getLength(); i++) {
+                for (int i = 0; i < nodeList.getLength(); i++)
+                {
                     Node node = nodeList.item(i);
-                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    if (node.getNodeType() == Node.ELEMENT_NODE)
+                    {
                         Element element = (Element) node;
 
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         // check if text exist in the node if so it's node we want.
-                        
-                            
-                        if ((getNodeByTagText(xmlChilderenNodes, tagText))) {
+
+                        if ((getNodeByTagText(xmlChilderenNodes, tagValue)))
+                        {
                             phoneInfoNode = node;
                         }
-                        
+
                     }
                 }
 
-            } catch (ParserConfigurationException | SAXException | IOException ex) {
+            } catch (ParserConfigurationException | SAXException | IOException ex)
+            {
                 LOG.log(Level.SEVERE, null, ex);
             }
 
-        } else {
+        } else
+        {
             System.out.println("Text to be search was too short or null");
         }
         return phoneInfoNode;
@@ -157,17 +211,21 @@ public class ReadXML {
      * @param tagText the text in the tag (MUST BE LONGER THAN 2 CHARS)
      * return true if found
      */
-    private static boolean getNodeByTagText(NodeList xmlChilderenNodes, String tagText) {
+    private static boolean getNodeByTagText(NodeList xmlChilderenNodes, String tagText)
+    {
 
         boolean textExists = false;
-        for (int j = 0; j < xmlChilderenNodes.getLength(); j++) {
+        for (int j = 0; j < xmlChilderenNodes.getLength(); j++)
+        {
             Node n = xmlChilderenNodes.item(j);
-            if (n.getNodeType() == Node.ELEMENT_NODE) {
+            if (n.getNodeType() == Node.ELEMENT_NODE)
+            {
                 Element name = (Element) n;
                 //check if wanted text exists in the element
                 //LOG.log(Level.INFO, "Tag content: {0}",name.getTextContent());
                 String tempName = name.getTextContent();
-                if (tempName.equals(tagText)) {
+                if (tempName.equals(tagText))
+                {
                     LOG.log(Level.INFO, "TagText {0} found", tagText);
                     textExists = true;
                 }
@@ -177,27 +235,35 @@ public class ReadXML {
     }
 
     /**
-     * Method to return all a node Elements and attributes as StringBuilder object
+     * Method to return all a node Elements and attributes as StringBuilder
+     * object
      *
      * @param node the node to evaluate
-     * @return StringBuilder containing element tag name + tag text +element attributes
+     * @return StringBuilder containing element tag name + tag text +element
+     * attributes
      */
-    public static StringBuilder getAllNodeListElements(Node node) {
+    public static StringBuilder getAllNodeListElements(Node node)
+    {
         StringBuilder sb = new StringBuilder();
-        if (node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node.getNodeType() == Node.ELEMENT_NODE)
+        {
             Element element = (Element) node;
 
             NodeList xmlChilderenNodes = element.getChildNodes();
-            for (int i = 0; i < xmlChilderenNodes.getLength(); i++) {
+            for (int i = 0; i < xmlChilderenNodes.getLength(); i++)
+            {
 
                 Node phoneNode = xmlChilderenNodes.item(i);
-                if (phoneNode.getNodeType() == Node.ELEMENT_NODE) {
+                if (phoneNode.getNodeType() == Node.ELEMENT_NODE)
+                {
 
                     NamedNodeMap attributesNodeMap = phoneNode.getAttributes();
                     StringBuilder attributeSB = new StringBuilder("");
-                    if (attributesNodeMap != null && attributesNodeMap.getLength() > 0) {
+                    if (attributesNodeMap != null && attributesNodeMap.getLength() > 0)
+                    {
 
-                        for (int j = 0; j < attributesNodeMap.getLength(); j++) {
+                        for (int j = 0; j < attributesNodeMap.getLength(); j++)
+                        {
                             attributeSB.append(" ").append(attributesNodeMap.item(j).getNodeName()).append("=\"").append(attributesNodeMap.item(j).getNodeValue()).append("\"");
                         }
 
@@ -221,17 +287,21 @@ public class ReadXML {
      * @param node the node to evaluate
      * @return ArrayList of String containing XML element tag names
      */
-    public static ArrayList<String> getNodePhoneTagNameList(Node node) {
+    public static ArrayList<String> getNodePhoneTagNameList(Node node)
+    {
         ArrayList<String> phoneInfoList = new ArrayList<>();
 
-        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE)
+        {
             Element element = (Element) node;
 
             NodeList xmlChilderenNodes = element.getChildNodes();
-            for (int i = 0; i < xmlChilderenNodes.getLength(); i++) {
+            for (int i = 0; i < xmlChilderenNodes.getLength(); i++)
+            {
 
                 Node phoneNode = xmlChilderenNodes.item(i);
-                if (phoneNode.getNodeType() == Node.ELEMENT_NODE) {
+                if (phoneNode.getNodeType() == Node.ELEMENT_NODE)
+                {
                     String elementInfo = ("<" + phoneNode.getNodeName() + ">");
                     //System.out.println("Phone Tag Name: " + elementInfo);
                     phoneInfoList.add(elementInfo);
@@ -241,7 +311,6 @@ public class ReadXML {
         }
         return phoneInfoList;
     }
-    
 
     /**
      * Method to return all a node phone tag values
@@ -249,17 +318,21 @@ public class ReadXML {
      * @param node the node to evaluate
      * @return ArrayList of String containing element XML tag values
      */
-    public static ArrayList<String> getNodePhoneTagValueList(Node node) {
+    public static ArrayList<String> getNodePhoneTagValueList(Node node)
+    {
         ArrayList<String> phoneInfoList = new ArrayList<>();
 
-        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE)
+        {
             Element element = (Element) node;
 
             NodeList xmlChilderenNodes = element.getChildNodes();
-            for (int i = 0; i < xmlChilderenNodes.getLength(); i++) {
+            for (int i = 0; i < xmlChilderenNodes.getLength(); i++)
+            {
 
                 Node phoneNode = xmlChilderenNodes.item(i);
-                if (phoneNode.getNodeType() == Node.ELEMENT_NODE) {
+                if (phoneNode.getNodeType() == Node.ELEMENT_NODE)
+                {
                     String elementInfo = (phoneNode.getTextContent());
                     //System.out.println("Phone Tag: " + elementInfo);
                     phoneInfoList.add(elementInfo);
@@ -275,26 +348,32 @@ public class ReadXML {
      * Method to return all a node phone Attributes
      *
      * @param node the node to evaluate
-     * @return ArrayList of String containing XML element attributes if exists and
-     * empty if not
+     * @return ArrayList of String containing XML element attributes if exists
+     * and empty if not
      */
-    public static ArrayList<String> getNodePhoneAttributeList(Node node) {
+    public static ArrayList<String> getNodePhoneAttributeList(Node node)
+    {
         ArrayList<String> attributeList = new ArrayList<>();
 
-        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE)
+        {
             Element element = (Element) node;
 
             NodeList xmlChilderenNodes = element.getChildNodes();
-            for (int i = 0; i < xmlChilderenNodes.getLength(); i++) {
+            for (int i = 0; i < xmlChilderenNodes.getLength(); i++)
+            {
 
                 Node phoneNode = xmlChilderenNodes.item(i);
-                if (phoneNode.getNodeType() == Node.ELEMENT_NODE) {
+                if (phoneNode.getNodeType() == Node.ELEMENT_NODE)
+                {
 
                     NamedNodeMap attributesNodeMap = phoneNode.getAttributes();
                     StringBuilder attributeSB = new StringBuilder("");
-                    if (attributesNodeMap != null && attributesNodeMap.getLength() > 0) {
+                    if (attributesNodeMap != null && attributesNodeMap.getLength() > 0)
+                    {
 
-                        for (int j = 0; j < attributesNodeMap.getLength(); j++) {
+                        for (int j = 0; j < attributesNodeMap.getLength(); j++)
+                        {
                             attributeSB.append(" ").append(attributesNodeMap.item(j).getNodeName()).append("=\"").append(attributesNodeMap.item(j).getNodeValue()).append("\"");
                         }
 
@@ -311,78 +390,93 @@ public class ReadXML {
         }
         return attributeList;
     }
-    
+
     /**
      * method to print all XML elements and attributes
+     *
      * @param xmlPath the full path to the XML
      * @param mainElement the main element of the XML (PHONE)
      */
-    public static void printElementsAndAttributes(String xmlPath, String mainElement) {
-        try {
+    public static void printElementsAndAttributes(String xmlPath, String mainElement)
+    {
+        try
+        {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             org.w3c.dom.Document doc = db.parse(xmlPath);
             NodeList base = doc.getElementsByTagName(mainElement);
 
-            for (int j = 0; j < base.getLength(); j++) {
+            for (int j = 0; j < base.getLength(); j++)
+            {
                 Node basenode = base.item(j);
                 System.out.println(basenode.getNodeName() + getAttributesAsString(basenode.getAttributes()));
                 NodeList children = basenode.getChildNodes();
-                for (int i = 0; i < children.getLength(); i++) {
+                for (int i = 0; i < children.getLength(); i++)
+                {
                     Node item = children.item(i);
-                    if (item.getNodeType() == Node.ELEMENT_NODE) {
+                    if (item.getNodeType() == Node.ELEMENT_NODE)
+                    {
                         System.out.println(item.getNodeName() + getAttributesAsString(item.getAttributes()));
 
                     }
                 }
             }
-        } catch (SAXException ex) {
+        } catch (SAXException ex)
+        {
             Logger.getLogger(ReadXML.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (IOException ex)
+        {
             Logger.getLogger(ReadXML.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
+        } catch (ParserConfigurationException ex)
+        {
             Logger.getLogger(ReadXML.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    private static String getAttributesAsString(NamedNodeMap attributes) {
+    private static String getAttributesAsString(NamedNodeMap attributes)
+    {
         StringBuilder sb = new StringBuilder("\n");
-        for (int j = 0; j < attributes.getLength(); j++) {
+        for (int j = 0; j < attributes.getLength(); j++)
+        {
             sb.append("\t- ").append(attributes.item(j).getNodeName()).append(": ").append(attributes.item(j).getNodeValue()).append("\n");
         }
         return sb.toString();
 
     }
-    
+
     /**
-     * Method to return value of specific tag in a phone node (return first found)
+     * Method to return value of specific tag in a phone node (return first
+     * found)
      *
      * @param node the node to evaluate
      * @param tagName the tag to get the value of
      * @return String containing the value in the specific tag
      */
-    public static String getNodePhoneTagValue(Node node, String tagName) {
+    public static String getNodePhoneTagValue(Node node, String tagName)
+    {
         //ArrayList<String> phoneInfoList = new ArrayList<>();
         String tagValue = "NONE";
 
-        if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE)
+        {
             Element element = (Element) node;
 
             NodeList xmlChilderenNodes = element.getChildNodes();
-            for (int i = 0; i < xmlChilderenNodes.getLength(); i++) {
+            for (int i = 0; i < xmlChilderenNodes.getLength(); i++)
+            {
 
                 Node phoneNode = xmlChilderenNodes.item(i);
-                if (phoneNode.getNodeType() == Node.ELEMENT_NODE && phoneNode.getNodeName().equals(tagName)) {
+                if (phoneNode.getNodeType() == Node.ELEMENT_NODE && phoneNode.getNodeName().equals(tagName))
+                {
                     tagValue = phoneNode.getTextContent();
-                   
-                    LOG.log(Level.INFO, "tag name: {0}",phoneNode.getNodeName() );
-                    LOG.log(Level.INFO, "tag value: {0}",tagValue );
+
+                    LOG.log(Level.INFO, "tag name: {0}", phoneNode.getNodeName());
+                    LOG.log(Level.INFO, "tag value: {0}", tagValue);
                     System.out.println("Phone OSType value: " + tagValue);
                 }
             }
         }
         return tagValue;
     }
-    
-    
+
 }

@@ -80,9 +80,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private Node defaultSectionNode;
     private Node androidDefaultOSSection;
     private Node iOSDefaultOSSection;
-    private Node currentPhoneNode = null;
+    private Node currentPhoneNode;
     private boolean defaultSectionCheckBoxselected;
     private boolean defaultOSSectionCheckBoxselected;
+    private ArrayList<String> fileList;
 
     //about window settings
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
@@ -168,6 +169,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        
+        currentPhoneNode = null;
+        
         //set up filename colomn
         xmlNameColumn.setCellValueFactory(cellData -> cellData.getValue().fileNameProperty());
         //set up phone name column
@@ -418,7 +422,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
      */
     private void getFileList(String folderPath)
     {
-        ArrayList<String> fileList = FileHandler.getFileList(folderPath);
+        fileList = FileHandler.getFileList(folderPath);
         if (!fileList.isEmpty())
         {
             selectFolderLabel.setText("");
