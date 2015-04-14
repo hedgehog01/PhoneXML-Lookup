@@ -114,30 +114,23 @@ public class ReadXML
         return tagText;
     }
 
-    public ArrayList<Node> getAllNodesByTagValue(ArrayList<String> fileList, String mainElement, String tagValue, String xmlType)
+    /**
+     * method to return a list of nodes that have a specific value in a tag
+     * @param fileList list of xml files
+     * @param mainElement the main XMl element
+     * @param tagValue the tag value to be searched
+     * @return a list of nodes that contain the value
+     */
+    public ArrayList<Node> getAllNodesByTagValue(ArrayList<String> fileList, String mainElement, String tagValue)
     {
         ArrayList<Node> phoneList = new ArrayList<>();
-        LOG.log(Level.INFO, "getting all nodes for value: {0}, and XML type: {1}", new Object[]
-        {
-            tagValue, xmlType
-        });
+        LOG.log(Level.INFO, "getting all nodes for value: {0}, and XML type: {1}", new Object[] {tagValue});
         if (fileList != null && !(fileList.isEmpty()))
         {
-            //check if XML requested is dump or logical XML
-            if (fileList.contains(xmlType))
+            for (String fileList1 : fileList)
             {
-                for (int i = 0; i < fileList.size(); i++)
-                {
-                    LOG.log(Level.INFO, "File read: {0}", fileList.get(i));
-                    phoneList.add(getAllNodeElements(fileList.get(i), mainElement, tagValue));
-                }
-            } else
-            {
-                for (int i = 0; i < fileList.size(); i++)
-                {
-                    LOG.log(Level.INFO, "File read: {0}", fileList.get(i));
-                    phoneList.add(getAllNodeElements(fileList.get(i), mainElement, tagValue));
-                }
+                LOG.log(Level.INFO, "File read: {0}", fileList1);
+                phoneList.add(getAllNodeElements(fileList1, mainElement, tagValue));
             }
         }
 
