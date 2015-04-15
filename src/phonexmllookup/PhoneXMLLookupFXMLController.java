@@ -78,6 +78,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String TAG_SOURCE_DEFAULT_OS = "Default OS";
     private final String NO_XML_SELECTED_TITLE = "No XML selected";
     private final String NO_XML_SELECTED_BODY = "Please select an XML and try again...";
+    private final String TABLE_ROW_COPIED_Title = "Row Copied";
+    private final String TABLE_ROW_COPIED_BODY = "Table Row copied to your Clipboard:\n\n";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
@@ -187,7 +189,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
         phoneFeatureTagOriginColumn.setCellValueFactory(cellData -> cellData.getValue().tagOriginProperty());
 
-        //set double click on phonefeature table row to copy info to the clipord
+        //set double click on phonefeature table row to copy info to the clipboard
         phoneFeatureTableView.setRowFactory(tv ->
         {
             TableRow<PhoneFeatureProperty> row = new TableRow<>();
@@ -201,6 +203,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     ClipboardContent content = new ClipboardContent();
                     content.putString(rowData.toString());
                     clipboard.setContent(content);
+                    
+                    showInfoMessage(TABLE_ROW_COPIED_Title, TABLE_ROW_COPIED_BODY + rowData.toString());
                 }
             });
             return row;
@@ -793,6 +797,19 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     {
         LOG.log(Level.INFO, "Error message initiated. Error Title: {0}", title);
         Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(body);
+        alert.showAndWait();
+    }
+    
+    /*
+     * method to show information messages
+     */
+    private void showInfoMessage(String title, String body)
+    {
+        LOG.log(Level.INFO, "Info message initiated. Info Title: {0}", title);
+        Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(body);
