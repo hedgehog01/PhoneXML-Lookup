@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  *
  * @author nathanr
  */
-public class ReadXML
+public final class ReadXML
 {
 
     private static final Logger LOG = Logger.getLogger(ReadXML.class.getName());

@@ -266,7 +266,7 @@ public final class PhoneFeatureProperty implements Serializable
     public String toString()
     {
         StringBuilder phoneFeatureString = new StringBuilder("");
-        phoneFeatureString.append("PhoneFeatureProperty{" + "elementName=").append(elementName.get()).append("elementContent= ").append(elementValue.get()).append("element attrubute=").append(elementAttribute.get()).append("default= ").append(defaultSection.get()).append("tag origin= ").append('}');
+        phoneFeatureString.append("Tag Name: ").append(elementName.get()).append("\nTag Value: ").append(elementValue.get()).append("\nTag attribute:").append(elementAttribute.get()).append("\nTag origin: ").append(tagOrigin.get()).append("\ndefault: ").append(defaultSection.get());
 
         return phoneFeatureString.toString();
     }
