@@ -32,6 +32,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -188,8 +189,12 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
         phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
         phoneFeatureTagOriginColumn.setCellValueFactory(cellData -> cellData.getValue().tagOriginProperty());
-
+        
+        phoneFeatureTableView.getSelectionModel().setCellSelectionEnabled(true);
+        //String t= phoneFeatureTableView.getFocusModel().getFocusedCell();
+        
         //set double click on phonefeature table row to copy info to the clipboard
+        /*
         phoneFeatureTableView.setRowFactory(tv ->
         {
             TableRow<PhoneFeatureProperty> row = new TableRow<>();
@@ -209,6 +214,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             });
             return row;
         });
+        /*
+        
+        
+        */
 
                 //copy selection to clipboard
                 /*
@@ -218,6 +227,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
          content.putString(selectedFile.toString());
          clipboard.setContent(content);
          */
+        
+        
         // add listner to your tableview selected item property of file list
         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
         {
