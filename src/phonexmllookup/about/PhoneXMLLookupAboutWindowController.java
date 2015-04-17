@@ -34,7 +34,7 @@ import javafx.scene.text.TextFlow;
  */
 public class PhoneXMLLookupAboutWindowController implements Initializable {
     
-    private final String BUILD_VERSION = "0.0.2";
+    private final String BUILD_VERSION = "0.0.3";
     private final String ABOUT_MESSAGE = "This software if in beta testing.\nIf you have any suggestion or issues, \nplease contact Nathan Randelman\nnathan.randelman@cellebrite.com";
 
     @FXML

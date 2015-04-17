@@ -34,8 +34,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
@@ -81,6 +83,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String NO_XML_SELECTED_BODY = "Please select an XML and try again...";
     private final String TABLE_ROW_COPIED_Title = "Row Copied";
     private final String TABLE_ROW_COPIED_BODY = "Table Row copied to your Clipboard:\n\n";
+    private final String INFO_LABEL_INTRO = "Value copied to clipboard:\n";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
@@ -172,6 +175,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     @FXML
     private CheckBox defaultOSSectionCheckBox;
 
+    @FXML
+    private Label infoLabel;
+
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -189,54 +195,42 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
         phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
         phoneFeatureTagOriginColumn.setCellValueFactory(cellData -> cellData.getValue().tagOriginProperty());
-        
+
         phoneFeatureTableView.getSelectionModel().setCellSelectionEnabled(true);
         //String t= phoneFeatureTableView.getFocusModel().getFocusedCell();
-        
-        //set double click on phonefeature table row to copy info to the clipboard
-        /*
-        phoneFeatureTableView.setRowFactory(tv ->
+
+        //set listener for copy of selected cell to clipboard
+        phoneFeatureTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
         {
-            TableRow<PhoneFeatureProperty> row = new TableRow<>();
-            row.setOnMouseClicked(event ->
+            @Override
+            public void changed(ObservableValue observableValue, Object oldValue, Object newValue)
             {
-                if (event.getClickCount() == 2 && (!row.isEmpty()))
+                //Check whether item is selected and set value of selected item to Label
+                if (phoneFeatureTableView.getSelectionModel().getSelectedItem() != null)
                 {
-                    PhoneFeatureProperty rowData = row.getItem();
-                    LOG.log(Level.INFO, "Row double clicked and copied to clipord: {0}", rowData);
+                    TableViewSelectionModel selectionModel = phoneFeatureTableView.getSelectionModel();
+                    ObservableList selectedCells = selectionModel.getSelectedCells();
+                    TablePosition tablePosition = (TablePosition) selectedCells.get(0);
+                    Object val = tablePosition.getTableColumn().getCellData(newValue);
+                    LOG.log(Level.INFO, "Cell select and copied to clipboard: {0}", val);
                     Clipboard clipboard = Clipboard.getSystemClipboard();
                     ClipboardContent content = new ClipboardContent();
-                    content.putString(rowData.toString());
+                    content.putString(val.toString());
                     clipboard.setContent(content);
-                    
-                    showInfoMessage(TABLE_ROW_COPIED_Title, TABLE_ROW_COPIED_BODY + rowData.toString());
+                    infoLabel.setText(INFO_LABEL_INTRO + val);
                 }
-            });
-            return row;
+            }
         });
-        /*
-        
-        
-        */
 
-                //copy selection to clipboard
-                /*
-         //Clipboard clipboard = Clipboard.getSystemClipboard();
-         ClipboardContent content = new ClipboardContent();
-         // make sure you override toString in UserClass
-         content.putString(selectedFile.toString());
-         clipboard.setContent(content);
-         */
-        
-        
-        // add listner to your tableview selected item property of file list
         fileListTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
         {
-            // this method will be called whenever user selected row
 
             @Override
             public void changed(ObservableValue observale, Object oldValue, Object newValue)
             {
+                //reset infoLabel on file change
+                infoLabel.setText("");
+
                 //uncheck default checkboxes
                 defaultOSSectionCheckBox.setSelected(false);
                 defaultSectionCheckBox.setSelected(false);
@@ -274,6 +268,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             @Override
             public void changed(ObservableValue observale, Object oldValue, Object newValue)
             {
+                //reset infoLabel on file change
+                infoLabel.setText("");
 
                 PhoneNameProperty selectedFile;
                 if (newValue != null)
@@ -813,7 +809,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         alert.setContentText(body);
         alert.showAndWait();
     }
-    
+
     /*
      * method to show information messages
      */

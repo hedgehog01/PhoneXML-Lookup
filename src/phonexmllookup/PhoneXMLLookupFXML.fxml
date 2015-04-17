@@ -61,6 +61,11 @@
                               <TableColumn editable="false" prefWidth="148.0" resizable="false" text="XML List" fx:id="xmlNameColumn" />
                            </columns>
                         </TableView>
+                        <Label fx:id="infoLabel" layoutX="670.0" layoutY="73.0" prefHeight="75.0" prefWidth="741.0" textFill="#1032da">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
             </content>
