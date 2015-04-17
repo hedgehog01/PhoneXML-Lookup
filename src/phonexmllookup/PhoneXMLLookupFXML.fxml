@@ -127,6 +127,19 @@
                   </AnchorPane>
               </content>
             </Tab>
+            <Tab text="Search by Vendor">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="655.0" layoutY="246.0" text="TBD">
+                           <font>
+                              <Font size="36.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>
