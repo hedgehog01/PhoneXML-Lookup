@@ -70,14 +70,6 @@
                   </AnchorPane>
             </content>
           </Tab>
-          <Tab text="Phone plain">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <TextArea fx:id="phoneNodeTextArea" editable="false" prefHeight="696.0" prefWidth="859.0" />
-                     </children></AnchorPane>
-            </content>
-          </Tab>
             <Tab text="Search by tag value">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -93,18 +85,18 @@
                             <TableColumn fx:id="phone1ModelColumn" minWidth="0.0" prefWidth="370.0" text="Model" />
                           </columns>
                         </TableView>
-                        <TableView fx:id="phone1FeaturesTableView" editable="true" layoutX="15.0" layoutY="256.0" prefHeight="453.0" prefWidth="700.0">
+                        <TableView fx:id="phone1FeaturesTableView" editable="true" layoutX="15.0" layoutY="256.0" prefHeight="453.0" prefWidth="700.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="256.0">
                            <columns>
-                              <TableColumn fx:id="phoneFeatureModuleNameColumn1" editable="false" prefWidth="231.0" text="Tag" />
-                              <TableColumn fx:id="phoneFeatureModuleValueColumn1" editable="false" prefWidth="316.0" text="Value" />
-                              <TableColumn fx:id="phoneFeatureContentColumn1" editable="false" prefWidth="152.0" text="Attribute" />
+                              <TableColumn fx:id="phone1TagNameColumn" editable="false" prefWidth="231.0" text="Tag" />
+                              <TableColumn fx:id="phone1TagValueColumn" editable="false" prefWidth="316.0" text="Value" />
+                              <TableColumn fx:id="phone1TagAttributeColumn" editable="false" prefWidth="152.0" text="Attribute" />
                            </columns>
                         </TableView>
-                        <TableView fx:id="phone2FeaturesTableView" editable="true" layoutX="720.0" layoutY="256.0" prefHeight="453.0" prefWidth="678.0">
+                        <TableView fx:id="phone2FeaturesTableView" editable="true" layoutX="720.0" layoutY="256.0" prefHeight="453.0" prefWidth="678.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="720.0" AnchorPane.topAnchor="256.0">
                            <columns>
-                              <TableColumn fx:id="phoneFeatureModuleNameColumn11" editable="false" prefWidth="206.0" text="Tag" />
-                              <TableColumn fx:id="phoneFeatureModuleValueColumn11" editable="false" prefWidth="347.0" text="Value" />
-                              <TableColumn fx:id="phoneFeatureContentColumn11" editable="false" prefWidth="124.0" text="Attribute" />
+                              <TableColumn fx:id="phone2TagNameColumn" editable="false" prefWidth="206.0" text="Tag" />
+                              <TableColumn fx:id="phone2TagValueColumn" editable="false" prefWidth="347.0" text="Value" />
+                              <TableColumn fx:id="phone2TagAttributeColumn" editable="false" prefWidth="124.0" text="Attribute" />
                            </columns>
                         </TableView>
                         <TableView fx:id="phone2VendorModelTableView" layoutX="719.0" layoutY="96.0" prefHeight="157.0" prefWidth="678.0">
@@ -113,12 +105,12 @@
                               <TableColumn fx:id="phone2ModelColumn" minWidth="6.0" prefWidth="322.0" text="Model" />
                            </columns>
                         </TableView>
-                        <Label layoutX="281.0" layoutY="65.0" prefHeight="27.0" prefWidth="133.0" text="Select Phone 1:">
+                        <Label layoutX="281.0" layoutY="65.0" prefHeight="27.0" prefWidth="133.0" text="Phone 1">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="1007.0" layoutY="65.0" prefHeight="27.0" prefWidth="130.0" text="Select Phone 2:">
+                        <Label layoutX="1007.0" layoutY="65.0" prefHeight="27.0" prefWidth="130.0" text="Phone 2">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -142,6 +134,14 @@
                   </AnchorPane>
               </content>
             </Tab>
+          <Tab text="Phone plain">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextArea fx:id="phoneNodeTextArea" editable="false" prefHeight="696.0" prefWidth="859.0" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
         </tabs>
       </TabPane>
    </children>
