@@ -119,17 +119,17 @@ public class ReadXMLTest {
     }
 
     /**
-     * Test of getAllNodeElements method, of class ReadXML.
+     * Test of getNodeByTagValue method, of class ReadXML.
      */
     @Ignore
     @Test
-    public void testGetAllNodeElements() {
+    public void testGetNodeByTagValue() {
         System.out.println("getAllNodeElements");
         String XMLName = "SamsungGSM.xml";
         String mainElement = "PHONE";
         String tagText = "GT-P6800 Galaxy Tab 7.7";
         Node expResult = null;
-        Node tempNode = ReadXML.getAllNodeElements(XMLName, mainElement, tagText);
+        Node tempNode = ReadXML.getNodeByTagValue(XMLName, mainElement, tagText);
         String result = tempNode.getFirstChild().getNodeName();
         
         System.out.println ("Result: " + result);

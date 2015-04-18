@@ -32,10 +32,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextArea;
@@ -56,6 +55,8 @@ import lib.xmlphonefeatures.PhoneFeatureProperty;
 import lib.xmlphonename.PhoneNameCreator;
 import lib.xmlphonename.PhoneNameHandler;
 import lib.xmlphonename.PhoneNameProperty;
+import lib.xmlvendormodel.VendorModelCreator;
+import lib.xmlvendormodel.VendorModelProperty;
 import org.w3c.dom.Node;
 import phonexmllookup.about.PhoneXMLLookupAboutWindowController;
 
@@ -81,8 +82,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String TAG_SOURCE_DEFAULT_OS = "Default OS";
     private final String NO_XML_SELECTED_TITLE = "No XML selected";
     private final String NO_XML_SELECTED_BODY = "Please select an XML and try again...";
-    private final String TABLE_ROW_COPIED_Title = "Row Copied";
-    private final String TABLE_ROW_COPIED_BODY = "Table Row copied to your Clipboard:\n\n";
     private final String INFO_LABEL_INTRO = "Value copied to clipboard:\n";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
@@ -109,6 +108,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     //phone feature table data
     private ObservableList<PhoneFeatureProperty> phoneFeaturePropertyData = FXCollections.observableArrayList();
 
+    //phone feature table data
+    private ObservableList<VendorModelProperty> vendorModelPropertyData = FXCollections.observableArrayList();
+
     @FXML
     private AnchorPane mainAnchor;
 
@@ -129,6 +131,12 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     @FXML
     private TableView<PhoneNameProperty> phoneNameTableView;
+
+    @FXML
+    private TableView<VendorModelProperty> phone1VendorModelTableView;
+
+    @FXML
+    private TableView<VendorModelProperty> phone2VendorModelTableView;
 
     //file name column data
     @FXML
@@ -157,6 +165,22 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     @FXML
     private TableColumn<PhoneFeatureProperty, String> phoneFeatureTagOriginColumn;
 
+    //phone 1 vendor column
+    @FXML
+    private TableColumn<VendorModelProperty, String> phone1VendorColumn;
+
+    //phone 2 vendor column
+    @FXML
+    private TableColumn<VendorModelProperty, String> phone2VendorColumn;
+
+    //phone 1 Model column
+    @FXML
+    private TableColumn<VendorModelProperty, String> phone1ModelColumn;
+
+    //phone 2 Model column
+    @FXML
+    private TableColumn<VendorModelProperty, String> phone2ModelColumn;
+
     @FXML
     private Label selectFolderLabel;
 
@@ -178,6 +202,12 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     @FXML
     private Label infoLabel;
 
+    @FXML
+    private TextField searchByTagTextField;
+
+    @FXML
+    private ProgressBar searchByValueProgressBar;
+
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
@@ -195,6 +225,13 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         phoneFeatureModuleValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
         phoneDefaultColumn.setCellValueFactory(cellData -> cellData.getValue().defaultSectionProperty());
         phoneFeatureTagOriginColumn.setCellValueFactory(cellData -> cellData.getValue().tagOriginProperty());
+
+        //set up Vendor model tables (phone 1)
+        phone1VendorColumn.setCellValueFactory(cellData -> cellData.getValue().xmlNameProperty());
+        phone1ModelColumn.setCellValueFactory(cellData -> cellData.getValue().modelNameProperty());
+        //set up Vendor model tables (phone 2)
+        phone2VendorColumn.setCellValueFactory(cellData -> cellData.getValue().xmlNameProperty());
+        phone2ModelColumn.setCellValueFactory(cellData -> cellData.getValue().modelNameProperty());
 
         phoneFeatureTableView.getSelectionModel().setCellSelectionEnabled(true);
         //String t= phoneFeatureTableView.getFocusModel().getFocusedCell();
@@ -307,7 +344,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 //Add phone info to text area
                 if (selectedXMLFilePath.contains(".xml"))
                 {
-                    currentPhoneNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
+                    currentPhoneNode = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, selectedPhone);
                 }
                 if (currentPhoneNode != null)
                 {
@@ -437,8 +474,14 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         //save folder path to prefrences
         LOG.log(Level.INFO, "attempting to save folder path to prefrences");
         PrefrencesHandler.setFolderPath(folderPath);
-
-        String filePathStr = folderPath.getPath();
+        String filePathStr = "";
+        if (folderPath.getPath() != null)
+        {
+            filePathStr = folderPath.getPath();
+        } else
+        {
+            LOG.log(Level.WARNING, "Folder path appears to be null");
+        }
 
         LOG.log(Level.INFO, "Folder path selected is: {0}", filePathStr);
 
@@ -690,33 +733,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     }
 
     /*
-     * method to return if the selected phone is of the same OS as the Default OS
-     */
-    /*
-     private boolean isPhoneCorrectOS(Node phoneNode, Node osDefaultNode)
-     {
-     boolean isCorrectOS = false;
-     if (phoneNode != null && osDefaultNode != null)
-     {
-     String phoneOSType = ReadXML.getNodePhoneTagValue(phoneNode, OSTYPETAGNAME);
-     String defaultTagName = ReadXML.getNodePhoneTagValue(osDefaultNode, PHONE_NAME_TAG);
-     LOG.log(Level.INFO, "Phone OSType tag value: {0}", phoneOSType);
-     LOG.log(Level.INFO, "Default OS Name tag value: {0}", defaultTagName);
-     if (defaultTagName.contains(phoneOSType))
-     {
-     LOG.log(Level.INFO, "default OS & phone OS type match");
-     isCorrectOS = true;
-     } else
-     {
-     LOG.log(Level.INFO, "default OS & phone OS type do NOT match");
-     }
-
-     }
-     return isCorrectOS;
-     }
-     */
-
-    /*
      * method to set default OS if valid or remove if not
      * @param defaultOSSelected is the OS that is to be retrieved from OS defaults
      */
@@ -725,10 +741,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         String defaultOSSelected = ReadXML.getNodePhoneTagValue(currentPhoneNode, OSTYPETAGNAME);
         LOG.log(Level.INFO, "phone OSType is: {0}", defaultOSSelected);
         //get default OS sections
-        if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(ANDROID) && (ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT) != null))
+        if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(ANDROID) && (ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT) != null))
         {
             LOG.log(Level.INFO, "Get default OS section Node: {0} (Should be Android)", defaultOSSelected);
-            androidDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
+            androidDefaultOSSection = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
 
             //return Android OS Default phone section as String ArrayList
             ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
@@ -737,10 +753,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
             //set the default Android OS section
             setPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true, TAG_SOURCE_DEFAULT_OS);
-        } else if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(IOS) && (ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT) != null))
+        } else if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(IOS) && (ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT) != null))
         {
             LOG.log(Level.INFO, "Get default OS section Node: {0} (Should be iOS)", defaultOSSelected);
-            iOSDefaultOSSection = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
+            iOSDefaultOSSection = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
 
             //return iOS OS Default phone section as String ArrayList
             ArrayList<String> iOSDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(iOSDefaultOSSection);
@@ -777,7 +793,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         if (defaultSectionCheckBoxselected)
         {
             LOG.log(Level.INFO, "Parsing default section Node");
-            defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
+            defaultSectionNode = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
             //Return default phone section as String ArrayList's
             ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
             ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
@@ -788,7 +804,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         } else
         {
             LOG.log(Level.INFO, "default section unselected - removing default section Node");
-            defaultSectionNode = ReadXML.getAllNodeElements(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
+            defaultSectionNode = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
             ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
             ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
             ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
@@ -821,6 +837,59 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         alert.setHeaderText(null);
         alert.setContentText(body);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void searchByTagValue()
+    {
+        LOG.log(Level.INFO, "Search by tag value called");
+        searchByValueProgressBar.setProgress(0.0);
+        if (searchByTagTextField.getText() != null && fileList != null && !(searchByTagTextField.getText().isEmpty()) && !(fileList.isEmpty()))
+        {
+            //clear existing data in the tables
+            vendorModelPropertyData.clear();
+
+            Thread t1 = new Thread(new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
+                    LOG.log(Level.INFO, "Starting search by tag value Thread");
+                    String folderPath = folderPathTextField.getText();
+                    for (int i = 0; i < fileList.size(); i++)
+                    {
+                        LOG.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]
+                        {
+                            folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
+                        });
+                        ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText());
+                        for (int j = 0; j < modelInFile.size(); j++)
+                        {
+
+                            String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
+                            LOG.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
+                            {
+                                fileList.get(i), phoneName
+                            });
+                            VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
+                        }
+                    }
+                }
+
+            });
+            t1.start();
+            try
+            {
+                t1.join();
+            } catch (InterruptedException ex)
+            {
+                LOG.log(Level.SEVERE, "Search byvalue thread join exception:\n {0}", ex);
+            }
+            LOG.log (Level.INFO, "Done getting search by value info, number of phones found: {0}",vendorModelPropertyData.size() );
+            phone1VendorModelTableView.setItems(vendorModelPropertyData);
+            phone2VendorModelTableView.setItems(vendorModelPropertyData);
+        }
     }
 
     /*

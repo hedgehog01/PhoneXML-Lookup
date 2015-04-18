@@ -130,17 +130,17 @@ public final class ReadXML
             for (String fileList1 : fileList)
             {
                 LOG.log(Level.INFO, "File read: {0}", fileList1);
-                phoneList.add(getAllNodeElements(fileList1, mainElement, tagValue));
+                //phoneList.add(getNodeListByTagValue(fileList1, mainElement, tagValue));
             }
         }
 
         LOG.log(Level.INFO, "Number of nodes found: {0}", phoneList.size());
         return phoneList;
     }
-
+    
     /**
      * Method to search for specific Node by text in one of it's elements -
-     * returns the node if found.
+     * returns the first node with the value if found.
      *
      * @param XMLName the XML to get results from (full XML path)
      * @param mainElement the main XML element (PHONE)
@@ -148,7 +148,66 @@ public final class ReadXML
      * CHARS)
      * @return the phone Node or null if not found
      */
-    public static Node getAllNodeElements(String XMLName, String mainElement, String tagValue)
+    public static ArrayList<Node> getNodeListByTagValue(String XMLName, String mainElement, String tagValue)
+    {
+        //StringBuilder phoneInfo = new StringBuilder();
+        ArrayList<Node> phoneInfoNode = new ArrayList<>();
+
+        //Make sure search text is not
+        if (tagValue != null && tagValue.length() > 2)
+        {
+            try
+            {
+                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = docFactory.newDocumentBuilder();
+                Document doc = builder.parse(XMLName);
+
+                // normalize text representation
+                doc.getDocumentElement().normalize();
+
+                NodeList nodeList = doc.getElementsByTagName(mainElement);
+                for (int i = 0; i < nodeList.getLength(); i++)
+                {
+                    Node node = nodeList.item(i);
+                    if (node.getNodeType() == Node.ELEMENT_NODE)
+                    {
+                        Element element = (Element) node;
+
+                        NodeList xmlChilderenNodes = element.getChildNodes();
+                        // check if text exist in the node if so it's node we want.
+
+                        if ((isValueInNodeChildren(xmlChilderenNodes, tagValue)))
+                        {
+                            phoneInfoNode.add(node);
+                        }
+
+                    }
+                }
+
+            } catch (ParserConfigurationException | SAXException | IOException ex)
+            {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+
+        } else
+        {
+            System.out.println("Text to be search was too short or null");
+        }
+        return phoneInfoNode;
+    }
+    
+    
+    /**
+     * Method to search for specific Node by text in one of it's elements -
+     * returns the first node with the value if found.
+     *
+     * @param XMLName the XML to get results from (full XML path)
+     * @param mainElement the main XML element (PHONE)
+     * @param tagValue the text in the tag to find by (MUST BE LONGER THAN 2
+     * CHARS)
+     * @return the phone Node or null if not found
+     */
+    public static Node getNodeByTagValue(String XMLName, String mainElement, String tagValue)
     {
         //StringBuilder phoneInfo = new StringBuilder();
         Node phoneInfoNode = null;
@@ -176,7 +235,7 @@ public final class ReadXML
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         // check if text exist in the node if so it's node we want.
 
-                        if ((getNodeByTagText(xmlChilderenNodes, tagValue)))
+                        if ((isValueInNodeChildren(xmlChilderenNodes, tagValue)))
                         {
                             phoneInfoNode = node;
                         }
@@ -197,14 +256,14 @@ public final class ReadXML
     }
 
     /*
-     * Method to search for specific text the node elements.
+     * Method to search for specific value the node child elements.
      *
      * @param XMLName the XML to get results from (full XML path)
      * @param mainElement the main XML element (PHONE)
-     * @param tagText the text in the tag (MUST BE LONGER THAN 2 CHARS)
-     * return true if found
+     * @param tagValue the value in the tag (MUST BE LONGER THAN 2 CHARS)
+     * return true value exists in the Node
      */
-    private static boolean getNodeByTagText(NodeList xmlChilderenNodes, String tagText)
+    private static boolean isValueInNodeChildren(NodeList xmlChilderenNodes, String tagValue)
     {
 
         boolean textExists = false;
@@ -217,9 +276,9 @@ public final class ReadXML
                 //check if wanted text exists in the element
                 //LOG.log(Level.INFO, "Tag content: {0}",name.getTextContent());
                 String tempName = name.getTextContent();
-                if (tempName.equals(tagText))
+                if (tempName.equals(tagValue))
                 {
-                    LOG.log(Level.INFO, "TagText {0} found", tagText);
+                    LOG.log(Level.INFO, "TagText {0} found", tagValue);
                     textExists = true;
                 }
             }
