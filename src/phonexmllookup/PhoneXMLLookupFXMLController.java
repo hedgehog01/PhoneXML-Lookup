@@ -237,6 +237,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     @FXML
     private ProgressBar searchByValueProgressBar;
+    
+    @FXML
+    private Label searchByValueResultLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -1014,12 +1017,14 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private void searchByTagValue()
     {
         LOG.log(Level.INFO, "Search by tag value called");
+        searchByValueResultLabel.setText("");
         searchByValueProgressBar.setProgress(0.0);
         if (searchByTagTextField.getText() != null && fileList != null && !(searchByTagTextField.getText().isEmpty()) && !(fileList.isEmpty()))
         {
             //clear existing data in the tables
             vendorModelPropertyData.clear();
-
+            phone1FeatureData.clear();
+            phone2FeatureData.clear();
             Thread t1 = new Thread(new Runnable()
             {
 
@@ -1058,6 +1063,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 LOG.log(Level.SEVERE, "Search byvalue thread join exception:\n {0}", ex);
             }
             LOG.log(Level.INFO, "Done getting search by value info, number of phones found: {0}", vendorModelPropertyData.size());
+            Integer searchResultInt = vendorModelPropertyData.size();
+            searchByValueResultLabel.setText(searchResultInt.toString());
             phone1VendorModelTableView.setItems(vendorModelPropertyData);
             phone2VendorModelTableView.setItems(vendorModelPropertyData);
         }
