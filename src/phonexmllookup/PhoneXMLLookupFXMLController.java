@@ -1056,6 +1056,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private void searchByTagValue()
     {
         //reset progress bar
+        searchByValueProgressBar.progressProperty().unbind();
+        LOG.log(Level.INFO, "Unbind the seach by tag progress bar");
+        searchByValueProgressBar.setProgress(0);
+        LOG.log(Level.INFO, "Progress: {0}",searchByValueProgressBar.getProgress());
         
         if (searchByTagTextField.getText() != null && fileList != null && !(searchByTagTextField.getText().isEmpty()) && !(fileList.isEmpty()))
         {
@@ -1064,7 +1068,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             vendorModelPropertyData.clear();
             phone1FeatureData.clear();
             phone2FeatureData.clear();
-            searchByValueProgressBar.progressProperty().unbind();
+            //searchByValueProgressBar.progressProperty().unbind();
             //searchByValueProgressBar.setProgress(0.0);
             //setup Task worker
             searchByTagValueWorker = searchByTagValueTask();
@@ -1075,7 +1079,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             {
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
                 {
-                    System.out.println(newValue);
+                    System.out.println("searchByTagValueWorker: " + newValue);
                 }
             });
 
