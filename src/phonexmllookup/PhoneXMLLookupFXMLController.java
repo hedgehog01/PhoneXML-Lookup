@@ -20,6 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -94,7 +95,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private boolean defaultSectionCheckBoxselected;
     private boolean defaultOSSectionCheckBoxselected;
     private ArrayList<String> fileList;
-
+    private Task searchByTagValueWorker;
+    private Integer searchResultInt;
     //about window settings
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
     private final boolean ABOUT_WIN_SET_RESIZABLE = false;
@@ -194,7 +196,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     //phone 2 Model column
     @FXML
     private TableColumn<VendorModelProperty, String> phone2ModelColumn;
-    
+
     //phone1 feature columns
     @FXML
     private TableColumn<PhoneFeatureProperty, String> phone1TagNameColumn;
@@ -202,7 +204,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private TableColumn<PhoneFeatureProperty, String> phone1TagValueColumn;
     @FXML
     private TableColumn<PhoneFeatureProperty, String> phone1TagAttributeColumn;
-    
+
     //phone1 feature columns
     @FXML
     private TableColumn<PhoneFeatureProperty, String> phone2TagNameColumn;
@@ -237,7 +239,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     @FXML
     private ProgressBar searchByValueProgressBar;
-    
+
     @FXML
     private Label searchByValueResultLabel;
 
@@ -262,11 +264,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         //set up Vendor model table columns (phone 1)
         phone1VendorColumn.setCellValueFactory(cellData -> cellData.getValue().xmlNameProperty());
         phone1ModelColumn.setCellValueFactory(cellData -> cellData.getValue().modelNameProperty());
-        
+
         //set up Vendor model table columns (phone 2)
         phone2VendorColumn.setCellValueFactory(cellData -> cellData.getValue().xmlNameProperty());
         phone2ModelColumn.setCellValueFactory(cellData -> cellData.getValue().modelNameProperty());
-        
+
         //setup phone 1 features table columns
         phone1TagNameColumn.setCellValueFactory(cellData -> cellData.getValue().elementNameProperty());
         phone1TagValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
@@ -275,7 +277,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         phone2TagNameColumn.setCellValueFactory(cellData -> cellData.getValue().elementNameProperty());
         phone2TagValueColumn.setCellValueFactory(cellData -> cellData.getValue().elementValueProperty());
         phone2TagAttributeColumn.setCellValueFactory(cellData -> cellData.getValue().elementAttributeProperty());
-        
+
         phoneFeatureTableView.getSelectionModel().setCellSelectionEnabled(true);
         //String t= phoneFeatureTableView.getFocusModel().getFocusedCell();
 
@@ -484,7 +486,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             }
 
         });
-        
+
         //Search by value - phone 2 listener
         phone2VendorModelTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
         {
@@ -766,20 +768,18 @@ public final class PhoneXMLLookupFXMLController implements Initializable
          }
          */
         //get phone feature property
-        if (phoneToUpdate ==1)
+        if (phoneToUpdate == 1)
         {
             LOG.log(Level.INFO, "get search by tag phone 1 feature data as property");
-            LOG.log(Level.INFO, "phone1 data size: {0}",phoneFeatureTempData.size());
+            LOG.log(Level.INFO, "phone1 data size: {0}", phoneFeatureTempData.size());
             phone1FeatureData.addAll(phoneFeatureTempData);
             phone1FeaturesTableView.setItems(phone1FeatureData);
-        }
-        else if (phoneToUpdate ==2)
+        } else if (phoneToUpdate == 2)
         {
             LOG.log(Level.INFO, "get search by tag phone 2 feature data as property");
             phone2FeatureData.addAll(phoneFeatureTempData);
             phone2FeaturesTableView.setItems(phone2FeatureData);
-        }
-        else
+        } else
         {
             LOG.log(Level.WARNING, "Phone other then 1 or 2 in search by tag table. phoneToUpdate value: ", phoneToUpdate);
         }
@@ -1013,62 +1013,154 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         alert.showAndWait();
     }
 
+    //Task to search for results by tag value
+    private Task searchByTagValueTask()
+    {
+        return new Task()
+        {
+            @Override
+            protected Object call() throws Exception
+            {
+                LOG.log(Level.INFO, "Starting search by tag value Task");
+                String folderPath = folderPathTextField.getText();
+                for (int i = 0; i < fileList.size(); i++)
+                {
+                    LOG.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]
+                    {
+                        folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
+                    });
+                    updateMessage("Update message");
+                    updateProgress(i + 1, fileList.size());
+                    ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText());
+                    for (int j = 0; j < modelInFile.size(); j++)
+                    {
+
+                        String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
+                        LOG.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
+                        {
+                            fileList.get(i), phoneName
+                        });
+                        VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
+                    }
+                }
+                LOG.log(Level.INFO,
+                        "Done getting search by value info, number of phones found: {0}", vendorModelPropertyData.size());
+                searchResultInt = vendorModelPropertyData.size();
+
+                return null;
+            }
+        };
+    }
+
     @FXML
     private void searchByTagValue()
     {
-        LOG.log(Level.INFO, "Search by tag value called");
-        searchByValueResultLabel.setText("");
-        searchByValueProgressBar.setProgress(0.0);
+        //reset progress bar
+        
         if (searchByTagTextField.getText() != null && fileList != null && !(searchByTagTextField.getText().isEmpty()) && !(fileList.isEmpty()))
         {
+            
             //clear existing data in the tables
             vendorModelPropertyData.clear();
             phone1FeatureData.clear();
             phone2FeatureData.clear();
-            Thread t1 = new Thread(new Runnable()
+            searchByValueProgressBar.progressProperty().unbind();
+            //searchByValueProgressBar.setProgress(0.0);
+            //setup Task worker
+            searchByTagValueWorker = searchByTagValueTask();
+            
+            //setup progress bar  
+            searchByValueProgressBar.progressProperty().bind(searchByTagValueWorker.progressProperty());
+            searchByTagValueWorker.messageProperty().addListener(new ChangeListener<String>()
             {
-
-                @Override
-                public void run()
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
                 {
-                    LOG.log(Level.INFO, "Starting search by tag value Thread");
-                    String folderPath = folderPathTextField.getText();
-                    for (int i = 0; i < fileList.size(); i++)
-                    {
-                        LOG.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]
-                        {
-                            folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
-                        });
-                        ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText());
-                        for (int j = 0; j < modelInFile.size(); j++)
-                        {
-
-                            String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
-                            LOG.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
-                            {
-                                fileList.get(i), phoneName
-                            });
-                            VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
-                        }
-                    }
+                    System.out.println(newValue);
                 }
-
             });
-            t1.start();
+
+            Thread startSearch = new Thread(searchByTagValueWorker);
+            startSearch.setDaemon(true);
+            startSearch.start();
+            
             try
             {
-                t1.join();
+                startSearch.join();
             } catch (InterruptedException ex)
             {
-                LOG.log(Level.SEVERE, "Search byvalue thread join exception:\n {0}", ex);
+                Logger.getLogger(PhoneXMLLookupFXMLController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            LOG.log(Level.INFO, "Done getting search by value info, number of phones found: {0}", vendorModelPropertyData.size());
-            Integer searchResultInt = vendorModelPropertyData.size();
+            
             searchByValueResultLabel.setText(searchResultInt.toString());
             phone1VendorModelTableView.setItems(vendorModelPropertyData);
+
             phone2VendorModelTableView.setItems(vendorModelPropertyData);
         }
+
     }
+    /*
+     @FXML
+     private void searchByTagValue()
+     {
+     LOG.log(Level.INFO, "Search by tag value called");
+     searchByValueResultLabel.setText("");
+     searchByValueProgressBar.setProgress(0.0);
+     if (searchByTagTextField.getText() != null && fileList != null && !(searchByTagTextField.getText().isEmpty()) && !(fileList.isEmpty()))
+     {
+
+     //test task instead of thread
+
+     Thread t1 = new Thread(new Runnable()
+     {
+
+     @Override
+     public void run()
+     {
+     LOG.log(Level.INFO, "Starting search by tag value Thread");
+     String folderPath = folderPathTextField.getText();
+     for (int i = 0; i < fileList.size(); i++)
+     {
+     LOG.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]
+     {
+     folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
+     });
+     ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText());
+     for (int j = 0; j < modelInFile.size(); j++)
+     {
+
+     String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
+     LOG.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
+     {
+     fileList.get(i), phoneName
+     });
+     VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
+     }
+     }
+     }
+
+     });
+
+     t1.start();
+
+     try
+     {
+     t1.join();
+     } catch (InterruptedException ex)
+     {
+     LOG.log(Level.SEVERE, "Search byvalue thread join exception:\n {0}", ex);
+     }
+
+     LOG.log(Level.INFO,
+     "Done getting search by value info, number of phones found: {0}", vendorModelPropertyData.size());
+     Integer searchResultInt = vendorModelPropertyData.size();
+
+     searchByValueResultLabel.setText(searchResultInt.toString());
+     phone1VendorModelTableView.setItems(vendorModelPropertyData);
+
+     phone2VendorModelTableView.setItems(vendorModelPropertyData);
+     }
+     }
+     */
 
     /*
      *method to exit the application 
