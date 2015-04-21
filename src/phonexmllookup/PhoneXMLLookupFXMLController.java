@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -1025,29 +1026,34 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 String folderPath = folderPathTextField.getText();
                 for (int i = 0; i < fileList.size(); i++)
                 {
-                    LOG.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]
-                    {
-                        folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
-                    });
-                    updateMessage("Update message");
-                    updateProgress(i + 1, fileList.size());
-                    ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText());
-                    for (int j = 0; j < modelInFile.size(); j++)
-                    {
-
-                        String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
-                        LOG.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
-                        {
-                            fileList.get(i), phoneName
-                        });
-                        VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
-                    }
+                    searchInXml(folderPath, i);
                 }
                 LOG.log(Level.INFO,
                         "Done getting search by value info, number of phones found: {0}", vendorModelPropertyData.size());
                 searchResultInt = vendorModelPropertyData.size();
 
                 return null;
+            }
+
+            private void searchInXml(String folderPath, int i)
+            {
+                LOG.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]
+                {
+                    folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
+                });
+                updateMessage("Update message");
+                ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText());
+                for (int j = 0; j < modelInFile.size(); j++)
+                {
+                    
+                    String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
+                    LOG.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
+                    {
+                        fileList.get(i), phoneName
+                    });
+                    VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
+                }
+                updateProgress(i + 1, fileList.size());
             }
         };
     }
@@ -1075,6 +1081,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             
             //setup progress bar  
             searchByValueProgressBar.progressProperty().bind(searchByTagValueWorker.progressProperty());
+            
             searchByTagValueWorker.messageProperty().addListener(new ChangeListener<String>()
             {
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
