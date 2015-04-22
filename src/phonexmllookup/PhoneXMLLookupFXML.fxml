@@ -28,20 +28,20 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TabPane layoutY="27.0" prefHeight="729.0" prefWidth="1246.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="-4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
+      <TabPane fx:id="mainTabPane" layoutY="27.0" prefHeight="729.0" prefWidth="1246.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="-4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0">
         <tabs>
-          <Tab text="Phone List">
+          <Tab fx:id="phoneListTab" text="Phone List">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="647.0" prefWidth="1107.0">
                      <children>
-                        <TextField fx:id="folderPathTextField" editable="false" layoutX="150.0" layoutY="42.0" prefHeight="25.0" prefWidth="458.0" AnchorPane.topAnchor="42.0" />
                         <Button fx:id="selectFolderBtn" layoutX="14.0" layoutY="42.0" mnemonicParsing="false" onAction="#selectFolderButtonAction" prefHeight="25.0" prefWidth="129.0" text="Select XML Folder" AnchorPane.topAnchor="42.0" />
+                        <TextField fx:id="folderPathTextField" editable="false" focusTraversable="false" layoutX="150.0" layoutY="42.0" prefHeight="25.0" prefWidth="458.0" AnchorPane.topAnchor="42.0" />
                         <Label fx:id="selectFolderLabel" layoutX="152.0" layoutY="71.0" prefHeight="17.0" prefWidth="254.0" />
                         <TextField fx:id="filteredFileNameTextField" layoutX="5.0" layoutY="93.0" prefHeight="25.0" prefWidth="146.0" promptText="Search XML..." />
                         <TextField fx:id="filteredModelTextField" layoutX="161.0" layoutY="93.0" prefHeight="25.0" prefWidth="236.0" promptText="Search phone..." />
+                        <TextField fx:id="filteredTagNameTextField" layoutX="411.0" layoutY="93.0" prefHeight="25.0" prefWidth="229.0" promptText="Search tag..." />
                         <CheckBox fx:id="defaultSectionCheckBox" layoutX="670.0" layoutY="33.0" mnemonicParsing="false" text="Add Default section" />
                         <CheckBox fx:id="defaultOSSectionCheckBox" layoutX="670.0" layoutY="54.0" mnemonicParsing="false" text="Add Default OS section" AnchorPane.topAnchor="54.0" />
-                        <TextField fx:id="filteredTagNameTextField" layoutX="411.0" layoutY="93.0" prefHeight="25.0" prefWidth="229.0" promptText="Search tag..." />
                         <TableView fx:id="phoneFeatureTableView" editable="true" layoutX="406.0" layoutY="150.0" prefHeight="554.0" prefWidth="868.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="406.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="150.0">
                            <columns>
                               <TableColumn fx:id="phoneFeatureModuleNameColumn" editable="false" prefWidth="234.0" text="Tag" />
@@ -70,13 +70,14 @@
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab text="Search by tag value">
+            <Tab fx:id="searchByTagValueTab" text="Search by tag value">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="347.0" layoutY="37.0" mnemonicParsing="false" onAction="#searchByTagValue" text="Search" />
                         <TextField fx:id="searchByTagTextField" layoutX="14.0" layoutY="37.0" prefHeight="25.0" prefWidth="326.0" promptText="Enter tag value..." />
-                        <Label layoutX="15.0" layoutY="14.0" prefHeight="17.0" prefWidth="108.0" text="Enter tag value" />
+                        <Button fx:id="startSearch" layoutX="347.0" layoutY="37.0" mnemonicParsing="false" onAction="#searchByTagValue" text="Search" />
+                        <Button fx:id="cancelSearch" layoutX="405.0" layoutY="38.0" mnemonicParsing="false" onAction="#cancelSearchByTagValue" text="Cancel" />
+                        <Label layoutX="15.0" layoutY="14.0" prefHeight="17.0" prefWidth="192.0" text="Enter tag value (case sensitive)" />
                         <Label layoutX="14.0" layoutY="70.0" text="Number of phones found:" />
                         <Label fx:id="searchByValueResultLabel" layoutX="162.0" layoutY="70.0" prefHeight="17.0" prefWidth="88.0" />
                         <TableView fx:id="phone1VendorModelTableView" layoutX="14.0" layoutY="96.0" prefHeight="157.0" prefWidth="702.0">
@@ -92,17 +93,17 @@
                               <TableColumn fx:id="phone1TagAttributeColumn" editable="false" prefWidth="152.0" text="Attribute" />
                            </columns>
                         </TableView>
+                        <TableView fx:id="phone2VendorModelTableView" layoutX="719.0" layoutY="96.0" prefHeight="157.0" prefWidth="678.0">
+                           <columns>
+                              <TableColumn fx:id="phone2VendorColumn" prefWidth="355.0" text="XML" />
+                              <TableColumn fx:id="phone2ModelColumn" minWidth="6.0" prefWidth="322.0" text="Model" />
+                           </columns>
+                        </TableView>
                         <TableView fx:id="phone2FeaturesTableView" editable="true" layoutX="720.0" layoutY="256.0" prefHeight="453.0" prefWidth="678.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="720.0" AnchorPane.topAnchor="256.0">
                            <columns>
                               <TableColumn fx:id="phone2TagNameColumn" editable="false" prefWidth="206.0" text="Tag" />
                               <TableColumn fx:id="phone2TagValueColumn" editable="false" prefWidth="347.0" text="Value" />
                               <TableColumn fx:id="phone2TagAttributeColumn" editable="false" prefWidth="124.0" text="Attribute" />
-                           </columns>
-                        </TableView>
-                        <TableView fx:id="phone2VendorModelTableView" layoutX="719.0" layoutY="96.0" prefHeight="157.0" prefWidth="678.0">
-                           <columns>
-                              <TableColumn fx:id="phone2VendorColumn" prefWidth="355.0" text="XML" />
-                              <TableColumn fx:id="phone2ModelColumn" minWidth="6.0" prefWidth="322.0" text="Model" />
                            </columns>
                         </TableView>
                         <Label layoutX="281.0" layoutY="65.0" prefHeight="27.0" prefWidth="133.0" text="Phone 1">
@@ -115,13 +116,13 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <ProgressBar fx:id="searchByValueProgressBar" layoutX="420.0" layoutY="41.0" prefWidth="200.0" progress="0.0" />
-                        <Label layoutX="420.0" layoutY="14.0" prefHeight="17.0" prefWidth="200.0" text="Data loading progress:" />
+                        <ProgressBar fx:id="searchByValueProgressBar" layoutX="618.0" layoutY="41.0" prefWidth="200.0" progress="0.0" />
+                        <Label layoutX="618.0" layoutY="14.0" prefHeight="17.0" prefWidth="200.0" text="Data loading..." />
                      </children>
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab text="Search by Vendor">
+            <Tab fx:id="searchByVendorTab" text="Search by Vendor">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -134,7 +135,7 @@
                   </AnchorPane>
               </content>
             </Tab>
-          <Tab text="Phone plain">
+          <Tab fx:id="phonePlainTextTab" text="Phone plain">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

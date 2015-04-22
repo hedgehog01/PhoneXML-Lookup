@@ -14,7 +14,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -22,7 +21,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,6 +36,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -85,6 +88,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String NO_XML_SELECTED_TITLE = "No XML selected";
     private final String NO_XML_SELECTED_BODY = "Please select an XML and try again...";
     private final String INFO_LABEL_INTRO = "Value copied to clipboard:\n";
+    private final String TAB_NAME_PHONE_LIST = "Phone List";
+    private final String TAB_NAME_SEARCH_BY_TAG_VALUE = "Search by tag value";
+    private final String TAB_NAME_SEARCH_BY_VENDOR = "Search by Vendor";
+    private final String TAB_NAME_PHONE_PLAIN_TEXT = "Phone plain text";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
@@ -97,7 +104,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private boolean defaultOSSectionCheckBoxselected;
     private ArrayList<String> fileList;
     private Task searchByTagValueWorker;
-    private Integer searchResultInt;
+    //private Integer searchResultInt;
     //about window settings
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
     private final boolean ABOUT_WIN_SET_RESIZABLE = false;
@@ -121,6 +128,21 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     //phone2 table data
     private ObservableList<PhoneFeatureProperty> phone2FeatureData = FXCollections.observableArrayList();
+
+    @FXML
+    private Tab phoneListTab;
+
+    @FXML
+    private Tab searchByTagValueTab;
+
+    @FXML
+    private Tab searchByVendorTab;
+
+    @FXML
+    private Tab phonePlainTextTab;
+
+    @FXML
+    private TabPane mainTabPane;
 
     @FXML
     private AnchorPane mainAnchor;
@@ -221,6 +243,12 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private Button selectFolderBtn;
 
     @FXML
+    private Button startSearch;
+
+    @FXML
+    private Button cancelSearch;
+
+    @FXML
     private TextField folderPathTextField;
 
     @FXML
@@ -250,6 +278,12 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
         currentPhoneNode = null;
 
+        //set phonelist tab focus
+        setPhoneListFocus();
+
+        //set Tab titles
+        setTabTitles();
+        
         //set up filename colomn
         xmlNameColumn.setCellValueFactory(cellData -> cellData.getValue().fileNameProperty());
         //set up phone name column
@@ -281,6 +315,26 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
         phoneFeatureTableView.getSelectionModel().setCellSelectionEnabled(true);
         //String t= phoneFeatureTableView.getFocusModel().getFocusedCell();
+
+        //add listener to tabpane
+        mainTabPane.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>()
+                {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1)
+                    {
+                        //System.out.println("Tab Selection changed to: " + t1.getText());
+                        LOG.log(Level.INFO, "Tab Selection changed to: {0}", t1.getText());
+                        switch (t1.getText())
+                        {
+                            case "Search by tag value":
+                                setSearchByValueFocus();
+                            case "Phone List":
+                                setPhoneListFocus();
+                        }
+                    }
+                }
+        );
 
         //set listener for copy of selected cell to clipboard
         phoneFeatureTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
@@ -1017,22 +1071,29 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     //Task to search for results by tag value
     private Task searchByTagValueTask()
     {
-        return new Task()
+        return new Task<Integer>()
         {
             @Override
-            protected Object call() throws Exception
+            protected Integer call() throws Exception
             {
                 LOG.log(Level.INFO, "Starting search by tag value Task");
                 String folderPath = folderPathTextField.getText();
                 for (int i = 0; i < fileList.size(); i++)
                 {
+
+                    if (isCancelled())
+                    {
+                        LOG.log(Level.WARNING, "task was cancelled");
+                        break;
+                    }
+                    updateProgress(i + 1, fileList.size());
                     searchInXml(folderPath, i);
                 }
                 LOG.log(Level.INFO,
                         "Done getting search by value info, number of phones found: {0}", vendorModelPropertyData.size());
-                searchResultInt = vendorModelPropertyData.size();
+                Integer searchResultInt = vendorModelPropertyData.size();
 
-                return null;
+                return searchResultInt;
             }
 
             private void searchInXml(String folderPath, int i)
@@ -1045,7 +1106,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText());
                 for (int j = 0; j < modelInFile.size(); j++)
                 {
-                    
+
                     String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
                     LOG.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
                     {
@@ -1053,129 +1114,111 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     });
                     VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
                 }
-                updateProgress(i + 1, fileList.size());
+
             }
         };
     }
 
+    /*
+     * method to cancel search by value task while working
+     */
+    @FXML
+    private void cancelSearchByTagValue()
+    {
+        if (searchByTagValueWorker != null && searchByTagValueWorker.isRunning())
+        {
+            LOG.log(Level.INFO, "Search by tag value canceled");
+            searchByTagValueWorker.cancel();
+        }
+
+    }
+
+    /*
+     * method that searches through all XML's for phone with specific tag value and updates tables with results
+     */
     @FXML
     private void searchByTagValue()
     {
         //reset progress bar
-        searchByValueProgressBar.progressProperty().unbind();
+        //searchByValueProgressBar.progressProperty().unbind();
         LOG.log(Level.INFO, "Unbind the seach by tag progress bar");
-        searchByValueProgressBar.setProgress(0);
-        LOG.log(Level.INFO, "Progress: {0}",searchByValueProgressBar.getProgress());
-        
+        //searchByValueProgressBar.setProgress(0);
+        //LOG.log(Level.INFO, "Progress: {0}",searchByValueProgressBar.getProgress());
+
         if (searchByTagTextField.getText() != null && fileList != null && !(searchByTagTextField.getText().isEmpty()) && !(fileList.isEmpty()))
         {
-            
+            searchByTagValueWorker = searchByTagValueTask();
             //clear existing data in the tables
             vendorModelPropertyData.clear();
             phone1FeatureData.clear();
             phone2FeatureData.clear();
-            //searchByValueProgressBar.progressProperty().unbind();
+            searchByValueProgressBar.progressProperty().unbind();
             //searchByValueProgressBar.setProgress(0.0);
-            //setup Task worker
-            searchByTagValueWorker = searchByTagValueTask();
-            
+
             //setup progress bar  
             searchByValueProgressBar.progressProperty().bind(searchByTagValueWorker.progressProperty());
-            
-            searchByTagValueWorker.messageProperty().addListener(new ChangeListener<String>()
-            {
-                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-                {
-                    System.out.println("searchByTagValueWorker: " + newValue);
-                }
-            });
 
             Thread startSearch = new Thread(searchByTagValueWorker);
             startSearch.setDaemon(true);
             startSearch.start();
-            
-            try
-            {
-                startSearch.join();
-            } catch (InterruptedException ex)
-            {
-                Logger.getLogger(PhoneXMLLookupFXMLController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            searchByValueResultLabel.setText(searchResultInt.toString());
+
+            //searchByValueResultLabel.setText(searchResultInt.toString());
             phone1VendorModelTableView.setItems(vendorModelPropertyData);
 
             phone2VendorModelTableView.setItems(vendorModelPropertyData);
+
+            searchByTagValueWorker.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
+                    new EventHandler<WorkerStateEvent>()
+                    {
+                        @Override
+                        public void handle(WorkerStateEvent t)
+                        {
+                            String result = searchByTagValueWorker.getValue().toString();
+                            LOG.log(Level.INFO, "result for task: {0}", result);
+                            searchByValueResultLabel.setText(result);
+                        }
+                    });
         }
 
     }
-    /*
-     @FXML
-     private void searchByTagValue()
-     {
-     LOG.log(Level.INFO, "Search by tag value called");
-     searchByValueResultLabel.setText("");
-     searchByValueProgressBar.setProgress(0.0);
-     if (searchByTagTextField.getText() != null && fileList != null && !(searchByTagTextField.getText().isEmpty()) && !(fileList.isEmpty()))
-     {
 
-     //test task instead of thread
+    //method that sets search by value default focus when tab selected
+    private void setSearchByValueFocus()
+    {
+        Platform.runLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                searchByTagTextField.requestFocus();
+            }
+        });
+    }
 
-     Thread t1 = new Thread(new Runnable()
-     {
+    //method that sets Phone List default focus when tab selected
+    private void setPhoneListFocus()
+    {
+        Platform.runLater(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                filteredFileNameTextField.requestFocus();
+            }
+        });
+    }
 
-     @Override
-     public void run()
-     {
-     LOG.log(Level.INFO, "Starting search by tag value Thread");
-     String folderPath = folderPathTextField.getText();
-     for (int i = 0; i < fileList.size(); i++)
-     {
-     LOG.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]
-     {
-     folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
-     });
-     ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText());
-     for (int j = 0; j < modelInFile.size(); j++)
-     {
-
-     String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
-     LOG.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
-     {
-     fileList.get(i), phoneName
-     });
-     VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
-     }
-     }
-     }
-
-     });
-
-     t1.start();
-
-     try
-     {
-     t1.join();
-     } catch (InterruptedException ex)
-     {
-     LOG.log(Level.SEVERE, "Search byvalue thread join exception:\n {0}", ex);
-     }
-
-     LOG.log(Level.INFO,
-     "Done getting search by value info, number of phones found: {0}", vendorModelPropertyData.size());
-     Integer searchResultInt = vendorModelPropertyData.size();
-
-     searchByValueResultLabel.setText(searchResultInt.toString());
-     phone1VendorModelTableView.setItems(vendorModelPropertyData);
-
-     phone2VendorModelTableView.setItems(vendorModelPropertyData);
-     }
-     }
-     */
-
+    private void setTabTitles()
+    {
+        phoneListTab.setText(TAB_NAME_PHONE_LIST);
+        searchByTagValueTab.setText(TAB_NAME_SEARCH_BY_TAG_VALUE);
+        searchByVendorTab.setText(TAB_NAME_SEARCH_BY_VENDOR);
+        phonePlainTextTab.setText(TAB_NAME_PHONE_PLAIN_TEXT);
+    }
     /*
      *method to exit the application 
      */
+
     @FXML
     private void doExit()
     {
