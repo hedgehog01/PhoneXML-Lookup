@@ -92,6 +92,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String TAB_NAME_SEARCH_BY_TAG_VALUE = "Search by tag value";
     private final String TAB_NAME_SEARCH_BY_VENDOR = "Search by Vendor";
     private final String TAB_NAME_PHONE_PLAIN_TEXT = "Phone plain text";
+    private final String ERROR_NO_XML_TITLE = "Error - No XML";
+    private final String ERROR_NO_XML_BODY = "No XML files found...";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
@@ -283,7 +285,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
         //set Tab titles
         setTabTitles();
-        
+
         //set up filename colomn
         xmlNameColumn.setCellValueFactory(cellData -> cellData.getValue().fileNameProperty());
         //set up phone name column
@@ -390,6 +392,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
                 //get list of phones in the specific XML
                 ArrayList<String> phoneList = PhoneNameHandler.getPhoneNames(xmlPath);
+
                 setPhoneNamePropertyData(phoneList);
                 //Default old OS removal     
                 iOSDefaultOSSection = null;
@@ -685,23 +688,24 @@ public final class PhoneXMLLookupFXMLController implements Initializable
      */
     private void getFileList(String folderPath)
     {
-        fileList = FileHandler.getFileList(folderPath);
-        if (!fileList.isEmpty())
+        Platform.runLater(new Runnable()
         {
-            selectFolderLabel.setText("");
-            setFilePropertyData(fileList);
-        } else
-        {
-            removeAllTableData();
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error - No XML");
-            //alert.setHeaderText("Look, an Error Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("Folder does not contain XML files...");
-
-            alert.showAndWait();
-            selectFolderLabel.setText("No XML files found...");
-        }
+            @Override
+            public void run()
+            {
+                fileList = FileHandler.getFileList(folderPath);
+                if (!fileList.isEmpty())
+                {
+                    selectFolderLabel.setText("");
+                    setFilePropertyData(fileList);
+                } else
+                {
+                    removeAllTableData();
+                    showErrorMessage(ERROR_NO_XML_TITLE, ERROR_NO_XML_BODY);
+                    selectFolderLabel.setText("No XML files found...");
+                }
+            }
+        });
 
     }
 
@@ -763,40 +767,47 @@ public final class PhoneXMLLookupFXMLController implements Initializable
      */
     private void setPhoneNamePropertyData(ArrayList<String> phoneNameList)
     {
-        phoneNamePropertyData.clear();
-        filteredModelTextField.clear();
-        phoneNamePropertyData = PhoneNameCreator.createFilePropertyList(phoneNameList);
-
-        //====set up filtering of Phone Name===
-        // Phone Name filter - Wrap the ObservableList in a FilteredList (initially display all data).
-        FilteredList<PhoneNameProperty> phoneNameFilteredList = new FilteredList<>(phoneNamePropertyData, p -> true);
-
-        // Phone Name filter - Set the filter Predicate whenever the filter changes.
-        filteredModelTextField.textProperty().addListener((observable, oldValue, newValue) ->
+        Platform.runLater(new Runnable()
         {
-            phoneNameFilteredList.setPredicate(phoneName ->
+            @Override
+            public void run()
             {
-                // If filter text is empty, display all persons.
-                if (newValue == null || newValue.isEmpty())
+                phoneNamePropertyData.clear();
+                filteredModelTextField.clear();
+                phoneNamePropertyData = PhoneNameCreator.createFilePropertyList(phoneNameList);
+
+                //====set up filtering of Phone Name===
+                // Phone Name filter - Wrap the ObservableList in a FilteredList (initially display all data).
+                FilteredList<PhoneNameProperty> phoneNameFilteredList = new FilteredList<>(phoneNamePropertyData, p -> true);
+
+                // Phone Name filter - Set the filter Predicate whenever the filter changes.
+                filteredModelTextField.textProperty().addListener((observable, oldValue, newValue) ->
                 {
-                    return true;
-                }
+                    phoneNameFilteredList.setPredicate(phoneName ->
+                    {
+                        // If filter text is empty, display all persons.
+                        if (newValue == null || newValue.isEmpty())
+                        {
+                            return true;
+                        }
 
-                // Compare filename with filter text.
-                String lowerCaseFilter = newValue.toLowerCase();
+                        // Compare filename with filter text.
+                        String lowerCaseFilter = newValue.toLowerCase();
 
-                return phoneName.getPhoneName().toLowerCase().indexOf(lowerCaseFilter) != -1;
-            });
+                        return phoneName.getPhoneName().toLowerCase().indexOf(lowerCaseFilter) != -1;
+                    });
+                });
+
+                // Wrap the FilteredList in a SortedList. 
+                SortedList<PhoneNameProperty> sortedPhoneNameData = new SortedList<>(phoneNameFilteredList);
+
+                // Bind the SortedList comparator to the TableView comparator.
+                sortedPhoneNameData.comparatorProperty().bind(phoneNameTableView.comparatorProperty());
+
+                //=======End of filtered phone name setup======
+                phoneNameTableView.setItems(sortedPhoneNameData);
+            }
         });
-
-        // Wrap the FilteredList in a SortedList. 
-        SortedList<PhoneNameProperty> sortedPhoneNameData = new SortedList<>(phoneNameFilteredList);
-
-        // Bind the SortedList comparator to the TableView comparator.
-        sortedPhoneNameData.comparatorProperty().bind(phoneNameTableView.comparatorProperty());
-
-        //=======End of filtered phone name setup======
-        phoneNameTableView.setItems(sortedPhoneNameData);
 
     }
 
@@ -1042,32 +1053,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         }
     }
 
-    /*
-     * method to show error messages
-     */
-    private void showErrorMessage(String title, String body)
-    {
-        LOG.log(Level.INFO, "Error message initiated. Error Title: {0}", title);
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(body);
-        alert.showAndWait();
-    }
-
-    /*
-     * method to show information messages
-     */
-    private void showInfoMessage(String title, String body)
-    {
-        LOG.log(Level.INFO, "Info message initiated. Info Title: {0}", title);
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(body);
-        alert.showAndWait();
-    }
-
     //Task to search for results by tag value
     private Task searchByTagValueTask()
     {
@@ -1215,10 +1200,36 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         searchByVendorTab.setText(TAB_NAME_SEARCH_BY_VENDOR);
         phonePlainTextTab.setText(TAB_NAME_PHONE_PLAIN_TEXT);
     }
+
+    /*
+     * method to show error messages
+     */
+    private void showErrorMessage(String title, String body)
+    {
+        LOG.log(Level.INFO, "Error message initiated. Error Title: {0}", title);
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(body);
+        alert.showAndWait();
+    }
+
+    /*
+     * method to show information messages
+     */
+    private void showInfoMessage(String title, String body)
+    {
+        LOG.log(Level.INFO, "Info message initiated. Info Title: {0}", title);
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(body);
+        alert.showAndWait();
+    }
+
     /*
      *method to exit the application 
      */
-
     @FXML
     private void doExit()
     {

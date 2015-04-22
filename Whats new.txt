@@ -1,15 +1,14 @@
-PhoneXML Lookup - Version 0.0.2
+PhoneXML Lookup - Version 0.0.3
 
-Before installing please make sure to uninstall the previous version!
-
-Whats new:
-1. Default & Default OS sections selected by default (if available)
-2. Sort now corrected to show default areas on top by default
-3. Better Default section handling
-3. New icon
+What's new:
+1. Search by tag value adds capability to compare devices with same tag value (i.e. same GUID value etc.)
+2. In the "Phone list" Tab, clicking on a cell in the phone feature table copies the value to clipboard.
+3. Performance improvements
 4. Bug fixes
-5. Updated installer
 
-For any issues or ideas send email to Nathan Randelman.
+Future items:
+1. Get vendor result for searches (i.e. what are the vendors that contain Android devices etc.)
+
+For any issues or ideas send email to Nathan R.
 
 Enjoy!
