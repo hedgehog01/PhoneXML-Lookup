@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.text.*?>
@@ -35,7 +36,7 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="647.0" prefWidth="1107.0">
                      <children>
                         <Button fx:id="selectFolderBtn" layoutX="14.0" layoutY="42.0" mnemonicParsing="false" onAction="#selectFolderButtonAction" prefHeight="25.0" prefWidth="129.0" text="Select XML Folder" AnchorPane.topAnchor="42.0" />
-                        <TextField fx:id="folderPathTextField" editable="false" focusTraversable="false" layoutX="150.0" layoutY="42.0" prefHeight="25.0" prefWidth="458.0" AnchorPane.topAnchor="42.0" />
+                        <TextField fx:id="folderPathTextField" editable="false" focusTraversable="false" layoutX="150.0" layoutY="42.0" prefHeight="25.0" prefWidth="491.0" AnchorPane.topAnchor="42.0" />
                         <Label fx:id="selectFolderLabel" layoutX="152.0" layoutY="71.0" prefHeight="17.0" prefWidth="254.0" />
                         <TextField fx:id="filteredFileNameTextField" layoutX="5.0" layoutY="93.0" prefHeight="25.0" prefWidth="146.0" promptText="Search XML..." />
                         <TextField fx:id="filteredModelTextField" layoutX="161.0" layoutY="93.0" prefHeight="25.0" prefWidth="236.0" promptText="Search phone..." />
@@ -61,11 +62,12 @@
                               <TableColumn editable="false" prefWidth="148.0" resizable="false" text="XML List" fx:id="xmlNameColumn" />
                            </columns>
                         </TableView>
-                        <Label fx:id="infoLabel" layoutX="670.0" layoutY="73.0" prefHeight="75.0" prefWidth="741.0" textFill="#1032da">
+                        <Label fx:id="infoLabel" layoutX="670.0" layoutY="73.0" prefHeight="75.0" prefWidth="560.0" textFill="#1032da">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
+                        <ImageView fx:id="deviceImageView" fitHeight="144.0" fitWidth="180.0" layoutX="1231.0" layoutY="3.0" onMouseClicked="#openDeviceImage" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </AnchorPane>
             </content>

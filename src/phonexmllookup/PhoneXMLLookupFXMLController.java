@@ -5,6 +5,8 @@
  */
 package phonexmllookup;
 
+import java.awt.Desktop;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -22,6 +24,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -44,11 +47,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 import lib.prefrences.PrefrencesHandler;
 import lib.xmlphonefile.FileHandler;
 import lib.xmlphonefile.FileProperty;
@@ -94,6 +100,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String TAB_NAME_PHONE_PLAIN_TEXT = "Phone plain text";
     private final String ERROR_NO_XML_TITLE = "Error - No XML";
     private final String ERROR_NO_XML_BODY = "No XML files found...";
+    private final String IMAGES_FOLDER = "\\images";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
@@ -106,7 +113,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private boolean defaultOSSectionCheckBoxselected;
     private ArrayList<String> fileList;
     private Task searchByTagValueWorker;
-    //private Integer searchResultInt;
+    private String deviceImageFilePath;
+    private Image deviceImage;
     //about window settings
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
     private final boolean ABOUT_WIN_SET_RESIZABLE = false;
@@ -131,6 +139,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     //phone2 table data
     private ObservableList<PhoneFeatureProperty> phone2FeatureData = FXCollections.observableArrayList();
 
+    @FXML
+    private ImageView deviceImageView;
+    
     @FXML
     private Tab phoneListTab;
 
@@ -277,7 +288,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-
+        deviceImageFilePath = "";
         currentPhoneNode = null;
 
         //set phonelist tab focus
@@ -489,6 +500,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     defaultSectionCheckBoxselected = defaultSectionCheckBox.isSelected();
                     LOG.log(Level.INFO, "defaultSectionCheckBox turned on automaticlly: {0}", defaultSectionCheckBoxselected);
                     setDefaultSection();
+                    
+                    //set phone image
+                    deviceImageView.setImage(null);
+                    setDeviceImage();
                 }
 
                 phoneNodeTextArea.setText("");
@@ -1053,6 +1068,74 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         }
     }
 
+    private void setDeviceImage()
+    {
+        
+        Task loadImageTask = loadDeviceImageTask();
+        LOG.log(Level.INFO, "Starting loadDeviceImage Task");
+        Thread loadimageThread = new Thread (loadImageTask);
+        loadimageThread.setDaemon(true);
+        loadimageThread.start();
+    }
+    
+    private Task loadDeviceImageTask()
+    {
+        return new Task()
+        {
+            String AutoPK = ReadXML.getNodePhoneTagValue(currentPhoneNode,"Auto_PK");
+            String familyID = ReadXML.getNodePhoneTagValue(defaultSectionNode,"FamilyID");;
+            Image deviceImage = null;
+
+            @Override
+            protected Image call() throws Exception
+            {
+                LOG.log(Level.INFO, "Starting get device image Task");
+                while (isCancelled())
+                {
+                    LOG.log(Level.WARNING, "Search by tag value task was cancelled");
+                    break;
+                }
+                String imageFolderPath = folderPathTextField.getText().concat(IMAGES_FOLDER);
+                LOG.log(Level.INFO, "images folder path: {0}", imageFolderPath);
+
+                File imageFolder = new File(imageFolderPath);
+                if (imageFolder.exists() && imageFolder.isDirectory())
+                {
+                    File [] subFolderList = FileHandler.getSubFolderList(imageFolderPath);
+                    File imagePath = null;
+                    for (int i=0;i<subFolderList.length;i++)
+                    {
+                        if (subFolderList[i].getName().contains(familyID + " ") || subFolderList[i].getName().contains(familyID + "-"))
+                        {
+                            imageFolderPath = imageFolderPath.concat("\\").concat(subFolderList[i].getName()).concat("\\");
+                            System.out.println("test " + subFolderList[i].getName());
+                            LOG.log(Level.INFO, "Family folder found, new path: {0} ",imageFolderPath);
+                            imagePath = FileHandler.getFileByName(imageFolderPath, AutoPK, ".jpg");                       
+                        }
+                    } 
+                    LOG.log(Level.INFO, "image file path: {0}", imagePath);
+                    if (imagePath!= null && imagePath.exists())
+                    {
+                        LOG.log(Level.INFO, "image found at path: {0}", imagePath.getPath());
+                        //save folder path to prefrences
+                        BufferedImage bufferedImage = null;
+                        try
+                        {
+                            bufferedImage = ImageIO.read(imagePath);
+                        } catch (IOException ex)
+                        {
+                            LOG.log(Level.SEVERE, null, ex);
+                        }
+                        deviceImage = SwingFXUtils.toFXImage(bufferedImage, null);
+                        deviceImageView.setImage(deviceImage);
+                    }
+                }
+                return null;
+            }
+
+        };
+    }
+
     //Task to search for results by tag value
     private Task searchByTagValueTask()
     {
@@ -1063,12 +1146,13 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             {
                 LOG.log(Level.INFO, "Starting search by tag value Task");
                 String folderPath = folderPathTextField.getText();
+                LOG.log(Level.INFO, "device folder path: {0}", folderPath);
                 for (int i = 0; i < fileList.size(); i++)
                 {
 
                     if (isCancelled())
                     {
-                        LOG.log(Level.WARNING, "task was cancelled");
+                        LOG.log(Level.WARNING, "Search by tag value task was cancelled");
                         break;
                     }
                     updateProgress(i + 1, fileList.size());
@@ -1165,6 +1249,32 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     });
         }
 
+    }
+    
+    @FXML
+    private void openDeviceImage()
+    {
+        File imageFile = new File (deviceImageFilePath);
+        if (imageFile.exists() && imageFile.isFile())
+        {
+            try
+            {
+                Desktop.getDesktop().open(imageFile);
+            } catch (IOException ex)
+            {
+               LOG.log(Level.SEVERE, "Attempt to open device image file failed:\n{0}", ex);
+            }catch (NullPointerException ex)
+            {
+                LOG.log(Level.SEVERE, "Attempt to open device image file failed:\n{0}", ex);
+            }catch (IllegalArgumentException ex)
+            {
+                LOG.log(Level.SEVERE, "Attempt to open device image file failed:\n{0}", ex);
+            }
+        }
+        else if (!(imageFile.exists()) || !(imageFile.isFile()))
+        {
+            LOG.log(Level.WARNING, "device image file doesnt exists: {0}", imageFile.getPath());
+        }
     }
 
     //method that sets search by value default focus when tab selected

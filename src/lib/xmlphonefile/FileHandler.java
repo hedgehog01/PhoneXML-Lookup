@@ -19,16 +19,22 @@ package lib.xmlphonefile;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class to handle file operations
+ *
  * @author Hedgehog01
  */
 public final class FileHandler
 {
 
+    private static final Logger LOG = Logger.getLogger(FileHandler.class.getName());
+
     /**
      * method to return a list of files with .xml extention in a given folder
+     *
      * @param folderPath the folder path to search in
      * @return the list of XML files in the folder
      */
@@ -53,5 +59,55 @@ public final class FileHandler
             }
         }
         return fileListArray;
+    }
+
+    public static File[] getSubFolderList(String folderPath)
+    {
+        File file = new File(folderPath);
+        if (file.isDirectory())
+        {
+            File[] directories = file.listFiles(File::isDirectory);
+            LOG.log(Level.INFO, "List of sub directories found");
+            return directories;
+        }
+        return null;
+    }
+
+    public static File getFileByName(String folderPathToFile, String fileNameSearched ,String ext)
+    {
+        FilenameFilter extFilter = new FilenameFilter()
+        {
+            public boolean accept(File dir, String name)
+            {
+                String lowercaseName = name.toLowerCase();
+                if (lowercaseName.endsWith(ext))
+                {
+                    LOG.log(Level.INFO, "File with Ext {0} found. File name: {1}", new Object[]
+                    {
+                        ext, lowercaseName
+                    });
+                    return true;
+                } else
+                {
+                    return false;
+                }
+            }
+        };
+
+        File folderPathFile = new File(folderPathToFile);
+        if (folderPathFile.isDirectory() && folderPathFile.exists())
+        {
+            File[] files = folderPathFile.listFiles(extFilter);
+            for (File file : files)
+            {
+                if (file.getName().contains(fileNameSearched+ " "))
+                {
+                    LOG.log(Level.INFO, "file found: {0}",file.getPath());
+                    return file;
+                } 
+                
+            }
+       }
+        return null;
     }
 }
