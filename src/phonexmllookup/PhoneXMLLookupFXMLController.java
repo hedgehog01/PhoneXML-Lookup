@@ -98,8 +98,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String TAB_NAME_SEARCH_BY_TAG_VALUE = "Search by tag value";
     private final String TAB_NAME_SEARCH_BY_VENDOR = "Search by Vendor";
     private final String TAB_NAME_PHONE_PLAIN_TEXT = "Phone plain text";
-    private final String ERROR_NO_XML_TITLE = "Error - No XML";
-    private final String ERROR_NO_XML_BODY = "No XML files found...";
+    private final String ERROR_NO_XML_TITLE = "No XML's found";
+    private final String ERROR_NO_XML_BODY = "No XML files found in the selected folder...\nSelect a folder with XML's.";
     private final String IMAGES_FOLDER = "\\images";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
@@ -716,7 +716,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 } else
                 {
                     removeAllTableData();
-                    showErrorMessage(ERROR_NO_XML_TITLE, ERROR_NO_XML_BODY);
+                    showInfoMessage(ERROR_NO_XML_TITLE, ERROR_NO_XML_BODY);
                     selectFolderLabel.setText("No XML files found...");
                 }
             }
