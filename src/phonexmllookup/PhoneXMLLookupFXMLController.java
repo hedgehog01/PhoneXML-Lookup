@@ -1105,7 +1105,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     File imagePath = null;
                     for (int i=0;i<subFolderList.length;i++)
                     {
-                        if (subFolderList[i].getName().startsWith(familyID + " ") || subFolderList[i].getName().startsWith(familyID + "-"))
+                        LOG.log(Level.INFO, "Folder name: {0}", subFolderList[i]);
+                        if (subFolderList[i].getName().matches(familyID) || subFolderList[i].getName().matches(familyID + "-"))
                         {
                             imageFolderPath = imageFolderPath.concat("\\").concat(subFolderList[i].getName()).concat("\\");
                             System.out.println("test " + subFolderList[i].getName());
