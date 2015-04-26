@@ -100,7 +100,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String TAB_NAME_PHONE_PLAIN_TEXT = "Phone plain text";
     private final String ERROR_NO_XML_TITLE = "No XML's found";
     private final String ERROR_NO_XML_BODY = "No XML files found in the selected folder...\nSelect a folder with XML's.";
-    private final String IMAGES_FOLDER = "\\images";
+    private final String IMAGES_FOLDER = "\\Images";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
@@ -1105,7 +1105,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     File imagePath = null;
                     for (int i=0;i<subFolderList.length;i++)
                     {
-                        if (subFolderList[i].getName().contains(familyID + " ") || subFolderList[i].getName().contains(familyID + "-"))
+                        if (subFolderList[i].getName().startsWith(familyID + " ") || subFolderList[i].getName().startsWith(familyID + "-"))
                         {
                             imageFolderPath = imageFolderPath.concat("\\").concat(subFolderList[i].getName()).concat("\\");
                             System.out.println("test " + subFolderList[i].getName());
