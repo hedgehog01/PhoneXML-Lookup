@@ -13,6 +13,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -119,11 +121,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
     private final boolean ABOUT_WIN_SET_RESIZABLE = false;
     private final String ABOUT_WIN_STAGE_TITLE = "About";
-
+    
     private String selectedXMLFilePath = "";
     //file name table data
     private ObservableList<FileProperty> fileNamePropertyData = FXCollections.observableArrayList();
-
+    
     //phone list table data
     private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
 
@@ -288,6 +290,19 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        Handler fh = null;
+        try
+        {
+            fh = new java.util.logging.FileHandler("%t/log.log");
+        } catch (IOException ex)
+        {
+            LOG.log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex)
+        {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+        LOG.addHandler(fh);
+        LOG.setLevel(Level.FINEST);
         deviceImageFilePath = "";
         currentPhoneNode = null;
 
