@@ -13,6 +13,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -100,7 +102,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String TAB_NAME_PHONE_PLAIN_TEXT = "Phone plain text";
     private final String ERROR_NO_XML_TITLE = "No XML's found";
     private final String ERROR_NO_XML_BODY = "No XML files found in the selected folder...\nSelect a folder with XML's.";
-    private final String IMAGES_FOLDER = "\\images";
+    private final String IMAGES_FOLDER = "\\Images";
     private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
@@ -119,11 +121,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
     private final boolean ABOUT_WIN_SET_RESIZABLE = false;
     private final String ABOUT_WIN_STAGE_TITLE = "About";
-
+    
     private String selectedXMLFilePath = "";
     //file name table data
     private ObservableList<FileProperty> fileNamePropertyData = FXCollections.observableArrayList();
-
+    
     //phone list table data
     private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
 
@@ -288,6 +290,19 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        Handler fh = null;
+        try
+        {
+            fh = new java.util.logging.FileHandler("%t/log.log");
+        } catch (IOException ex)
+        {
+            LOG.log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex)
+        {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+        LOG.addHandler(fh);
+        LOG.setLevel(Level.FINEST);
         deviceImageFilePath = "";
         currentPhoneNode = null;
 
@@ -1105,7 +1120,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     File imagePath = null;
                     for (int i=0;i<subFolderList.length;i++)
                     {
-                        if (subFolderList[i].getName().contains(familyID + " ") || subFolderList[i].getName().contains(familyID + "-"))
+                        //LOG.log(Level.INFO, "Folder name: {0}", subFolderList[i]);
+                        //if (subFolderList[i].getName().matches("^"+familyID+".*") || subFolderList[i].getName().matches("^"+familyID + ".-"))
+                        if (subFolderList[i].getName().matches("^"+familyID+"[^0-9].*"))
                         {
                             imageFolderPath = imageFolderPath.concat("\\").concat(subFolderList[i].getName()).concat("\\");
                             System.out.println("test " + subFolderList[i].getName());

@@ -33,7 +33,7 @@ public final class FileHandler
     private static final Logger LOG = Logger.getLogger(FileHandler.class.getName());
 
     /**
-     * method to return a list of files with .xml extention in a given folder
+     * method to return a list of files with .XML extention in a given folder
      *
      * @param folderPath the folder path to search in
      * @return the list of XML files in the folder
@@ -100,7 +100,7 @@ public final class FileHandler
             File[] files = folderPathFile.listFiles(extFilter);
             for (File file : files)
             {
-                if (file.getName().contains(fileNameSearched+ " "))
+                if (file.getName().contains(fileNameSearched))
                 {
                     LOG.log(Level.INFO, "file found: {0}",file.getPath());
                     return file;

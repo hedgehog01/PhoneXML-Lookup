@@ -524,7 +524,6 @@ public final class ReadXML
 
                     LOG.log(Level.INFO, "tag name: {0}", phoneNode.getNodeName());
                     LOG.log(Level.INFO, "tag value: {0}", tagValue);
-                    System.out.println("Phone OSType value: " + tagValue);
                 }
             }
         }
