@@ -3,8 +3,9 @@ PhoneXML Lookup - Version 0.0.3
 What's new:
 1. Search by tag value adds capability to compare devices with same tag value (i.e. same GUID value etc.)
 2. In the "Phone list" Tab, clicking on a cell in the phone feature table copies the value to clipboard.
-3. Performance improvements
-4. Bug fixes
+3. Phone image loaded when phone selected
+4. Performance improvements
+5. Bug fixes
 
 Future items:
 1. Get vendor result for searches (i.e. what are the vendors that contain Android devices etc.)
