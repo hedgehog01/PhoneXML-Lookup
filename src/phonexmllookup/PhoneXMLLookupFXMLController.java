@@ -1200,10 +1200,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
             private void searchInXml(String folderPath, int i)
             {
-                MyLogger.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]
-                {
-                    folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
-                });
+                MyLogger.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]{folderPath + "/" + fileList.get(i), searchByTagTextField.getText()});
                 updateMessage("Update message");
                 ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText());
                 for (int j = 0; j < modelInFile.size(); j++)
