@@ -67,7 +67,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <ImageView fx:id="deviceImageView" fitHeight="144.0" fitWidth="180.0" layoutX="1231.0" layoutY="3.0" onMouseClicked="#openDeviceImage" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fx:id="deviceImageView" fitHeight="133.0" fitWidth="166.0" layoutX="1230.0" layoutY="13.0" onMouseClicked="#openDeviceImage" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </AnchorPane>
             </content>

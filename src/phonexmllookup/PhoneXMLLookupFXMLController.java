@@ -6,15 +6,13 @@
 package phonexmllookup;
 
 import java.awt.Desktop;
-import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -56,9 +54,9 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javax.imageio.ImageIO;
+import lib.logUtil.MyLogger;
 import lib.prefrences.PrefrencesHandler;
-import lib.xmlphonefile.FileHandler;
+import lib.xmlphonefile.FileHandlerClass;
 import lib.xmlphonefile.FileProperty;
 import lib.xmlphonefile.FileProperyCreator;
 import lib.xml.utils.PhoneDataHandler;
@@ -103,7 +101,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String ERROR_NO_XML_TITLE = "No XML's found";
     private final String ERROR_NO_XML_BODY = "No XML files found in the selected folder...\nSelect a folder with XML's.";
     private final String IMAGES_FOLDER = "\\Images";
-    private static final Logger LOG = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
+    //private static final Logger MyLogger = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
+    private final Level LOG_LEVEL = Level.INFO;
+    private final String APPLICATION_VERSION = "0.0.4";
+
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
     private Node androidDefaultOSSection;
@@ -121,11 +122,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
     private final boolean ABOUT_WIN_SET_RESIZABLE = false;
     private final String ABOUT_WIN_STAGE_TITLE = "About";
-    
+
     private String selectedXMLFilePath = "";
     //file name table data
     private ObservableList<FileProperty> fileNamePropertyData = FXCollections.observableArrayList();
-    
+
     //phone list table data
     private ObservableList<PhoneNameProperty> phoneNamePropertyData = FXCollections.observableArrayList();
 
@@ -143,7 +144,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     @FXML
     private ImageView deviceImageView;
-    
+
     @FXML
     private Tab phoneListTab;
 
@@ -290,19 +291,15 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        Handler fh = null;
-        try
+        //set App version
+        if (PrefrencesHandler.getAppVersion() == null || !(PrefrencesHandler.getAppVersion().equals(APPLICATION_VERSION)))
         {
-            fh = new java.util.logging.FileHandler("%t/log.log");
-        } catch (IOException ex)
+            PrefrencesHandler.setAppVersion(APPLICATION_VERSION);
+        } else
         {
-            LOG.log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex)
-        {
-            LOG.log(Level.SEVERE, null, ex);
+            MyLogger.log(Level.INFO, "App version: {0}", PrefrencesHandler.getAppVersion());
         }
-        LOG.addHandler(fh);
-        LOG.setLevel(Level.FINEST);
+
         deviceImageFilePath = "";
         currentPhoneNode = null;
 
@@ -345,23 +342,22 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         //String t= phoneFeatureTableView.getFocusModel().getFocusedCell();
 
         //add listener to tabpane
-        mainTabPane.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Tab>()
+        mainTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1)
+            {
+                //System.out.println("Tab Selection changed to: " + t1.getText());
+                MyLogger.log(Level.INFO, "Tab Selection changed to: {0}", t1.getText());
+                switch (t1.getText())
                 {
-                    @Override
-                    public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1)
-                    {
-                        //System.out.println("Tab Selection changed to: " + t1.getText());
-                        LOG.log(Level.INFO, "Tab Selection changed to: {0}", t1.getText());
-                        switch (t1.getText())
-                        {
-                            case "Search by tag value":
-                                setSearchByValueFocus();
-                            case "Phone List":
-                                setPhoneListFocus();
-                        }
-                    }
+                    case "Search by tag value":
+                        setSearchByValueFocus();
+                    case "Phone List":
+                        setPhoneListFocus();
                 }
+            }
+        }
         );
 
         //set listener for copy of selected cell to clipboard
@@ -377,7 +373,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     ObservableList selectedCells = selectionModel.getSelectedCells();
                     TablePosition tablePosition = (TablePosition) selectedCells.get(0);
                     Object val = tablePosition.getTableColumn().getCellData(newValue);
-                    LOG.log(Level.INFO, "Cell select and copied to clipboard: {0}", val);
+                    MyLogger.log(Level.INFO, "Cell select and copied to clipboard: {0}", val);
                     Clipboard clipboard = Clipboard.getSystemClipboard();
                     ClipboardContent content = new ClipboardContent();
                     content.putString(val.toString());
@@ -411,9 +407,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 }
 
                 //get XML path
-                LOG.log(Level.INFO, "File selected: {0}", selectedFile.getFileName());
+                MyLogger.log(Level.INFO, "File selected: {0}", selectedFile.getFileName());
                 String xmlPath = (folderPathTextField.getText() + "\\" + selectedFile.getFileName());
-                LOG.log(Level.INFO, "Full XML path: {0}", xmlPath);
+                MyLogger.log(Level.INFO, "Full XML path: {0}", xmlPath);
                 selectedXMLFilePath = xmlPath;
 
                 //get list of phones in the specific XML
@@ -440,11 +436,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 PhoneNameProperty selectedFile;
                 if (newValue != null)
                 {
-                    LOG.log(Level.INFO, "new phone selected is: {0}", newValue);
+                    MyLogger.log(Level.INFO, "new phone selected is: {0}", newValue);
                     selectedFile = (PhoneNameProperty) newValue;
                 } else
                 {
-                    LOG.log(Level.INFO, "new phone is null");
+                    MyLogger.log(Level.INFO, "new phone is null");
                     selectedFile = null;
                 }
 
@@ -455,15 +451,15 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                  clipboard.setContent(content);
                  */
                 //get XML path
-                LOG.log(Level.INFO, "selectedFile: {0}", newValue);
+                MyLogger.log(Level.INFO, "selectedFile: {0}", newValue);
                 String selectedPhone = "";
                 if (selectedFile != null)
                 {
                     selectedPhone = selectedFile.getPhoneName();
                 }
 
-                LOG.log(Level.INFO, "File selected in file list table: {0}", selectedXMLFilePath);
-                LOG.log(Level.INFO, "Phone selected: {0}", selectedPhone);
+                MyLogger.log(Level.INFO, "File selected in file list table: {0}", selectedXMLFilePath);
+                MyLogger.log(Level.INFO, "Phone selected: {0}", selectedPhone);
 
                 if ((allNodeElements != null) && (allNodeElements.length() > 0))
                 {
@@ -481,14 +477,14 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     //clear phone data
                     if (oldValue != newValue)
                     {
-                        LOG.log(Level.INFO, "clearing phone feature data table due to new phone selected");
+                        MyLogger.log(Level.INFO, "clearing phone feature data table due to new phone selected");
                         if (oldValue != null)
                         {
-                            LOG.log(Level.INFO, "Old value is: {0}", oldValue.toString());
+                            MyLogger.log(Level.INFO, "Old value is: {0}", oldValue.toString());
                         }
                         if (newValue != null)
                         {
-                            LOG.log(Level.INFO, "new value is: {0}", newValue.toString());
+                            MyLogger.log(Level.INFO, "new value is: {0}", newValue.toString());
                         }
 
                     }
@@ -500,22 +496,22 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(currentPhoneNode);
                     ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(currentPhoneNode);
                     ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(currentPhoneNode);
-                    LOG.log(Level.INFO, "Adding phone info to phone feature table");
+                    MyLogger.log(Level.INFO, "Adding phone info to phone feature table");
                     setMainPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false, TAG_SOURCE_PHONE);
 
                     //set default OS & default on by default
                     //set new default OS
                     defaultOSSectionCheckBox.setSelected(true);
                     defaultOSSectionCheckBoxselected = defaultOSSectionCheckBox.isSelected();
-                    LOG.log(Level.INFO, "defaultOSSectionCheckBox turned on automaticlly: {0}", defaultOSSectionCheckBoxselected);
+                    MyLogger.log(Level.INFO, "defaultOSSectionCheckBox turned on automaticlly: {0}", defaultOSSectionCheckBoxselected);
                     setDefaultOSSection();
 
                     //Default section
                     defaultSectionCheckBox.setSelected(true);
                     defaultSectionCheckBoxselected = defaultSectionCheckBox.isSelected();
-                    LOG.log(Level.INFO, "defaultSectionCheckBox turned on automaticlly: {0}", defaultSectionCheckBoxselected);
+                    MyLogger.log(Level.INFO, "defaultSectionCheckBox turned on automaticlly: {0}", defaultSectionCheckBoxselected);
                     setDefaultSection();
-                    
+
                     //set phone image
                     deviceImageView.setImage(null);
                     setDeviceImage();
@@ -548,18 +544,18 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     selectedVendorModel = (VendorModelProperty) newValue;
                     xmlPath = (folderPathTextField.getText() + "\\" + selectedVendorModel.getXmlName());
                     selectedPhone = selectedVendorModel.getModelName();
-                    LOG.log(Level.INFO, "phone1 table xml selected {0}, model selected: {1}", new Object[]
+                    MyLogger.log(Level.INFO, "phone1 table xml selected {0}, model selected: {1}", new Object[]
                     {
                         xmlPath, selectedPhone
                     });
                 } else
                 {
-                    LOG.log(Level.INFO, "phone1 table xml selected is null");
+                    MyLogger.log(Level.INFO, "phone1 table xml selected is null");
                 }
                 //get phone1 node
                 if (xmlPath.contains(".xml"))
                 {
-                    LOG.log(Level.INFO, "getting phone1 node");
+                    MyLogger.log(Level.INFO, "getting phone1 node");
                     Phone1Node = ReadXML.getNodeByTagValue(xmlPath, MAIN_NODE_ELEMENT, selectedPhone);
                 }
 
@@ -592,18 +588,18 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     selectedVendorModel = (VendorModelProperty) newValue;
                     xmlPath = (folderPathTextField.getText() + "\\" + selectedVendorModel.getXmlName());
                     selectedPhone = selectedVendorModel.getModelName();
-                    LOG.log(Level.INFO, "phone2 table xml selected {0}, model selected: {1}", new Object[]
+                    MyLogger.log(Level.INFO, "phone2 table xml selected {0}, model selected: {1}", new Object[]
                     {
                         xmlPath, selectedPhone
                     });
                 } else
                 {
-                    LOG.log(Level.INFO, "phone2 table xml selected is null");
+                    MyLogger.log(Level.INFO, "phone2 table xml selected is null");
                 }
                 //get phone1 node
                 if (xmlPath.contains(".xml"))
                 {
-                    LOG.log(Level.INFO, "getting phone2 node");
+                    MyLogger.log(Level.INFO, "getting phone2 node");
                     Phone2Node = ReadXML.getNodeByTagValue(xmlPath, MAIN_NODE_ELEMENT, selectedPhone);
                 }
 
@@ -626,11 +622,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             if (!selectedXMLFilePath.equals(""))
             {
                 defaultSectionCheckBoxselected = defaultSectionCheckBox.isSelected();
-                LOG.log(Level.INFO, "defaultSectionCheckBox selected: {0}", defaultSectionCheckBoxselected);
+                MyLogger.log(Level.INFO, "defaultSectionCheckBox selected: {0}", defaultSectionCheckBoxselected);
                 setDefaultSection();
             } else
             {
-                LOG.log(Level.INFO, "No XML selected...");
+                MyLogger.log(Level.INFO, "No XML selected...");
                 defaultSectionCheckBox.setSelected(false);
                 showErrorMessage(NO_XML_SELECTED_TITLE, NO_XML_SELECTED_BODY);
             }
@@ -643,14 +639,14 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             if (!selectedXMLFilePath.equals(""))
             {
                 defaultOSSectionCheckBoxselected = defaultOSSectionCheckBox.isSelected();
-                LOG.log(Level.INFO, "defaultOSSectionCheckBox selected: {0}", defaultOSSectionCheckBoxselected);
+                MyLogger.log(Level.INFO, "defaultOSSectionCheckBox selected: {0}", defaultOSSectionCheckBoxselected);
                 //get phone OS type
                 String phoneOSType = ReadXML.getNodePhoneTagValue(currentPhoneNode, OSTYPETAGNAME);
-                LOG.log(Level.INFO, "phone OSType is: {0}", phoneOSType);
+                MyLogger.log(Level.INFO, "phone OSType is: {0}", phoneOSType);
                 setDefaultOSSection();
             } else
             {
-                LOG.log(Level.INFO, "No XML selected...");
+                MyLogger.log(Level.INFO, "No XML selected...");
                 defaultOSSectionCheckBox.setSelected(false);
                 showErrorMessage(NO_XML_SELECTED_TITLE, NO_XML_SELECTED_BODY);
 
@@ -663,7 +659,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         {
 
             String savedFolderPath = PrefrencesHandler.getFolderPath().getPath();
-            LOG.log(Level.INFO, "Laoding files useing default folder: {0}", savedFolderPath);
+            //MyLogger.log(Level.INFO, MyLogger.class.getName());
+            MyLogger.log(Level.INFO, "Laoding files useing default folder: {0}", savedFolderPath);
             folderPathTextField.setText(savedFolderPath);
             getFileList(savedFolderPath);
         }
@@ -679,7 +676,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         final DirectoryChooser dirChoose = new DirectoryChooser();
         //attempt to get saved folder location from prefrences
         File lastFolderSelected = PrefrencesHandler.getFolderPath();
-        LOG.log(Level.INFO, "Saved file path retrieved");
+        MyLogger.log(Level.INFO, "Saved file path retrieved");
         if (lastFolderSelected != null)
         {
             final File initialDir = new File(lastFolderSelected.getPath());
@@ -693,7 +690,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         //open Dialog
         final File folderPath = dirChoose.showDialog(currentStage);
         //save folder path to prefrences
-        LOG.log(Level.INFO, "attempting to save folder path to prefrences");
+        MyLogger.log(Level.INFO, "attempting to save folder path to prefrences");
         PrefrencesHandler.setFolderPath(folderPath);
         String filePathStr = "";
         if (folderPath.getPath() != null)
@@ -701,14 +698,14 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             filePathStr = folderPath.getPath();
         } else
         {
-            LOG.log(Level.WARNING, "Folder path appears to be null");
+            MyLogger.log(Level.WARNING, "Folder path appears to be null");
         }
 
-        LOG.log(Level.INFO, "Folder path selected is: {0}", filePathStr);
+        MyLogger.log(Level.INFO, "Folder path selected is: {0}", filePathStr);
 
         folderPathTextField.setText(filePathStr);
 
-        LOG.log(Level.INFO, "attempt getting list of files in the folder");
+        MyLogger.log(Level.INFO, "attempt getting list of files in the folder");
         getFileList(filePathStr);
 
     }
@@ -723,7 +720,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             @Override
             public void run()
             {
-                fileList = FileHandler.getFileList(folderPath);
+                fileList = FileHandlerClass.getFileList(folderPath);
                 if (!fileList.isEmpty())
                 {
                     selectFolderLabel.setText("");
@@ -866,18 +863,18 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         //get phone feature property
         if (phoneToUpdate == 1)
         {
-            LOG.log(Level.INFO, "get search by tag phone 1 feature data as property");
-            LOG.log(Level.INFO, "phone1 data size: {0}", phoneFeatureTempData.size());
+            MyLogger.log(Level.INFO, "get search by tag phone 1 feature data as property");
+            MyLogger.log(Level.INFO, "phone1 data size: {0}", phoneFeatureTempData.size());
             phone1FeatureData.addAll(phoneFeatureTempData);
             phone1FeaturesTableView.setItems(phone1FeatureData);
         } else if (phoneToUpdate == 2)
         {
-            LOG.log(Level.INFO, "get search by tag phone 2 feature data as property");
+            MyLogger.log(Level.INFO, "get search by tag phone 2 feature data as property");
             phone2FeatureData.addAll(phoneFeatureTempData);
             phone2FeaturesTableView.setItems(phone2FeatureData);
         } else
         {
-            LOG.log(Level.WARNING, "Phone other then 1 or 2 in search by tag table. phoneToUpdate value: ", phoneToUpdate);
+            MyLogger.log(Level.WARNING, "Phone other then 1 or 2 in search by tag table. phoneToUpdate value: ", phoneToUpdate);
         }
 
     }
@@ -904,7 +901,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         }
 
         //get phone feature property
-        LOG.log(Level.INFO, "get phone feature data as property");
+        MyLogger.log(Level.INFO, "get phone feature data as property");
         phoneFeaturePropertyData.addAll(phoneFeatureTempData);
 
         //set sorted tag name
@@ -947,19 +944,19 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     private void removePhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection, String tagSource)
     {
-        LOG.log(Level.INFO, "remove phone feature data");
+        MyLogger.log(Level.INFO, "remove phone feature data");
         ObservableList<PhoneFeatureProperty> phonesDataToRemove = FXCollections.observableArrayList();
         phonesDataToRemove.addAll(PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection, tagSource));
         ObservableList<PhoneFeatureProperty> tempPhoneFeaturePropertyData = FXCollections.observableArrayList();
         tempPhoneFeaturePropertyData.addAll(phoneFeaturePropertyData);
-        LOG.log(Level.INFO, "phonesDataToRemove size: {0}", phonesDataToRemove.size());
+        MyLogger.log(Level.INFO, "phonesDataToRemove size: {0}", phonesDataToRemove.size());
 
         //remove tags from default that already exists in phone
         for (Iterator<PhoneFeatureProperty> itPhone = tempPhoneFeaturePropertyData.iterator(); itPhone.hasNext();)
         {
             String phoneTagName = itPhone.next().getElementName();
 
-            LOG.log(Level.INFO, "removeing Phone tag for default: {0}", defaultType);
+            MyLogger.log(Level.INFO, "removeing Phone tag for default: {0}", defaultType);
             //phoneFeaturePropertyData.removeIf(tag -> (tag.getElementName().equals(phoneTagName)));
             phoneFeaturePropertyData.removeIf(tag -> tag.getDefaultType().equals(defaultType));
             //phoneFeatureTableView.setItems(phoneFeaturePropertyData);
@@ -1009,11 +1006,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private void setDefaultOSSection()
     {
         String defaultOSSelected = ReadXML.getNodePhoneTagValue(currentPhoneNode, OSTYPETAGNAME);
-        LOG.log(Level.INFO, "phone OSType is: {0}", defaultOSSelected);
+        MyLogger.log(Level.INFO, "phone OSType is: {0}", defaultOSSelected);
         //get default OS sections
         if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(ANDROID) && (ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT) != null))
         {
-            LOG.log(Level.INFO, "Get default OS section Node: {0} (Should be Android)", defaultOSSelected);
+            MyLogger.log(Level.INFO, "Get default OS section Node: {0} (Should be Android)", defaultOSSelected);
             androidDefaultOSSection = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
 
             //return Android OS Default phone section as String ArrayList
@@ -1025,7 +1022,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             setMainPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true, TAG_SOURCE_DEFAULT_OS);
         } else if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(IOS) && (ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT) != null))
         {
-            LOG.log(Level.INFO, "Get default OS section Node: {0} (Should be iOS)", defaultOSSelected);
+            MyLogger.log(Level.INFO, "Get default OS section Node: {0} (Should be iOS)", defaultOSSelected);
             iOSDefaultOSSection = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
 
             //return iOS OS Default phone section as String ArrayList
@@ -1037,7 +1034,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             setMainPhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true, TAG_SOURCE_DEFAULT_OS);
         } else
         {
-            LOG.log(Level.INFO, "Mo match found for OSType: {0} or checkbox unchecked", defaultOSSelected);
+            MyLogger.log(Level.INFO, "Mo match found for OSType: {0} or checkbox unchecked", defaultOSSelected);
             defaultOSSectionCheckBox.setSelected(false);
 
             //return Android OS Default phone section as String ArrayList
@@ -1062,7 +1059,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     {
         if (defaultSectionCheckBoxselected)
         {
-            LOG.log(Level.INFO, "Parsing default section Node");
+            MyLogger.log(Level.INFO, "Parsing default section Node");
             defaultSectionNode = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
             //Return default phone section as String ArrayList's
             ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
@@ -1073,7 +1070,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
         } else
         {
-            LOG.log(Level.INFO, "default section unselected - removing default section Node");
+            MyLogger.log(Level.INFO, "default section unselected - removing default section Node");
             defaultSectionNode = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
             ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
             ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
@@ -1085,66 +1082,85 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     private void setDeviceImage()
     {
-        
+
         Task loadImageTask = loadDeviceImageTask();
-        LOG.log(Level.INFO, "Starting loadDeviceImage Task");
-        Thread loadimageThread = new Thread (loadImageTask);
-        loadimageThread.setDaemon(true);
-        loadimageThread.start();
+        MyLogger.log(Level.INFO, "Starting loadDeviceImage Task");
+        Thread loadimageThread = new Thread(loadImageTask);
+        loadimageThread.setDaemon(false);
+        loadimageThread.start();        
     }
-    
+
     private Task loadDeviceImageTask()
     {
         return new Task()
         {
-            String AutoPK = ReadXML.getNodePhoneTagValue(currentPhoneNode,"Auto_PK");
-            String familyID = ReadXML.getNodePhoneTagValue(defaultSectionNode,"FamilyID");;
+            String AutoPK = ReadXML.getNodePhoneTagValue(currentPhoneNode, "Auto_PK");
+            String familyID = ReadXML.getNodePhoneTagValue(defaultSectionNode, "FamilyID");
+            ;
             Image deviceImage = null;
 
             @Override
             protected Image call() throws Exception
             {
-                LOG.log(Level.INFO, "Starting get device image Task");
+                MyLogger.log(Level.INFO, "Starting get device image Task");
                 while (isCancelled())
                 {
-                    LOG.log(Level.WARNING, "Search by tag value task was cancelled");
+                    MyLogger.log(Level.WARNING, "Search by tag value task was cancelled");
                     break;
                 }
                 String imageFolderPath = folderPathTextField.getText().concat(IMAGES_FOLDER);
-                LOG.log(Level.INFO, "images folder path: {0}", imageFolderPath);
+                MyLogger.log(Level.INFO, "images folder path: {0}", imageFolderPath);
 
                 File imageFolder = new File(imageFolderPath);
                 if (imageFolder.exists() && imageFolder.isDirectory())
                 {
-                    File [] subFolderList = FileHandler.getSubFolderList(imageFolderPath);
+                    File[] subFolderList = FileHandlerClass.getSubFolderList(imageFolderPath);
                     File imagePath = null;
-                    for (int i=0;i<subFolderList.length;i++)
+                    for (int i = 0; i < subFolderList.length; i++)
                     {
                         //LOG.log(Level.INFO, "Folder name: {0}", subFolderList[i]);
                         //if (subFolderList[i].getName().matches("^"+familyID+".*") || subFolderList[i].getName().matches("^"+familyID + ".-"))
-                        if (subFolderList[i].getName().matches("^"+familyID+"[^0-9].*"))
+                        if (subFolderList[i].getName().matches("^" + familyID + "[^0-9].*"))
                         {
                             imageFolderPath = imageFolderPath.concat("\\").concat(subFolderList[i].getName()).concat("\\");
                             System.out.println("test " + subFolderList[i].getName());
-                            LOG.log(Level.INFO, "Family folder found, new path: {0} ",imageFolderPath);
-                            imagePath = FileHandler.getFileByName(imageFolderPath, AutoPK, ".jpg");                       
+                            MyLogger.log(Level.INFO, "Family folder found, new path: {0} ", imageFolderPath);
+                            imagePath = FileHandlerClass.getFileByName(imageFolderPath, AutoPK, ".jpg");
                         }
-                    } 
-                    LOG.log(Level.INFO, "image file path: {0}", imagePath);
-                    if (imagePath!= null && imagePath.exists())
+                    }
+                    MyLogger.log(Level.INFO, "image file path: {0}", imagePath);
+                    if (imagePath != null && imagePath.exists())
                     {
-                        LOG.log(Level.INFO, "image found at path: {0}", imagePath.getPath());
+                        MyLogger.log(Level.INFO, "image found at path: {0}", imagePath.getPath());
                         //save folder path to prefrences
-                        BufferedImage bufferedImage = null;
+
                         try
                         {
+                            java.io.FileInputStream fis = new FileInputStream(imagePath);
+                            MyLogger.log(Level.INFO, "setting device image to image view");
+                            deviceImageView.setImage(new Image(fis));
+                            deviceImageFilePath = imagePath.getPath();
+                            
+                            /*
+                            BufferedImage bufferedImage = null;
                             bufferedImage = ImageIO.read(imagePath);
+
+                            deviceImage = SwingFXUtils.toFXImage(bufferedImage, null);
+                            if (bufferedImage != null)
+                            {
+                                MyLogger.log(Level.INFO, "setting device image to image view");
+                                deviceImageView.setImage(deviceImage);
+                            } else
+                            {
+                                MyLogger.log(Level.INFO, "Buffered image is null");
+                            }
+                            */
+
                         } catch (IOException ex)
                         {
-                            LOG.log(Level.SEVERE, null, ex);
+                            MyLogger.log(Level.SEVERE, "IOException when trying to load image: {0}", ex);
                         }
-                        deviceImage = SwingFXUtils.toFXImage(bufferedImage, null);
-                        deviceImageView.setImage(deviceImage);
+
                     }
                 }
                 return null;
@@ -1161,21 +1177,21 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             @Override
             protected Integer call() throws Exception
             {
-                LOG.log(Level.INFO, "Starting search by tag value Task");
+                MyLogger.log(Level.INFO, "Starting search by tag value Task");
                 String folderPath = folderPathTextField.getText();
-                LOG.log(Level.INFO, "device folder path: {0}", folderPath);
+                MyLogger.log(Level.INFO, "device folder path: {0}", folderPath);
                 for (int i = 0; i < fileList.size(); i++)
                 {
 
                     if (isCancelled())
                     {
-                        LOG.log(Level.WARNING, "Search by tag value task was cancelled");
+                        MyLogger.log(Level.WARNING, "Search by tag value task was cancelled");
                         break;
                     }
                     updateProgress(i + 1, fileList.size());
                     searchInXml(folderPath, i);
                 }
-                LOG.log(Level.INFO,
+                MyLogger.log(Level.INFO,
                         "Done getting search by value info, number of phones found: {0}", vendorModelPropertyData.size());
                 Integer searchResultInt = vendorModelPropertyData.size();
 
@@ -1184,7 +1200,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
             private void searchInXml(String folderPath, int i)
             {
-                LOG.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]
+                MyLogger.log(Level.INFO, "Searching file: {0}, for text: {1}", new Object[]
                 {
                     folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
                 });
@@ -1194,7 +1210,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 {
 
                     String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
-                    LOG.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
+                    MyLogger.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
                     {
                         fileList.get(i), phoneName
                     });
@@ -1213,7 +1229,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     {
         if (searchByTagValueWorker != null && searchByTagValueWorker.isRunning())
         {
-            LOG.log(Level.INFO, "Search by tag value canceled");
+            MyLogger.log(Level.INFO, "Search by tag value canceled");
             searchByTagValueWorker.cancel();
         }
 
@@ -1227,7 +1243,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     {
         //reset progress bar
         //searchByValueProgressBar.progressProperty().unbind();
-        LOG.log(Level.INFO, "Unbind the seach by tag progress bar");
+        MyLogger.log(Level.INFO, "Unbind the seach by tag progress bar");
         //searchByValueProgressBar.setProgress(0);
         //LOG.log(Level.INFO, "Progress: {0}",searchByValueProgressBar.getProgress());
 
@@ -1260,18 +1276,18 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                         public void handle(WorkerStateEvent t)
                         {
                             String result = searchByTagValueWorker.getValue().toString();
-                            LOG.log(Level.INFO, "result for task: {0}", result);
+                            MyLogger.log(Level.INFO, "result for task: {0}", result);
                             searchByValueResultLabel.setText(result);
                         }
                     });
         }
 
     }
-    
+
     @FXML
     private void openDeviceImage()
     {
-        File imageFile = new File (deviceImageFilePath);
+        File imageFile = new File(deviceImageFilePath);
         if (imageFile.exists() && imageFile.isFile())
         {
             try
@@ -1279,18 +1295,17 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 Desktop.getDesktop().open(imageFile);
             } catch (IOException ex)
             {
-               LOG.log(Level.SEVERE, "Attempt to open device image file failed:\n{0}", ex);
-            }catch (NullPointerException ex)
+                MyLogger.log(Level.SEVERE, "Attempt to open device image file failed:\n{0}", ex);
+            } catch (NullPointerException ex)
             {
-                LOG.log(Level.SEVERE, "Attempt to open device image file failed:\n{0}", ex);
-            }catch (IllegalArgumentException ex)
+                MyLogger.log(Level.SEVERE, "Attempt to open device image file failed:\n{0}", ex);
+            } catch (IllegalArgumentException ex)
             {
-                LOG.log(Level.SEVERE, "Attempt to open device image file failed:\n{0}", ex);
+                MyLogger.log(Level.SEVERE, "Attempt to open device image file failed:\n{0}", ex);
             }
-        }
-        else if (!(imageFile.exists()) || !(imageFile.isFile()))
+        } else if (!(imageFile.exists()) || !(imageFile.isFile()))
         {
-            LOG.log(Level.WARNING, "device image file doesnt exists: {0}", imageFile.getPath());
+            MyLogger.log(Level.WARNING, "device image file doesnt exists: {0}", imageFile.getPath());
         }
     }
 
@@ -1333,7 +1348,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
      */
     private void showErrorMessage(String title, String body)
     {
-        LOG.log(Level.INFO, "Error message initiated. Error Title: {0}", title);
+        MyLogger.log(Level.INFO, "Error message initiated. Error Title: {0}", title);
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -1346,7 +1361,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
      */
     private void showInfoMessage(String title, String body)
     {
-        LOG.log(Level.INFO, "Info message initiated. Info Title: {0}", title);
+        MyLogger.log(Level.INFO, "Info message initiated. Info Title: {0}", title);
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);

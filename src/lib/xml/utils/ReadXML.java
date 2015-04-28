@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import lib.logUtil.MyLogger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -31,7 +32,6 @@ import org.xml.sax.SAXException;
 public final class ReadXML
 {
 
-    private static final Logger LOG = Logger.getLogger(ReadXML.class.getName());
 
     /**
      * Method to return all XML tag text from specific tags in the XML
@@ -85,7 +85,7 @@ public final class ReadXML
             }
         } catch (ParserConfigurationException | SAXException | IOException ex)
         {
-            LOG.log(Level.SEVERE, "Exception:{0}", ex);
+            MyLogger.log(Level.SEVERE, "Exception:{0}", ex);
         }
 
         return list;
@@ -124,17 +124,17 @@ public final class ReadXML
     public ArrayList<Node> getAllNodesByTagValue(ArrayList<String> fileList, String mainElement, String tagValue)
     {
         ArrayList<Node> phoneList = new ArrayList<>();
-        LOG.log(Level.INFO, "getting all nodes for value: {0}, and XML type: {1}", new Object[] {tagValue});
+        MyLogger.log(Level.INFO, "getting all nodes for value: {0}, and XML type: {1}", new Object[] {tagValue});
         if (fileList != null && !(fileList.isEmpty()))
         {
             for (String fileList1 : fileList)
             {
-                LOG.log(Level.INFO, "File read: {0}", fileList1);
+                MyLogger.log(Level.INFO, "File read: {0}", fileList1);
                 //phoneList.add(getNodeListByTagValue(fileList1, mainElement, tagValue));
             }
         }
 
-        LOG.log(Level.INFO, "Number of nodes found: {0}", phoneList.size());
+        MyLogger.log(Level.INFO, "Number of nodes found: {0}", phoneList.size());
         return phoneList;
     }
     
@@ -186,7 +186,7 @@ public final class ReadXML
 
             } catch (ParserConfigurationException | SAXException | IOException ex)
             {
-                LOG.log(Level.SEVERE, null, ex);
+                MyLogger.log(Level.SEVERE, null, ex);
             }
 
         } else
@@ -245,7 +245,7 @@ public final class ReadXML
 
             } catch (ParserConfigurationException | SAXException | IOException ex)
             {
-                LOG.log(Level.SEVERE, null, ex);
+                MyLogger.log(Level.SEVERE, null, ex);
             }
 
         } else
@@ -278,7 +278,7 @@ public final class ReadXML
                 String tempName = name.getTextContent();
                 if (tempName.equals(tagValue))
                 {
-                    LOG.log(Level.INFO, "TagText {0} found", tagValue);
+                    MyLogger.log(Level.INFO, "TagText {0} found", tagValue);
                     textExists = true;
                 }
             }
@@ -522,8 +522,8 @@ public final class ReadXML
                 {
                     tagValue = phoneNode.getTextContent();
 
-                    LOG.log(Level.INFO, "tag name: {0}", phoneNode.getNodeName());
-                    LOG.log(Level.INFO, "tag value: {0}", tagValue);
+                    MyLogger.log(Level.INFO, "tag name: {0}", phoneNode.getNodeName());
+                    MyLogger.log(Level.INFO, "tag value: {0}", tagValue);
                 }
             }
         }

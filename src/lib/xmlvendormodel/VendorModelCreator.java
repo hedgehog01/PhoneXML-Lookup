@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import lib.logUtil.MyLogger;
 
 /**
  *
@@ -29,7 +30,6 @@ import javafx.collections.ObservableList;
 public class VendorModelCreator
 {
     private static ObservableList<VendorModelProperty> xmlPhonePropertyNameData = FXCollections.observableArrayList();
-    private static final Logger LOG = Logger.getLogger(VendorModelCreator.class.getName());
     
         /**
      * Method to return list of VendorModelProperty objects
@@ -42,7 +42,7 @@ public class VendorModelCreator
     {
         if (files.size()==models.size())
         {
-            LOG.log(Level.INFO, "Creating vendor model list...");
+            MyLogger.log(Level.INFO, "Creating vendor model list...");
             for (int i=0;i<files.size();i++)
             {
                 xmlPhonePropertyNameData.add(new VendorModelProperty(files.get(i),models.get(i)));
@@ -50,7 +50,7 @@ public class VendorModelCreator
         }
         else
         {
-            LOG.log(Level.WARNING, "File list and model list not equal as should be!");
+            MyLogger.log(Level.WARNING, "File list and model list not equal as should be!");
         }
         return xmlPhonePropertyNameData;       
     }
@@ -64,7 +64,7 @@ public class VendorModelCreator
     public static void addVendorModelPropertyItem (ObservableList<VendorModelProperty> vendorModelList,String fileName,String modelName)
     {
         vendorModelList.add(new VendorModelProperty(fileName,modelName));
-        LOG.log(Level.INFO, "Adding VendorModel info. Vendor: {0}, Model {1}", new Object[] {fileName,modelName});
+        MyLogger.log(Level.INFO, "Adding VendorModel info. Vendor: {0}, Model {1}", new Object[] {fileName,modelName});
     }
     
 }

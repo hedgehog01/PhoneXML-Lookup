@@ -21,16 +21,15 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lib.logUtil.MyLogger;
 
 /**
  * Class to handle file operations
  *
  * @author Hedgehog01
  */
-public final class FileHandler
+public final class FileHandlerClass
 {
-
-    private static final Logger LOG = Logger.getLogger(FileHandler.class.getName());
 
     /**
      * method to return a list of files with .XML extention in a given folder
@@ -67,7 +66,7 @@ public final class FileHandler
         if (file.isDirectory())
         {
             File[] directories = file.listFiles(File::isDirectory);
-            LOG.log(Level.INFO, "List of sub directories found");
+            MyLogger.log(Level.INFO, "List of sub directories found");
             return directories;
         }
         return null;
@@ -82,10 +81,7 @@ public final class FileHandler
                 String lowercaseName = name.toLowerCase();
                 if (lowercaseName.endsWith(ext))
                 {
-                    LOG.log(Level.INFO, "File with Ext {0} found. File name: {1}", new Object[]
-                    {
-                        ext, lowercaseName
-                    });
+                    MyLogger.log(Level.INFO, "File with Ext {0} found. File name: {1}", new Object[]{ext, lowercaseName});
                     return true;
                 } else
                 {
@@ -102,7 +98,7 @@ public final class FileHandler
             {
                 if (file.getName().contains(fileNameSearched))
                 {
-                    LOG.log(Level.INFO, "file found: {0}",file.getPath());
+                    MyLogger.log(Level.INFO, "file found: {0}",file.getPath());
                     return file;
                 } 
                 

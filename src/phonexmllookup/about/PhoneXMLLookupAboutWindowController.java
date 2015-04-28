@@ -26,6 +26,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import lib.prefrences.PrefrencesHandler;
 
 /**
  * FXML Controller class
@@ -34,7 +35,6 @@ import javafx.scene.text.TextFlow;
  */
 public class PhoneXMLLookupAboutWindowController implements Initializable {
     
-    private final String BUILD_VERSION = "0.0.3";
     private final String ABOUT_MESSAGE = "This software if in beta testing.\nIf you have any suggestion or issues, \nplease contact Nathan Randelman\nnathan.randelman@cellebrite.com";
 
     @FXML
@@ -47,8 +47,8 @@ public class PhoneXMLLookupAboutWindowController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        titleLabel.setText("PhoneXML Lookup - " + BUILD_VERSION);
+        String buildVersion = PrefrencesHandler.getAppVersion();
+        titleLabel.setText("PhoneXML Lookup - " + PrefrencesHandler.getAppVersion());
         titleLabel.setAlignment(Pos.CENTER);
         aboutTextArea.setEditable(false);
         

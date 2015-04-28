@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import lib.logUtil.MyLogger;
 import lib.xmlphonefeatures.PhoneFeatureProperty;
 
 /**
@@ -33,7 +34,6 @@ public final class PhoneDataHandler
 
     private final static String OS_DEFAULT = "_OS_Default";
     private final static String DEFAULT_SECTION = "Default";
-    private static final Logger LOG = Logger.getLogger(PhoneDataHandler.class.getName());
 
     /**
      * Method to remove duplicate data from default phone data property data if
@@ -85,9 +85,9 @@ public final class PhoneDataHandler
             if (itPhone.hasNext())
             {
                 phoneTagName = itPhone.next().getElementName();
-                LOG.log(Level.INFO, "phone name tag: {0}", phoneTagName);
+                MyLogger.log(Level.INFO, "phone name tag: {0}", phoneTagName);
                 phoneTagDefaultType = itPhone.next().getDefaultType();
-                LOG.log(Level.INFO, "phone default type: {0}", phoneTagDefaultType);
+                MyLogger.log(Level.INFO, "phone default type: {0}", phoneTagDefaultType);
             } else
             {
                 phoneTagName = "";
@@ -128,9 +128,9 @@ public final class PhoneDataHandler
             String phoneTagDefaultType;
 
             phoneTagName = phoneFeaturePropertyData.get(i).getElementName();
-            LOG.log(Level.INFO, "phone name tag: {0}", phoneTagName);
+            MyLogger.log(Level.INFO, "phone name tag: {0}", phoneTagName);
             phoneTagDefaultType = phoneFeaturePropertyData.get(i).getDefaultType();
-            LOG.log(Level.INFO, "phone default type: {0}", phoneTagDefaultType);
+            MyLogger.log(Level.INFO, "phone default type: {0}", phoneTagDefaultType);
 
             //LOG.log(Level.INFO, "Phone tag Name: {0}",phoneTagName);
             //updatedDefaultOSProperty.removeIf(tag -> tag.getElementName().equals(phoneTagName) && (phoneTagDefaultType.contains(DEFAULT_SECTION)));

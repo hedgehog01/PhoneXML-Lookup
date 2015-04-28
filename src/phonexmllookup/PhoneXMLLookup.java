@@ -19,7 +19,6 @@ import javafx.stage.Stage;
  */
 public class PhoneXMLLookup extends Application
 {
-
     
     /**
      * Launches the main stage

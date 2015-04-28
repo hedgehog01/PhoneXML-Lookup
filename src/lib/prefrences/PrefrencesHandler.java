@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import lib.logUtil.MyLogger;
 
 /**
  * Class to handle preferences
@@ -27,7 +28,7 @@ import java.util.prefs.Preferences;
  */
 public final class PrefrencesHandler 
 {
-    private static final Logger LOG = Logger.getLogger(PrefrencesHandler.class.getName());
+
 
     /**
      * Returns the saved folder path preference
@@ -36,14 +37,13 @@ public final class PrefrencesHandler
      */
     public static File getFolderPath() 
     {
-        LOG.log(Level.INFO, "");
         Preferences prefs = Preferences.userNodeForPackage(PrefrencesHandler.class);
         String filePath = prefs.get("filePath", null);
         if (filePath != null) {
-            LOG.log(Level.INFO, "file path returned from prefrences: {0}",filePath);
+            MyLogger.log(Level.INFO, "file path returned from prefrences: {0}",filePath);
             return new File(filePath);
         } else {
-            LOG.log(Level.INFO, "No file path found in prefrences");
+            MyLogger.log(Level.INFO, "No file path found in prefrences");
             return null;
         }
     }
@@ -56,13 +56,47 @@ public final class PrefrencesHandler
     public static void setFolderPath(File file) {
         Preferences prefs = Preferences.userNodeForPackage(PrefrencesHandler.class);
         if (file != null) {
-            LOG.log(Level.INFO, "file path prefrences set to: {0}", file.getPath());
+            MyLogger.log(Level.INFO, "file path prefrences set to: {0}", file.getPath());
             prefs.put("filePath", file.getPath());
 
         } else {
-            LOG.log (Level.INFO, "file path null , remving from prefrences");
+            MyLogger.log (Level.INFO, "file path null , remving from prefrences");
             prefs.remove("filePath");
         }
     }
+    
+    /**
+     * Sets the folder path of the currently selected folder.
+     *
+     * @param version the Application version
+     */
+    public static void setAppVersion (String version)
+    {
+        Preferences prefs = Preferences.userNodeForPackage(PrefrencesHandler.class);
+        if (version != null && !(version.isEmpty())) {
+            MyLogger.log(Level.INFO, "version prefrences set to: {0}", version);
+            prefs.put("AppVersion", version);
 
+        } else {
+            MyLogger.log (Level.INFO, "version null or empty , remving from prefrences");
+            prefs.remove("AppVersion");
+        }
+    }
+    /**
+     * Returns the saved application version from preference
+     *
+     * @return the Application version saved in the preferences
+     */
+    public static String getAppVersion() 
+    {
+        Preferences prefs = Preferences.userNodeForPackage(PrefrencesHandler.class);
+        String version = prefs.get("AppVersion", null);
+        if (version != null && (!version.isEmpty())) {
+            MyLogger.log(Level.INFO, "Application version returned from prefrences: {0}",version);
+            return version;
+        } else {
+            MyLogger.log(Level.INFO, "No version found in preferences");
+            return null;
+        }
+    }
 }
