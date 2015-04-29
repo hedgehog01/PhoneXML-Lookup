@@ -104,6 +104,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     //private static final Logger MyLogger = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private final Level LOG_LEVEL = Level.INFO;
     private final String APPLICATION_VERSION = "0.0.4";
+    private final String[] SUPPORTED_IMAGE_EXTENTIONS = {"jpg","png"};
 
     private StringBuilder allNodeElements;
     private Node defaultSectionNode;
@@ -901,7 +902,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         }
 
         //get phone feature property
-        MyLogger.log(Level.INFO, "get phone feature data as property");
+        MyLogger.log(Level.FINE, "get phone feature data as property");
         phoneFeaturePropertyData.addAll(phoneFeatureTempData);
 
         //set sorted tag name
@@ -944,7 +945,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     private void removePhoneFeatureData(ArrayList<String> phoneTagNameList, ArrayList<String> phoneTagValueList, ArrayList<String> phoneAttributeList, String defaultType, boolean defaultSection, String tagSource)
     {
-        MyLogger.log(Level.INFO, "remove phone feature data");
+        MyLogger.log(Level.FINE, "remove phone feature data");
         ObservableList<PhoneFeatureProperty> phonesDataToRemove = FXCollections.observableArrayList();
         phonesDataToRemove.addAll(PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection, tagSource));
         ObservableList<PhoneFeatureProperty> tempPhoneFeaturePropertyData = FXCollections.observableArrayList();
@@ -956,7 +957,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         {
             String phoneTagName = itPhone.next().getElementName();
 
-            MyLogger.log(Level.INFO, "removeing Phone tag for default: {0}", defaultType);
+            MyLogger.log(Level.FINE, "removing Phone tag for default: {0}", defaultType);
             //phoneFeaturePropertyData.removeIf(tag -> (tag.getElementName().equals(phoneTagName)));
             phoneFeaturePropertyData.removeIf(tag -> tag.getDefaultType().equals(defaultType));
             //phoneFeatureTableView.setItems(phoneFeaturePropertyData);
@@ -1084,10 +1085,19 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     {
 
         Task loadImageTask = loadDeviceImageTask();
-        MyLogger.log(Level.INFO, "Starting loadDeviceImage Task");
+        MyLogger.log(Level.INFO, "Starting loadDeviceImage method (Before call to thread)");
         Thread loadimageThread = new Thread(loadImageTask);
-        loadimageThread.setDaemon(false);
-        loadimageThread.start();        
+        loadimageThread.setDaemon(true);
+        loadimageThread.start();      
+        
+        try
+        {
+            MyLogger.log(Level.INFO, "Image load thread in Join try");
+            loadimageThread.join();
+        } catch (InterruptedException ex)
+        {
+            MyLogger.log(Level.SEVERE, "Exception in image load thread join: {0}", ex);
+        }
     }
 
     private Task loadDeviceImageTask()
@@ -1096,7 +1106,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         {
             String AutoPK = ReadXML.getNodePhoneTagValue(currentPhoneNode, "Auto_PK");
             String familyID = ReadXML.getNodePhoneTagValue(defaultSectionNode, "FamilyID");
-            ;
+
             Image deviceImage = null;
 
             @Override
@@ -1124,8 +1134,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                         {
                             imageFolderPath = imageFolderPath.concat("\\").concat(subFolderList[i].getName()).concat("\\");
                             System.out.println("test " + subFolderList[i].getName());
+                             MyLogger.log(Level.INFO, "Family folder found: {0} ", subFolderList[i].getName());
                             MyLogger.log(Level.INFO, "Family folder found, new path: {0} ", imageFolderPath);
-                            imagePath = FileHandlerClass.getFileByName(imageFolderPath, AutoPK, ".jpg");
+                            imagePath = FileHandlerClass.getFileByName(imageFolderPath, AutoPK,SUPPORTED_IMAGE_EXTENTIONS);
                         }
                     }
                     MyLogger.log(Level.INFO, "image file path: {0}", imagePath);
@@ -1138,9 +1149,12 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                         {
                             java.io.FileInputStream fis = new FileInputStream(imagePath);
                             MyLogger.log(Level.INFO, "setting device image to image view");
-                            deviceImageView.setImage(new Image(fis));
+                            //deviceImageView.setImage(new Image(fis));
                             deviceImageFilePath = imagePath.getPath();
                             
+                            deviceImage = new Image(fis);
+                            MyLogger.log(Level.INFO, "Setting image to ImageView");
+                            deviceImageView.setImage(deviceImage);
                             /*
                             BufferedImage bufferedImage = null;
                             bufferedImage = ImageIO.read(imagePath);
@@ -1163,7 +1177,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
                     }
                 }
-                return null;
+                return deviceImage;
             }
 
         };

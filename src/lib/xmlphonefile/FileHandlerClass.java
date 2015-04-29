@@ -72,21 +72,25 @@ public final class FileHandlerClass
         return null;
     }
 
-    public static File getFileByName(String folderPathToFile, String fileNameSearched ,String ext)
+    public static File getFileByName(String folderPathToFile, String fileNameSearched, String[] ext)
     {
         FilenameFilter extFilter = new FilenameFilter()
         {
             public boolean accept(File dir, String name)
             {
                 String lowercaseName = name.toLowerCase();
-                if (lowercaseName.endsWith(ext))
+                for (int i = 0; i < ext.length; i++)
                 {
-                    MyLogger.log(Level.INFO, "File with Ext {0} found. File name: {1}", new Object[]{ext, lowercaseName});
-                    return true;
-                } else
-                {
-                    return false;
+                    if (lowercaseName.endsWith(ext[i]))
+                    {
+                        MyLogger.log(Level.FINE, "File with Ext {0} found. File name: {1}", new Object[]{ext[i], lowercaseName});
+                        return true;
+                    } else
+                    {
+                        return false;
+                    }
                 }
+                return false;
             }
         };
 
@@ -98,12 +102,12 @@ public final class FileHandlerClass
             {
                 if (file.getName().contains(fileNameSearched))
                 {
-                    MyLogger.log(Level.INFO, "file found: {0}",file.getPath());
+                    MyLogger.log(Level.INFO, "file found: {0}", file.getPath());
                     return file;
-                } 
-                
+                }
+
             }
-       }
+        }
         return null;
     }
 }

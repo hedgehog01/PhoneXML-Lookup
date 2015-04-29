@@ -85,9 +85,9 @@ public final class PhoneDataHandler
             if (itPhone.hasNext())
             {
                 phoneTagName = itPhone.next().getElementName();
-                MyLogger.log(Level.INFO, "phone name tag: {0}", phoneTagName);
+                MyLogger.log(Level.FINE, "phone name tag: {0}", phoneTagName);
                 phoneTagDefaultType = itPhone.next().getDefaultType();
-                MyLogger.log(Level.INFO, "phone default type: {0}", phoneTagDefaultType);
+                MyLogger.log(Level.FINE, "phone default type: {0}", phoneTagDefaultType);
             } else
             {
                 phoneTagName = "";

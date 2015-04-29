@@ -522,8 +522,8 @@ public final class ReadXML
                 {
                     tagValue = phoneNode.getTextContent();
 
-                    MyLogger.log(Level.INFO, "tag name: {0}", phoneNode.getNodeName());
-                    MyLogger.log(Level.INFO, "tag value: {0}", tagValue);
+                    MyLogger.log(Level.FINE, "tag name: {0}", phoneNode.getNodeName());
+                    MyLogger.log(Level.FINE, "tag value: {0}", tagValue);
                 }
             }
         }
