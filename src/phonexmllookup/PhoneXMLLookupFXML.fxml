@@ -62,12 +62,13 @@
                               <TableColumn editable="false" prefWidth="148.0" resizable="false" text="XML List" fx:id="xmlNameColumn" />
                            </columns>
                         </TableView>
-                        <Label fx:id="infoLabel" layoutX="670.0" layoutY="73.0" prefHeight="75.0" prefWidth="560.0" textFill="#1032da">
+                        <Label fx:id="infoLabel" layoutX="815.0" layoutY="5.0" prefHeight="87.0" prefWidth="409.0" textFill="#1032da">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Label>
                         <ImageView fx:id="deviceImageView" fitHeight="133.0" fitWidth="166.0" layoutX="1230.0" layoutY="13.0" onMouseClicked="#openDeviceImage" pickOnBounds="true" preserveRatio="true" />
+                        <TextField fx:id="filteredTagValueTextField" layoutX="648.0" layoutY="93.0" prefHeight="25.0" prefWidth="261.0" promptText="Search value..." />
                      </children>
                   </AnchorPane>
             </content>

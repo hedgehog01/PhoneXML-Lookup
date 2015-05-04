@@ -103,7 +103,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String IMAGES_FOLDER = "\\Images";
     //private static final Logger MyLogger = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private final Level LOG_LEVEL = Level.INFO;
-    private final String APPLICATION_VERSION = "0.0.4";
+    private final String APPLICATION_VERSION = "0.0.5";
     private final String[] SUPPORTED_IMAGE_EXTENTIONS = {"jpg","png"};
 
     private StringBuilder allNodeElements;
@@ -172,6 +172,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     @FXML
     private TextField filteredTagNameTextField;
+    
+    @FXML
+    private TextField filteredTagValueTextField;
 
     @FXML
     private TableView<FileProperty> fileListTableView;
@@ -906,15 +909,18 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         phoneFeaturePropertyData.addAll(phoneFeatureTempData);
 
         //set sorted tag name
-        phoneFeatureTableView.setItems(getSortedTagNameList());
+        phoneFeatureTableView.setItems(getSortedPhoneFeatureDataList());
     }
 
-    private SortedList<PhoneFeatureProperty> getSortedTagNameList()
+    private SortedList<PhoneFeatureProperty> getSortedPhoneFeatureDataList()
     {
         //====set up filtering of Phone Feature tag name data===
         // Phone Feature tag name filter - Wrap the ObservableList in a FilteredList (initially display all data).
         FilteredList<PhoneFeatureProperty> phoneTagNameFilteredList = new FilteredList<>(phoneFeaturePropertyData, p -> true);
-
+        
+        // Phone Feature tag value filter - Wrap the ObservableList in a FilteredList (initially display all data).
+        FilteredList<PhoneFeatureProperty> phoneTagValueFilteredList = new FilteredList<>(phoneFeaturePropertyData, p -> true);
+        
         // Phone Feature filter - Set the filter Predicate whenever the filter changes.
         filteredTagNameTextField.textProperty().addListener((observable, oldValue, newValue) ->
         {
@@ -932,13 +938,32 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 return phoneTagName.getElementName().toLowerCase().indexOf(lowerCaseFilter) != -1;
             });
         });
+        
+        // Phone Feature filter - Set the filter Predicate whenever the filter changes.
+        filteredTagValueTextField.textProperty().addListener((observable, oldValue, newValue) ->
+        {
+            phoneTagNameFilteredList.setPredicate(phoneValueName ->
+            {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty())
+                {
+                    return true;
+                }
+
+                // Compare filename with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                return phoneValueName.getElementValue().toLowerCase().indexOf(lowerCaseFilter) != -1;
+            });
+        });
+       
 
         // Wrap the FilteredList in a SortedList. 
         SortedList<PhoneFeatureProperty> sortedPhoneTagNameData = new SortedList<>(phoneTagNameFilteredList);
 
         // Bind the SortedList comparator to the TableView comparator.
-        sortedPhoneTagNameData.comparatorProperty().bind(phoneFeatureTableView.comparatorProperty());
-
+        sortedPhoneTagNameData.comparatorProperty().bind(phoneFeatureTableView.comparatorProperty());   
+        
         //=======End of filtered phone name setup======
         return sortedPhoneTagNameData;
     }

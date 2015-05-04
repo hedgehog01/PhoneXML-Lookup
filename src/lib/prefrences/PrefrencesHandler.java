@@ -18,7 +18,6 @@ package lib.prefrences;
 
 import java.io.File;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import lib.logUtil.MyLogger;
 

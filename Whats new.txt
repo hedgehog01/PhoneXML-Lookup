@@ -1,9 +1,7 @@
-PhoneXML Lookup - Version 0.0.4
+PhoneXML Lookup - Version 0.0.5
 
 What's new:
-1. Image should load when phone selected (Let me know if doesn't work).
-2. Clicking on the image with the mouse will open the image.
-3. Added App log output to help debug issues.
+1. Added search in tag value column.
 
 Future items:
 1. Get vendor result for searches (i.e. what are the vendors that contain Android devices etc.)
