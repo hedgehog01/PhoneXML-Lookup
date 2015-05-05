@@ -1,10 +1,10 @@
-PhoneXML Lookup - Version 0.0.5
+PhoneXML Lookup - Version 0.0.6
 
 What's new:
 1. Added search in tag value column.
 
 Future items:
-1. Get vendor result for searches (i.e. what are the vendors that contain Android devices etc.)
+1. Double click on XML name will open the XML file.
 
 For any issues or ideas send email to Nathan R.
 
