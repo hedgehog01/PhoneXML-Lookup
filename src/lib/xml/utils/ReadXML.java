@@ -32,7 +32,6 @@ import org.xml.sax.SAXException;
 public final class ReadXML
 {
 
-
     /**
      * Method to return all XML tag text from specific tags in the XML
      *
@@ -116,6 +115,7 @@ public final class ReadXML
 
     /**
      * method to return a list of nodes that have a specific value in a tag
+     *
      * @param fileList list of xml files
      * @param mainElement the main XMl element
      * @param tagValue the tag value to be searched
@@ -124,7 +124,10 @@ public final class ReadXML
     public ArrayList<Node> getAllNodesByTagValue(ArrayList<String> fileList, String mainElement, String tagValue)
     {
         ArrayList<Node> phoneList = new ArrayList<>();
-        MyLogger.log(Level.INFO, "getting all nodes for value: {0}, and XML type: {1}", new Object[] {tagValue});
+        MyLogger.log(Level.INFO, "getting all nodes for value: {0}, and XML type: {1}", new Object[]
+        {
+            tagValue
+        });
         if (fileList != null && !(fileList.isEmpty()))
         {
             for (String fileList1 : fileList)
@@ -137,7 +140,7 @@ public final class ReadXML
         MyLogger.log(Level.INFO, "Number of nodes found: {0}", phoneList.size());
         return phoneList;
     }
-    
+
     /**
      * Method to search for specific Node by text in one of it's elements -
      * returns the first node with the value if found.
@@ -146,9 +149,11 @@ public final class ReadXML
      * @param mainElement the main XML element (PHONE)
      * @param tagValue the text in the tag to find by (MUST BE LONGER THAN 2
      * CHARS)
+     * @param matchWholeWordSelected if true will search for match of whole word
+     * only, false will return value contained in the value
      * @return the phone Node or null if not found
      */
-    public static ArrayList<Node> getNodeListByTagValue(String XMLName, String mainElement, String tagValue)
+    public static ArrayList<Node> getNodeListByTagValue(String XMLName, String mainElement, String tagValue, boolean matchWholeWordSelected)
     {
         //StringBuilder phoneInfo = new StringBuilder();
         ArrayList<Node> phoneInfoNode = new ArrayList<>();
@@ -176,7 +181,7 @@ public final class ReadXML
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         // check if text exist in the node if so it's node we want.
 
-                        if ((isValueInNodeChildren(xmlChilderenNodes, tagValue)))
+                        if ((isValueInNodeChildren(xmlChilderenNodes, tagValue,matchWholeWordSelected)))
                         {
                             phoneInfoNode.add(node);
                         }
@@ -195,8 +200,7 @@ public final class ReadXML
         }
         return phoneInfoNode;
     }
-    
-    
+
     /**
      * Method to search for specific Node by text in one of it's elements -
      * returns the first node with the value if found.
@@ -209,6 +213,8 @@ public final class ReadXML
      */
     public static Node getNodeByTagValue(String XMLName, String mainElement, String tagValue)
     {
+        //result will only be if tag value exactly matches searched value
+        boolean matchWholeWord = true;
         //StringBuilder phoneInfo = new StringBuilder();
         Node phoneInfoNode = null;
 
@@ -235,7 +241,7 @@ public final class ReadXML
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         // check if text exist in the node if so it's node we want.
 
-                        if ((isValueInNodeChildren(xmlChilderenNodes, tagValue)))
+                        if ((isValueInNodeChildren(xmlChilderenNodes, tagValue,matchWholeWord)))
                         {
                             phoneInfoNode = node;
                         }
@@ -263,7 +269,7 @@ public final class ReadXML
      * @param tagValue the value in the tag (MUST BE LONGER THAN 2 CHARS)
      * return true value exists in the Node
      */
-    private static boolean isValueInNodeChildren(NodeList xmlChilderenNodes, String tagValue)
+    private static boolean isValueInNodeChildren(NodeList xmlChilderenNodes, String tagValue, boolean matchWholeWordSelected)
     {
 
         boolean textExists = false;
@@ -276,10 +282,21 @@ public final class ReadXML
                 //check if wanted text exists in the element
                 //LOG.log(Level.INFO, "Tag content: {0}",name.getTextContent());
                 String tempName = name.getTextContent();
-                if (tempName.equals(tagValue))
+                //check if search should be by matching whole word or not
+                if (matchWholeWordSelected)
                 {
-                    MyLogger.log(Level.INFO, "TagText {0} found", tagValue);
-                    textExists = true;
+                    if (tempName.equals(tagValue))
+                    {
+                        MyLogger.log(Level.INFO, "TagText that equals {0} found", tagValue);
+                        textExists = true;
+                    }
+                } else if (!matchWholeWordSelected)
+                {
+                    if (tempName.contains(tagValue))
+                    {
+                        MyLogger.log(Level.INFO, "TagText that contains {0} found", tagValue);
+                        textExists = true;
+                    }
                 }
             }
         }

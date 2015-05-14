@@ -123,6 +123,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private Task searchByTagValueWorker;
     private String deviceImageFilePath;
     private Image deviceImage;
+    private  boolean matchWholeWordSelected;
     //about window settings
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
     private final boolean ABOUT_WIN_SET_RESIZABLE = false;
@@ -155,6 +156,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     @FXML
     private Tab searchByTagValueTab;
+    
+    @FXML
+    private CheckBox matchWholeWordCheckBox;
 
     @FXML
     private Tab searchByVendorTab;
@@ -643,7 +647,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             }
 
         });
-
+        
         //setup checkboxes
         defaultSectionCheckBox.setOnAction((event) ->
         {
@@ -681,6 +685,12 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
             }
 
+        });
+        
+        matchWholeWordCheckBox.setOnAction((event) ->
+        {
+            matchWholeWordSelected = matchWholeWordCheckBox.isSelected();
+            MyLogger.log(LOG_LEVEL, "Search by value match whole word checkbox selected {0}", matchWholeWordSelected);
         });
 
         //load files from folder path saved in prefrences
@@ -1268,7 +1278,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
                 });
                 updateMessage("Update message");
-                ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText());
+                ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(),matchWholeWordSelected);
                 for (int j = 0; j < modelInFile.size(); j++)
                 {
 
@@ -1309,7 +1319,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         //MyLogger.log(Level.INFO, "Unbind the seach by tag progress bar");
         //searchByValueProgressBar.setProgress(0);
         //LOG.log(Level.INFO, "Progress: {0}",searchByValueProgressBar.getProgress());
-
         if (searchByTagTextField.getText() != null && fileList != null && !(searchByTagTextField.getText().isEmpty()) && !(fileList.isEmpty()))
         {
             searchByTagValueWorker = searchByTagValueTask();
