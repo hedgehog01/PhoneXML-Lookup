@@ -101,6 +101,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String TAB_NAME_PHONE_PLAIN_TEXT = "Phone plain text";
     private final String ERROR_NO_XML_TITLE = "No XML's found";
     private final String ERROR_NO_XML_BODY = "No XML files found in the selected folder...\nSelect a folder with XML's.";
+    private final String ERROR_FILE_NOT_FOUND_TITLE = "Error! File not found!";
+    private final String ERROR_FILE_NOT_FOUND_BODY = "File was not found, please verify it exists in the folder.";
     private final String IMAGES_FOLDER = "\\Images";
     //private static final Logger MyLogger = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
     private final Level LOG_LEVEL = Level.INFO;
@@ -123,7 +125,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private Task searchByTagValueWorker;
     private String deviceImageFilePath;
     private Image deviceImage;
-    private  boolean matchWholeWordSelected;
+    private boolean matchWholeWordSelected;
     //about window settings
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
     private final boolean ABOUT_WIN_SET_RESIZABLE = false;
@@ -156,7 +158,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     @FXML
     private Tab searchByTagValueTab;
-    
+
     @FXML
     private CheckBox matchWholeWordCheckBox;
 
@@ -442,11 +444,22 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             {
                 if (event.isPrimaryButtonDown() && event.getClickCount() == 2)
                 {
-                    MyLogger.log(Level.INFO,"File double clicked and should open: {0}",fileListTableView.getSelectionModel().getSelectedItem().getFileName());
+
+                    MyLogger.log(Level.INFO, "File double clicked and should open: {0}", fileListTableView.getSelectionModel().getSelectedItem().getFileName());
                     try
-                    {   String filePath = folderPathTextField.getText() + "\\" +fileListTableView.getSelectionModel().getSelectedItem().getFileName();
-                        MyLogger.log(Level.INFO, "Attemp to open file: {0}",filePath );
-                        Desktop.getDesktop().open(new File(filePath));
+                    {
+                        String filePath = folderPathTextField.getText() + "\\" + fileListTableView.getSelectionModel().getSelectedItem().getFileName();
+                        //verify file exists
+                        File file = new File(filePath);
+                        if (file.exists())
+                        {
+                            MyLogger.log(Level.INFO, "Attemp to open file: {0}", filePath);
+                            Desktop.getDesktop().open(new File(filePath));
+                        } else
+                        {
+                            MyLogger.log(Level.SEVERE, "Attemp to open file {0} failed!", filePath);
+                            showErrorMessage(ERROR_FILE_NOT_FOUND_TITLE,ERROR_FILE_NOT_FOUND_BODY);
+                        }
                     } catch (IOException ex)
                     {
                         MyLogger.log(Level.SEVERE, "Exception when trying to open the file", ex);
@@ -647,7 +660,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             }
 
         });
-        
+
         //setup checkboxes
         defaultSectionCheckBox.setOnAction((event) ->
         {
@@ -686,7 +699,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             }
 
         });
-        
+
         matchWholeWordCheckBox.setOnAction((event) ->
         {
             matchWholeWordSelected = matchWholeWordCheckBox.isSelected();
@@ -1278,7 +1291,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
                 });
                 updateMessage("Update message");
-                ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(),matchWholeWordSelected);
+                ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(), matchWholeWordSelected);
                 for (int j = 0; j < modelInFile.size(); j++)
                 {
 
