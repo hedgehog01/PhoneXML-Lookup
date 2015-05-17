@@ -1,10 +1,10 @@
 PhoneXML Lookup - Version 0.0.6
 
 What's new:
-1. Added search in tag value column.
-
-Future items:
 1. Double click on XML name will open the XML file.
+2. In search by tag value - option added to match search by whole word or not.
+3. Small UI fixes.
+
 
 For any issues or ideas send email to Nathan R.
 
