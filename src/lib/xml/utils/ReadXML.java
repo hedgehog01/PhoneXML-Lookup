@@ -8,7 +8,6 @@ package lib.xml.utils;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -114,36 +113,8 @@ public final class ReadXML
     }
 
     /**
-     * method to return a list of nodes that have a specific value in a tag
-     *
-     * @param fileList list of xml files
-     * @param mainElement the main XMl element
-     * @param tagValue the tag value to be searched
-     * @return a list of nodes that contain the value
-     */
-    public ArrayList<Node> getAllNodesByTagValue(ArrayList<String> fileList, String mainElement, String tagValue)
-    {
-        ArrayList<Node> phoneList = new ArrayList<>();
-        MyLogger.log(Level.INFO, "getting all nodes for value: {0}, and XML type: {1}", new Object[]
-        {
-            tagValue
-        });
-        if (fileList != null && !(fileList.isEmpty()))
-        {
-            for (String fileList1 : fileList)
-            {
-                MyLogger.log(Level.INFO, "File read: {0}", fileList1);
-                //phoneList.add(getNodeListByTagValue(fileList1, mainElement, tagValue));
-            }
-        }
-
-        MyLogger.log(Level.INFO, "Number of nodes found: {0}", phoneList.size());
-        return phoneList;
-    }
-
-    /**
-     * Method to search for specific Node by text in one of it's elements -
-     * returns the first node with the value if found.
+     * Method to search for list of Nodes by text in one of the nodes elements -
+     * returns a list of nodes that contain the searched value.
      *
      * @param XMLName the XML to get results from (full XML path)
      * @param mainElement the main XML element (PHONE)
@@ -304,7 +275,7 @@ public final class ReadXML
     }
 
     /**
-     * Method to return all a node Elements and attributes as StringBuilder
+     * Method to return all node Elements and attributes as StringBuilder
      * object
      *
      * @param node the node to evaluate

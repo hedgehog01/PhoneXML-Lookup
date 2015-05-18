@@ -457,7 +457,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                         } else
                         {
                             MyLogger.log(Level.SEVERE, "Attemp to open file {0} failed!", filePath);
-                            showErrorMessage(ERROR_FILE_NOT_FOUND_TITLE,ERROR_FILE_NOT_FOUND_BODY);
+                            showErrorMessage(ERROR_FILE_NOT_FOUND_TITLE, ERROR_FILE_NOT_FOUND_BODY);
                         }
                     } catch (IOException ex)
                     {
@@ -1176,9 +1176,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         return new Task()
         {
             String AutoPK = ReadXML.getNodePhoneTagValue(currentPhoneNode, "Auto_PK");
+            String phoneGuid = ReadXML.getNodePhoneTagValue(currentPhoneNode, "Guid");
             String familyID = ReadXML.getNodePhoneTagValue(defaultSectionNode, "FamilyID");
+            String familyGuid = ReadXML.getNodePhoneTagValue(defaultSectionNode, "FGuid");
 
-            Image deviceImage = null;
+            Image localDeviceImage = null;
 
             @Override
             protected Image call() throws Exception
@@ -1199,8 +1201,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     File imagePath = null;
                     for (int i = 0; i < subFolderList.length; i++)
                     {
-                        //LOG.log(Level.INFO, "Folder name: {0}", subFolderList[i]);
-                        //if (subFolderList[i].getName().matches("^"+familyID+".*") || subFolderList[i].getName().matches("^"+familyID + ".-"))
                         if (subFolderList[i].getName().matches("^" + familyID + "[^0-9].*"))
                         {
                             imageFolderPath = imageFolderPath.concat("\\").concat(subFolderList[i].getName()).concat("\\");
@@ -1210,51 +1210,58 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                             imagePath = FileHandlerClass.getFileByName(imageFolderPath, AutoPK, SUPPORTED_IMAGE_EXTENTIONS);
                         }
                     }
-                    MyLogger.log(Level.INFO, "image file path: {0}", imagePath);
-                    if (imagePath != null && imagePath.exists())
-                    {
-                        MyLogger.log(Level.INFO, "image found at path: {0}", imagePath.getPath());
-                        //save folder path to prefrences
-
-                        try
-                        {
-                            java.io.FileInputStream fis = new FileInputStream(imagePath);
-                            MyLogger.log(Level.INFO, "setting device image to image view");
-                            //deviceImageView.setImage(new Image(fis));
-                            deviceImageFilePath = imagePath.getPath();
-
-                            deviceImage = new Image(fis);
-                            MyLogger.log(Level.INFO, "Setting image to ImageView");
-                            deviceImageView.setImage(deviceImage);
-                            /*
-                             BufferedImage bufferedImage = null;
-                             bufferedImage = ImageIO.read(imagePath);
-
-                             deviceImage = SwingFXUtils.toFXImage(bufferedImage, null);
-                             if (bufferedImage != null)
-                             {
-                             MyLogger.log(Level.INFO, "setting device image to image view");
-                             deviceImageView.setImage(deviceImage);
-                             } else
-                             {
-                             MyLogger.log(Level.INFO, "Buffered image is null");
-                             }
-                             */
-
-                        } catch (IOException ex)
-                        {
-                            MyLogger.log(Level.SEVERE, "IOException when trying to load image: {0}", ex);
-                        }
-
-                    }
+                    localDeviceImage = getDeviceImage(imagePath,familyID,phoneGuid,familyGuid);
                 }
-                return deviceImage;
+                return localDeviceImage;
             }
-
         };
     }
 
+    private Image getDeviceImage(File imagePath,String familyID,String phoneGuid,String familyGuid)
+    {
+        Image localDeviceImage = null;
+        MyLogger.log(Level.INFO, "image file path: {0}", imagePath);
+        if (imagePath != null && imagePath.exists())
+        {
+            MyLogger.log(Level.INFO, "image found at path: {0}", imagePath.getPath());
+
+            try
+            {
+                java.io.FileInputStream fis = new FileInputStream(imagePath);
+                MyLogger.log(Level.INFO, "setting device image to image view");
+                //deviceImageView.setImage(new Image(fis));
+                deviceImageFilePath = imagePath.getPath();
+
+                localDeviceImage = new Image(fis);
+                MyLogger.log(Level.INFO, "Setting image to ImageView");
+                deviceImageView.setImage(localDeviceImage);
+
+            } catch (IOException ex)
+            {
+                MyLogger.log(Level.SEVERE, "IOException when trying to load image: {0}", ex);
+            }
+
+        } //check if dump family (FamilyID >10000) and if so check if logical counterpart has image
+        else if (imagePath == null && Integer.parseInt(familyID) > 10000)
+        {
+            /*
+            ArrayList<Node> resultNodes = new ArrayList<>();
+            String folderPath = folderPathTextField.getText();
+            MyLogger.log(Level.INFO, "In Dump XML - attempting to get logical counterpart image");
+            for (String file : fileList)
+            {
+                resultNodes = (ReadXML.getNodeListByTagValue(folderPath + "/" + file, MAIN_NODE_ELEMENT, phoneGuid, true));
+                
+                
+            }
+            */
+            
+        }
+        return localDeviceImage;
+    }
+
     //Task to search for results by tag value
+
     private Task searchByTagValueTask()
     {
         return new Task<Integer>()
