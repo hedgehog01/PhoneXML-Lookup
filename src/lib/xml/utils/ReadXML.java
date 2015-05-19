@@ -111,6 +111,7 @@ public final class ReadXML
         }
         return tagText;
     }
+    
 
     /**
      * Method to search for list of Nodes by text in one of the nodes elements -

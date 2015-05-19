@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import lib.logUtil.MyLogger;
 
 /**
@@ -30,6 +29,9 @@ import lib.logUtil.MyLogger;
  */
 public final class FileHandlerClass
 {
+    private static final Level LOG_LEVEL_INFO = Level.INFO;
+    private static final Level LOG_LEVEL_SEVER = Level.SEVERE;
+    private static final Level LOG_LEVEL_FINE = Level.FINE;
 
     /**
      * method to return a list of files with .XML extention in a given folder
@@ -109,5 +111,50 @@ public final class FileHandlerClass
             }
         }
         return null;
+    }
+    
+    /**
+     * method to return Logical counterpart of physical XML
+     * @param physicalXMLName the Physical XML name
+     * @param fileList the list of files to search through
+     * @return the logical counterpart if found or null if non found
+     */
+    public static String getLogicalCounterpart(String physicalXMLName,ArrayList<String> fileList)
+    {
+            MyLogger.log(Level.INFO, "In Dump XML - attempting to get logical counterpart Logical XML");
+            //get xml logical name to find Physical counterpart
+            String newLogicalFileName = physicalXMLName.replace("_", "").replace("Dump", "");
+            MyLogger.log(LOG_LEVEL_INFO, "XML physical family before cut name: {0}" ,physicalXMLName );
+            MyLogger.log(LOG_LEVEL_INFO, "XML physical family cut name: {0}" ,newLogicalFileName );
+            newLogicalFileName = "__" + newLogicalFileName;
+            for (String file : fileList)
+            {
+                if (file.equals(newLogicalFileName))
+                {
+
+                    MyLogger.log(LOG_LEVEL_INFO, "Logical counterpart file found for Physical: {0}", file);
+                    return file;
+                }
+            }
+            return null;
+    }
+    
+    /**
+     * method to test if a file exists
+     * @param filePath the file to check
+     * @return true if file exists or false if not
+     */
+    public static boolean fileExists(File filePath)
+    {
+        if (filePath != null && filePath.exists())
+        {
+            MyLogger.log(LOG_LEVEL_INFO, "File exists: {0}", filePath.getPath());
+            return true;
+        }
+        else
+        {
+            MyLogger.log(LOG_LEVEL_INFO, "File does NOT exists");
+            return false;
+        }
     }
 }

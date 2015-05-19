@@ -104,7 +104,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final String ERROR_FILE_NOT_FOUND_BODY = "File was not found, please verify it exists in the folder.";
     private final String IMAGES_FOLDER = "\\Images";
     //private static final Logger MyLogger = Logger.getLogger(PhoneXMLLookupFXMLController.class.getName());
-    private final Level LOG_LEVEL = Level.INFO;
+    private final Level LOG_LEVEL_INFO = Level.INFO;
+    private final Level LOG_LEVEL_SEVER = Level.SEVERE;
+    private final Level LOG_LEVEL_FINE = Level.FINE;
     private final String APPLICATION_VERSION = "0.0.6";
     private final String[] SUPPORTED_IMAGE_EXTENTIONS =
     {
@@ -123,8 +125,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private ArrayList<String> fileList;
     private Task searchByTagValueWorker;
     private String deviceImageFilePath;
-    private Image deviceImage;
     private boolean matchWholeWordSelected;
+    private FileProperty selectedFile;
     //about window settings
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
     private final boolean ABOUT_WIN_SET_RESIZABLE = false;
@@ -410,7 +412,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 defaultSectionCheckBox.setSelected(false);
 
                 //make sure new value is not null (in case folder with no data selected)
-                FileProperty selectedFile;
                 if (newValue != null)
                 {
                     selectedFile = (FileProperty) newValue;
@@ -702,7 +703,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         matchWholeWordCheckBox.setOnAction((event) ->
         {
             matchWholeWordSelected = matchWholeWordCheckBox.isSelected();
-            MyLogger.log(LOG_LEVEL, "Search by value match whole word checkbox selected {0}", matchWholeWordSelected);
+            MyLogger.log(LOG_LEVEL_INFO, "Search by value match whole word checkbox selected {0}", matchWholeWordSelected);
         });
 
         //load files from folder path saved in prefrences
@@ -1175,7 +1176,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     {
         return new Task()
         {
-            String AutoPK = ReadXML.getNodePhoneTagValue(currentPhoneNode, "Auto_PK");
+            String autoPK = ReadXML.getNodePhoneTagValue(currentPhoneNode, "Auto_PK");
             String phoneGuid = ReadXML.getNodePhoneTagValue(currentPhoneNode, "Guid");
             String familyID = ReadXML.getNodePhoneTagValue(defaultSectionNode, "FamilyID");
             String familyGuid = ReadXML.getNodePhoneTagValue(defaultSectionNode, "FGuid");
@@ -1191,37 +1192,47 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     MyLogger.log(Level.WARNING, "Search by tag value task was cancelled");
                     break;
                 }
-                String imageFolderPath = folderPathTextField.getText().concat(IMAGES_FOLDER);
-                MyLogger.log(Level.INFO, "images folder path: {0}", imageFolderPath);
-
-                File imageFolder = new File(imageFolderPath);
-                if (imageFolder.exists() && imageFolder.isDirectory())
+                File imagePath = getImagePath(familyID,autoPK);
+                if (FileHandlerClass.fileExists(imagePath))
                 {
-                    File[] subFolderList = FileHandlerClass.getSubFolderList(imageFolderPath);
-                    File imagePath = null;
-                    for (int i = 0; i < subFolderList.length; i++)
-                    {
-                        if (subFolderList[i].getName().matches("^" + familyID + "[^0-9].*"))
-                        {
-                            imageFolderPath = imageFolderPath.concat("\\").concat(subFolderList[i].getName()).concat("\\");
-                            System.out.println("test " + subFolderList[i].getName());
-                            MyLogger.log(Level.INFO, "Family folder found: {0} ", subFolderList[i].getName());
-                            MyLogger.log(Level.INFO, "Family folder found, new path: {0} ", imageFolderPath);
-                            imagePath = FileHandlerClass.getFileByName(imageFolderPath, AutoPK, SUPPORTED_IMAGE_EXTENTIONS);
-                        }
-                    }
-                    localDeviceImage = getDeviceImage(imagePath,familyID,phoneGuid,familyGuid);
+                    localDeviceImage = getDeviceImage(imagePath, familyID, phoneGuid);
                 }
                 return localDeviceImage;
             }
         };
     }
 
-    private Image getDeviceImage(File imagePath,String familyID,String phoneGuid,String familyGuid)
+    private File getImagePath(String familyID,String autoPK )
+    {
+        String imageFolderPath = folderPathTextField.getText().concat(IMAGES_FOLDER);
+        MyLogger.log(Level.INFO, "images folder path: {0}", imageFolderPath);
+        File imagePath = null;
+        File imageFolder = new File(imageFolderPath);
+        if (imageFolder.exists() && imageFolder.isDirectory())
+        {
+            File[] subFolderList = FileHandlerClass.getSubFolderList(imageFolderPath);
+            
+            for (int i = 0; i < subFolderList.length; i++)
+            {
+                if (subFolderList[i].getName().matches("^" + familyID + "[^0-9].*"))
+                {
+                    imageFolderPath = imageFolderPath.concat("\\").concat(subFolderList[i].getName()).concat("\\");
+                    System.out.println("test " + subFolderList[i].getName());
+                    MyLogger.log(Level.INFO, "Family folder found: {0} ", subFolderList[i].getName());
+                    MyLogger.log(Level.INFO, "Family folder found, new path: {0} ", imageFolderPath);
+                    imagePath = FileHandlerClass.getFileByName(imageFolderPath, autoPK, SUPPORTED_IMAGE_EXTENTIONS);
+                }
+            }
+
+        }
+        return imagePath;
+    }
+
+    private Image getDeviceImage(File imagePath, String physicalFamilyID, String physicalPhoneGuid)
     {
         Image localDeviceImage = null;
-        MyLogger.log(Level.INFO, "image file path: {0}", imagePath);
-        if (imagePath != null && imagePath.exists())
+        
+        if (FileHandlerClass.fileExists(imagePath))
         {
             MyLogger.log(Level.INFO, "image found at path: {0}", imagePath.getPath());
 
@@ -1242,26 +1253,37 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             }
 
         } //check if dump family (FamilyID >10000) and if so check if logical counterpart has image
-        else if (imagePath == null && Integer.parseInt(familyID) > 10000)
+        else if (imagePath == null && Integer.parseInt(physicalFamilyID) > 10000)
         {
-            /*
+
             ArrayList<Node> resultNodes = new ArrayList<>();
             String folderPath = folderPathTextField.getText();
-            MyLogger.log(Level.INFO, "In Dump XML - attempting to get logical counterpart image");
-            for (String file : fileList)
+            String logicalCounterpart = FileHandlerClass.getLogicalCounterpart(selectedFile.getFileName(), fileList);
+            String logicalXMLPath = (folderPathTextField.getText() + "\\" + logicalCounterpart);
+            Node logicalDefaultNode = ReadXML.getNodeByTagValue(logicalXMLPath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
+            String logicalFamilyID = ReadXML.getNodePhoneTagValue(logicalDefaultNode, "FamilyID");
+            //verify logical is indeed counterpart by FamilyID
+            if (Integer.parseInt(physicalFamilyID) - Integer.parseInt(logicalFamilyID) == 10000)
             {
-                resultNodes = (ReadXML.getNodeListByTagValue(folderPath + "/" + file, MAIN_NODE_ELEMENT, phoneGuid, true));
-                
-                
+                MyLogger.log(LOG_LEVEL_INFO, "Logical counterpart verified by Family ID");
+                Node logicalNode = ReadXML.getNodeByTagValue(logicalXMLPath, MAIN_NODE_ELEMENT, physicalPhoneGuid);
+                if (logicalNode != null)
+                {
+
+                } else if (logicalNode == null)
+                {
+                    MyLogger.log(LOG_LEVEL_INFO, "Could not find logical counterpart with GUID {0}", physicalPhoneGuid);
+                    return null;
+                }
             }
-            */
-            
+
         }
         return localDeviceImage;
     }
+    
+    
 
     //Task to search for results by tag value
-
     private Task searchByTagValueTask()
     {
         return new Task<Integer>()
