@@ -1,4 +1,4 @@
-PhoneXML Lookup - Version 0.0.6
+PhoneXML Lookup - Version 0.0.7
 
 What's new:
 1. Phone image now loads even if Physical phone selected (if logical counterpart has an image).
