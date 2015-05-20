@@ -31,6 +31,10 @@ import org.xml.sax.SAXException;
 public final class ReadXML
 {
 
+    private static Level LOG_LEVEL_INFO = Level.INFO;
+    private static Level LOG_LEVEL_WARNING = Level.WARNING;
+    private static Level LOG_LEVEL_FINE = Level.FINE;
+    private static Level LOG_LEVEL_SEVERE = Level.SEVERE;
     /**
      * Method to return all XML tag text from specific tags in the XML
      *
@@ -51,9 +55,7 @@ public final class ReadXML
 
             // normalize text representation
             doc.getDocumentElement().normalize();
-            System.out.println("Root element of the doc is "
-                    + doc.getDocumentElement().getNodeName());
-
+            MyLogger.log(LOG_LEVEL_FINE, "Root element of the doc is: {0}", doc.getDocumentElement().getNodeName());
             NodeList nodeList = doc.getElementsByTagName(mainElement);
             for (int i = 0; i < nodeList.getLength(); i++)
             {
@@ -74,7 +76,7 @@ public final class ReadXML
                             if (name.getTagName().equals(tagName) && !(name.hasAttributes()))
                             {
                                 list.add(name.getTextContent());
-                                System.out.println("Adding " + name.getTextContent());
+                                MyLogger.log(LOG_LEVEL_FINE, "Adding tag text content: {0}", name.getTextContent());
                             }
                         }
                     }
@@ -168,7 +170,7 @@ public final class ReadXML
 
         } else
         {
-            System.out.println("Text to be search was too short or null");
+            MyLogger.log(LOG_LEVEL_FINE, "Text to be search was too short or null: {0}", tagValue);
         }
         return phoneInfoNode;
     }
@@ -228,7 +230,7 @@ public final class ReadXML
 
         } else
         {
-            System.out.println("Text to be search was too short or null");
+            MyLogger.log(LOG_LEVEL_FINE, "Text to be search was too short or null: {0}", tagValue);
         }
         return phoneInfoNode;
     }

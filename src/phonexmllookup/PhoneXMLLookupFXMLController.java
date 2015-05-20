@@ -107,7 +107,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final Level LOG_LEVEL_INFO = Level.INFO;
     private final Level LOG_LEVEL_SEVER = Level.SEVERE;
     private final Level LOG_LEVEL_FINE = Level.FINE;
-    private final String APPLICATION_VERSION = "0.0.6";
+    private final String APPLICATION_VERSION = "0.0.7";
     private final String[] SUPPORTED_IMAGE_EXTENTIONS =
     {
         "jpg", "png"

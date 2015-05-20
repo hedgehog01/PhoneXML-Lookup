@@ -37,6 +37,7 @@ public final class MyLogger
     private final static int LOG_SIZE_LIMIT = 1024000;
     private final static int NUMBER_OF_LOG_FILES = 3;
     private static final boolean APPEND_LOG = true;
+    private static final String LOG_FILE_NAME = "/log_phoneXML_Lookup.txt";
 
     public MyLogger() throws IOException
     {
@@ -93,7 +94,7 @@ public final class MyLogger
             {
                 logFolder.mkdirs();
             }
-            fh = new FileHandler(logFolder.getPath() + "/log_test_phoneLookup.txt", LOG_SIZE_LIMIT, NUMBER_OF_LOG_FILES, APPEND_LOG);
+            fh = new FileHandler(logFolder.getPath() + LOG_FILE_NAME, LOG_SIZE_LIMIT, NUMBER_OF_LOG_FILES, APPEND_LOG);
 
             lm.addLogger(LOG);
             LOG.setLevel(Level.INFO);

@@ -34,6 +34,9 @@ public final class PhoneDataHandler
 
     private final static String OS_DEFAULT = "_OS_Default";
     private final static String DEFAULT_SECTION = "Default";
+    private static final Level LOG_LEVEL_INFO = Level.INFO;
+    private static final Level LOG_LEVEL_SEVER = Level.SEVERE;
+    private static final Level LOG_LEVEL_FINE = Level.FINE;
 
     /**
      * Method to remove duplicate data from default phone data property data if
@@ -85,9 +88,9 @@ public final class PhoneDataHandler
             if (itPhone.hasNext())
             {
                 phoneTagName = itPhone.next().getElementName();
-                MyLogger.log(Level.FINE, "phone name tag: {0}", phoneTagName);
+                MyLogger.log(LOG_LEVEL_FINE, "phone name tag: {0}", phoneTagName);
                 phoneTagDefaultType = itPhone.next().getDefaultType();
-                MyLogger.log(Level.FINE, "phone default type: {0}", phoneTagDefaultType);
+                MyLogger.log(LOG_LEVEL_FINE, "phone default type: {0}", phoneTagDefaultType);
             } else
             {
                 phoneTagName = "";
@@ -128,9 +131,9 @@ public final class PhoneDataHandler
             String phoneTagDefaultType;
 
             phoneTagName = phoneFeaturePropertyData.get(i).getElementName();
-            MyLogger.log(Level.INFO, "phone name tag: {0}", phoneTagName);
+            MyLogger.log(LOG_LEVEL_FINE, "phone name tag: {0}", phoneTagName);
             phoneTagDefaultType = phoneFeaturePropertyData.get(i).getDefaultType();
-            MyLogger.log(Level.INFO, "phone default type: {0}", phoneTagDefaultType);
+            MyLogger.log(LOG_LEVEL_FINE, "phone default type: {0}", phoneTagDefaultType);
 
             //LOG.log(Level.INFO, "Phone tag Name: {0}",phoneTagName);
             //updatedDefaultOSProperty.removeIf(tag -> tag.getElementName().equals(phoneTagName) && (phoneTagDefaultType.contains(DEFAULT_SECTION)));
