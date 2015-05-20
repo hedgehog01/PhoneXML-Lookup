@@ -1192,7 +1192,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     MyLogger.log(Level.WARNING, "Search by tag value task was cancelled");
                     break;
                 }
-                File imagePath = getImagePath(familyID,autoPK);
+                File imagePath = getImagePath(familyID, autoPK,phoneGuid);
                 if (FileHandlerClass.fileExists(imagePath))
                 {
                     localDeviceImage = getDeviceImage(imagePath, familyID, phoneGuid);
@@ -1202,7 +1202,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         };
     }
 
-    private File getImagePath(String familyID,String autoPK )
+    private File getImagePath(String familyID, String autoPK,String phoneGuid)
     {
         String imageFolderPath = folderPathTextField.getText().concat(IMAGES_FOLDER);
         MyLogger.log(Level.INFO, "images folder path: {0}", imageFolderPath);
@@ -1210,20 +1210,25 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         File imageFolder = new File(imageFolderPath);
         if (imageFolder.exists() && imageFolder.isDirectory())
         {
-            File[] subFolderList = FileHandlerClass.getSubFolderList(imageFolderPath);
-            
-            for (int i = 0; i < subFolderList.length; i++)
+            imagePath = FileHandlerClass.getImageFolderPath(imageFolderPath, familyID, autoPK, SUPPORTED_IMAGE_EXTENTIONS);
+            if (imagePath != null && imagePath.exists())
             {
-                if (subFolderList[i].getName().matches("^" + familyID + "[^0-9].*"))
+                MyLogger.log(LOG_LEVEL_INFO, "image path found {0}", imagePath.getPath());
+                return imagePath;
+            } else
+            {
+                if (Integer.parseInt(familyID) > 10000)
                 {
-                    imageFolderPath = imageFolderPath.concat("\\").concat(subFolderList[i].getName()).concat("\\");
-                    System.out.println("test " + subFolderList[i].getName());
-                    MyLogger.log(Level.INFO, "Family folder found: {0} ", subFolderList[i].getName());
-                    MyLogger.log(Level.INFO, "Family folder found, new path: {0} ", imageFolderPath);
-                    imagePath = FileHandlerClass.getFileByName(imageFolderPath, autoPK, SUPPORTED_IMAGE_EXTENTIONS);
+                    String logicalCounterpart = FileHandlerClass.getLogicalCounterpart(selectedFile.getFileName(), fileList);
+                    String logicalXMLPath = (folderPathTextField.getText() + "\\" + logicalCounterpart);
+                    Node logicalDefaultNode = ReadXML.getNodeByTagValue(logicalXMLPath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
+                    Node logicalCounterpartNode = ReadXML.getNodeByTagValue(logicalXMLPath, MAIN_NODE_ELEMENT, phoneGuid);
+                    String logicalFamilyID = ReadXML.getNodePhoneTagValue(logicalDefaultNode, "FamilyID");
+                    String logicalAutoPK = ReadXML.getNodePhoneTagValue(logicalCounterpartNode, "Auto_PK");
+                    imagePath = FileHandlerClass.getImageFolderPath(imageFolderPath, logicalFamilyID, logicalAutoPK, SUPPORTED_IMAGE_EXTENTIONS);
+                    
                 }
             }
-
         }
         return imagePath;
     }
@@ -1231,7 +1236,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private Image getDeviceImage(File imagePath, String physicalFamilyID, String physicalPhoneGuid)
     {
         Image localDeviceImage = null;
-        
+
         if (FileHandlerClass.fileExists(imagePath))
         {
             MyLogger.log(Level.INFO, "image found at path: {0}", imagePath.getPath());
@@ -1253,6 +1258,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             }
 
         } //check if dump family (FamilyID >10000) and if so check if logical counterpart has image
+        /*
         else if (imagePath == null && Integer.parseInt(physicalFamilyID) > 10000)
         {
 
@@ -1277,11 +1283,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 }
             }
 
-        }
+        }*/
         return localDeviceImage;
     }
-    
-    
 
     //Task to search for results by tag value
     private Task searchByTagValueTask()
