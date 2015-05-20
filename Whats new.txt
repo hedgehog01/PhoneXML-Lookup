@@ -1,9 +1,8 @@
 PhoneXML Lookup - Version 0.0.6
 
 What's new:
-1. Double click on XML name will open the XML file.
-2. In search by tag value - option added to match search by whole word or not.
-3. Small UI fixes.
+1. Phone image now loads even if Physical phone selected (if logical counterpart has an image).
+2. Minor Log fixes
 
 
 For any issues or ideas send email to Nathan R.
