@@ -36,6 +36,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
@@ -63,7 +64,6 @@ import lib.xml.utils.PhoneDataHandler;
 import lib.xml.utils.ReadXML;
 import lib.xmlphonefeatures.PhoneFeatureCreator;
 import lib.xmlphonefeatures.PhoneFeatureProperty;
-import lib.xmlphonefeatures.PhoneFeaturePropertyCompare;
 import lib.xmlphonename.PhoneNameCreator;
 import lib.xmlphonename.PhoneNameHandler;
 import lib.xmlphonename.PhoneNameProperty;
@@ -108,7 +108,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final Level LOG_LEVEL_INFO = Level.INFO;
     private final Level LOG_LEVEL_SEVER = Level.SEVERE;
     private final Level LOG_LEVEL_FINE = Level.FINE;
-    private final String APPLICATION_VERSION = "0.0.8";
+    private final String APPLICATION_VERSION = "0.0.9";
     private final String[] SUPPORTED_IMAGE_EXTENTIONS =
     {
         "jpg", "png"
@@ -132,6 +132,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final boolean ABOUT_WIN_ALWAYS_ON_TOP = true;
     private final boolean ABOUT_WIN_SET_RESIZABLE = false;
     private final String ABOUT_WIN_STAGE_TITLE = "About";
+    private final String[] SEARCH_TYPE_OPTIONS = {"Tag Value","Tag Name"};
 
     private String selectedXMLFilePath = "";
     //file name table data
@@ -304,10 +305,15 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     @FXML
     private Label searchByValueResultLabel;
     
+    @FXML
+    private ChoiceBox<String> searchTypeChoiceBox;
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        //setup searchTypeChoiceBox items:
+        searchTypeChoiceBox.getItems().addAll(SEARCH_TYPE_OPTIONS);
+        searchTypeChoiceBox.getSelectionModel().selectFirst();
         //set App version
         if (PrefrencesHandler.getAppVersion() == null || !(PrefrencesHandler.getAppVersion().equals(APPLICATION_VERSION)))
         {
@@ -737,14 +743,13 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             if (initialDir.exists() && initialDir.isDirectory())
             {
                 dirChoose.setInitialDirectory(initialDir);
-            }
-            else
+            } else
             {
                 MyLogger.log(LOG_LEVEL_SEVER, "Folder path from prefrences appears to be incorrect: {0}", lastFolderSelected.getPath());
                 folderPathTextField.setText("");
                 dirChoose.setInitialDirectory(null);
             }
-            
+
         }
 
         dirChoose.setTitle(FOLDER_CHOOSER_TITLE);
@@ -910,7 +915,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         //create list from the inputed strings
         ObservableList<PhoneFeatureProperty> phoneFeatureTempData;
         phoneFeatureTempData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection, tagSource);
- 
+
         //get phone feature property
         if (phoneToUpdate == 1)
         {
@@ -1191,7 +1196,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     MyLogger.log(Level.WARNING, "Search by tag value task was cancelled");
                     break;
                 }
-                File imagePath = getImagePath(familyID, autoPK,phoneGuid);
+                File imagePath = getImagePath(familyID, autoPK, phoneGuid);
                 if (FileHandlerClass.fileExists(imagePath))
                 {
                     localDeviceImage = getDeviceImage(imagePath, familyID, phoneGuid);
@@ -1201,7 +1206,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         };
     }
 
-    private File getImagePath(String familyID, String autoPK,String phoneGuid)
+    private File getImagePath(String familyID, String autoPK, String phoneGuid)
     {
         String imageFolderPath = folderPathTextField.getText().concat(IMAGES_FOLDER);
         MyLogger.log(Level.INFO, "images folder path: {0}", imageFolderPath);
@@ -1225,7 +1230,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                     String logicalFamilyID = ReadXML.getNodePhoneTagValue(logicalDefaultNode, "FamilyID");
                     String logicalAutoPK = ReadXML.getNodePhoneTagValue(logicalCounterpartNode, "Auto_PK");
                     imagePath = FileHandlerClass.getImageFolderPath(imageFolderPath, logicalFamilyID, logicalAutoPK, SUPPORTED_IMAGE_EXTENTIONS);
-                    
+
                 }
             }
         }
@@ -1255,7 +1260,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             {
                 MyLogger.log(Level.SEVERE, "IOException when trying to load image: {0}", ex);
             }
-        } 
+        }
         return localDeviceImage;
     }
 
@@ -1294,21 +1299,51 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 {
                     folderPath + "/" + fileList.get(i), searchByTagTextField.getText()
                 });
-                updateMessage("Update message");
-                ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(), matchWholeWordSelected);
-                for (int j = 0; j < modelInFile.size(); j++)
+                if (searchTypeChoiceBox.getSelectionModel().getSelectedItem().equals("Tag Value"))
                 {
-
-                    String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
-                    MyLogger.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
-                    {
-                        fileList.get(i), phoneName
-                    });
-                    VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
+                    MyLogger.log(LOG_LEVEL_FINE, "Searching by tag value: {0}", searchTypeChoiceBox.getSelectionModel().getSelectedItem());
+                    searchInXMLByTagValue(folderPath,i);
                 }
+                else if (searchTypeChoiceBox.getSelectionModel().getSelectedItem().equals("Tag Name"))
+                {
+                    MyLogger.log(LOG_LEVEL_FINE, "Searching by tag Name: {0}", searchTypeChoiceBox.getSelectionModel().getSelectedItem());
+                    searchInXMLByTagName(folderPath,i);
+                }
+                
+                updateMessage("Update message");
 
             }
         };
+    }
+
+    private void searchInXMLByTagValue(String folderPath,int i)
+    {
+        ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(), matchWholeWordSelected);
+        for (int j = 0; j < modelInFile.size(); j++)
+        {
+
+            String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
+            MyLogger.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
+            {
+                fileList.get(i), phoneName
+            });
+            VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
+        }
+    }
+    
+        private void searchInXMLByTagName(String folderPath,int i)
+    {
+        ArrayList<Node> modelInFile = ReadXML.getNodeListByTagName(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(), matchWholeWordSelected);
+        for (int j = 0; j < modelInFile.size(); j++)
+        {
+
+            String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
+            MyLogger.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
+            {
+                fileList.get(i), phoneName
+            });
+            VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
+        }
     }
 
     /*
@@ -1343,6 +1378,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             vendorModelPropertyData.clear();
             phone1FeatureData.clear();
             phone2FeatureData.clear();
+            searchByValueResultLabel.setText("");
             searchByValueProgressBar.progressProperty().unbind();
             //searchByValueProgressBar.setProgress(0.0);
 
@@ -1457,8 +1493,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         alert.setContentText(body);
         alert.showAndWait();
     }
-    
-
 
     /*
      *method to exit the application 

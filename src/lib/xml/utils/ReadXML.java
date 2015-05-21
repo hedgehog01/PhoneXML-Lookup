@@ -155,7 +155,7 @@ public final class ReadXML
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         // check if text exist in the node if so it's node we want.
 
-                        if ((isValueInNodeChildren(xmlChilderenNodes, tagValue,matchWholeWordSelected)))
+                        if ((isTagValueInNodeChildren(xmlChilderenNodes, tagValue,matchWholeWordSelected)))
                         {
                             phoneInfoNode.add(node);
                         }
@@ -171,6 +171,66 @@ public final class ReadXML
         } else
         {
             MyLogger.log(LOG_LEVEL_FINE, "Text to be search was too short or null: {0}", tagValue);
+        }
+        return phoneInfoNode;
+    }
+    
+        /**
+     * Method to search for list of Nodes by tag name
+     * returns a list of nodes that contain the searched value.
+     *
+     * @param XMLName the XML to get results from (full XML path)
+     * @param mainElement the main XML element (PHONE)
+     * @param tagName the tag name to find by (MUST BE LONGER THAN 2
+     * CHARS)
+     * @param matchWholeWordSelected if true will search for match of whole word
+     * only, false will return value contained in the value
+     * @return the phone Node or null if not found
+     */
+    public static ArrayList<Node> getNodeListByTagName(String XMLName, String mainElement, String tagName, boolean matchWholeWordSelected)
+    {
+        //StringBuilder phoneInfo = new StringBuilder();
+        ArrayList<Node> phoneInfoNode = new ArrayList<>();
+
+        //Make sure search text is not
+        if (tagName != null && tagName.length() > 2)
+        {
+            try
+            {
+                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = docFactory.newDocumentBuilder();
+                Document doc = builder.parse(XMLName);
+
+                // normalize text representation
+                doc.getDocumentElement().normalize();
+
+                NodeList nodeList = doc.getElementsByTagName(mainElement);
+                for (int i = 0; i < nodeList.getLength(); i++)
+                {
+                    Node node = nodeList.item(i);
+                    if (node.getNodeType() == Node.ELEMENT_NODE)
+                    {
+                        Element element = (Element) node;
+
+                        NodeList xmlChilderenNodes = element.getChildNodes();
+                        // check if text exist in the node if so it's node we want.
+
+                        if ((isTagNameInNodeChildren(xmlChilderenNodes, tagName,matchWholeWordSelected)))
+                        {
+                            phoneInfoNode.add(node);
+                        }
+
+                    }
+                }
+
+            } catch (ParserConfigurationException | SAXException | IOException ex)
+            {
+                MyLogger.log(Level.SEVERE, null, ex);
+            }
+
+        } else
+        {
+            MyLogger.log(LOG_LEVEL_FINE, "Text to be search was too short or null: {0}", tagName);
         }
         return phoneInfoNode;
     }
@@ -215,7 +275,7 @@ public final class ReadXML
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         // check if text exist in the node if so it's node we want.
 
-                        if ((isValueInNodeChildren(xmlChilderenNodes, tagValue,matchWholeWord)))
+                        if ((isTagValueInNodeChildren(xmlChilderenNodes, tagValue,matchWholeWord)))
                         {
                             phoneInfoNode = node;
                         }
@@ -236,14 +296,14 @@ public final class ReadXML
     }
 
     /*
-     * Method to search for specific value the node child elements.
+     * Method to search for specific tag value the node child elements.
      *
      * @param XMLName the XML to get results from (full XML path)
      * @param mainElement the main XML element (PHONE)
      * @param tagValue the value in the tag (MUST BE LONGER THAN 2 CHARS)
      * return true value exists in the Node
      */
-    private static boolean isValueInNodeChildren(NodeList xmlChilderenNodes, String tagValue, boolean matchWholeWordSelected)
+    private static boolean isTagValueInNodeChildren(NodeList xmlChilderenNodes, String tagValue, boolean matchWholeWordSelected)
     {
 
         boolean textExists = false;
@@ -261,20 +321,62 @@ public final class ReadXML
                 {
                     if (tempName.equals(tagValue))
                     {
-                        MyLogger.log(Level.INFO, "TagText that equals {0} found", tagValue);
+                        MyLogger.log(Level.FINE, "TagText that equals {0} found", tagValue);
                         textExists = true;
                     }
                 } else if (!matchWholeWordSelected)
                 {
                     if (tempName.contains(tagValue))
                     {
-                        MyLogger.log(Level.INFO, "TagText that contains {0} found", tagValue);
+                        MyLogger.log(Level.FINE, "TagText that contains {0} found", tagValue);
                         textExists = true;
                     }
                 }
             }
         }
         return textExists;
+    }
+    
+        /*
+     * Method to search for specific tag by the tag name the node child elements.
+     *
+     * @param XMLName the XML to get results from (full XML path)
+     * @param mainElement the main XML element (PHONE)
+     * @param tagName the value in the tag (MUST BE LONGER THAN 2 CHARS)
+     * return true value exists in the Node
+     */
+    private static boolean isTagNameInNodeChildren(NodeList xmlChilderenNodes, String tagName, boolean matchWholeWordSelected)
+    {
+
+        boolean tagNameExists = false;
+        for (int j = 0; j < xmlChilderenNodes.getLength(); j++)
+        {
+            Node n = xmlChilderenNodes.item(j);
+            if (n.getNodeType() == Node.ELEMENT_NODE)
+            {
+                Element name = (Element) n;
+                //check if wanted text exists in the element
+                //LOG.log(Level.INFO, "Tag content: {0}",name.getTextContent());
+                String tempName = name.getTagName();
+                //check if search should be by matching whole word or not
+                if (matchWholeWordSelected)
+                {
+                    if (tempName.equals(tagName))
+                    {
+                        MyLogger.log(Level.INFO, "Tag Name that equals: {0} found", tagName);
+                        tagNameExists = true;
+                    }
+                } else if (!matchWholeWordSelected)
+                {
+                    if (tempName.contains(tagName))
+                    {
+                        MyLogger.log(Level.INFO, "Tag Name that contains {0} found", tagName);
+                        tagNameExists = true;
+                    }
+                }
+            }
+        }
+        return tagNameExists;
     }
 
     /**
