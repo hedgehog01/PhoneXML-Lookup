@@ -123,8 +123,8 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <ProgressBar fx:id="searchByValueProgressBar" layoutX="618.0" layoutY="41.0" prefWidth="200.0" progress="0.0" />
-                        <Label layoutX="618.0" layoutY="14.0" prefHeight="17.0" prefWidth="200.0" text="Data loading..." />
+                        <ProgressBar fx:id="searchByValueProgressBar" layoutX="1195.0" layoutY="54.0" prefWidth="200.0" progress="0.0" />
+                        <Label layoutX="1195.0" layoutY="27.0" prefHeight="17.0" prefWidth="200.0" text="Data loading..." />
                         <CheckBox fx:id="matchWholeWordCheckBox" layoutX="470.0" layoutY="41.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="133.0" text="Match whole word" />
                      </children>
                   </AnchorPane>

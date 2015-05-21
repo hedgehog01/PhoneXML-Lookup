@@ -44,21 +44,29 @@ public final class FileHandlerClass
     {
         ArrayList<String> fileListArray = new ArrayList<>();
         File folder = new File(folderPath);
-        File[] fileList = folder.listFiles(new FilenameFilter()
+        if (folder.exists() && folder.isDirectory())
         {
-            @Override
-            public boolean accept(File fileList, String name)
+            File[] fileList = folder.listFiles(new FilenameFilter()
             {
-                return name.toLowerCase().endsWith(".xml");
+                @Override
+                public boolean accept(File fileList, String name)
+                {
+                    return name.toLowerCase().endsWith(".xml");
+                }
+            });
+            for (File file : fileList)
+            {
+                if (file.isFile())
+                {
+                    //System.out.println(file.getName());
+                    fileListArray.add(file.getName());
+                }
             }
-        });
-        for (File file : fileList)
+        }
+        else
         {
-            if (file.isFile())
-            {
-                //System.out.println(file.getName());
-                fileListArray.add(file.getName());
-            }
+            MyLogger.log(LOG_LEVEL_SEVER, "Folder doesn't exists or is null: {0}", folderPath);
+            return null;
         }
         return fileListArray;
     }
@@ -163,7 +171,7 @@ public final class FileHandlerClass
         }
     }
 
-    public static File getImageFolderPath (String imageFolderPath,String familyID,String autoPK, String[] SUPPORTED_IMAGE_EXTENTIONS)
+    public static File getImageFolderPath(String imageFolderPath, String familyID, String autoPK, String[] SUPPORTED_IMAGE_EXTENTIONS)
     {
         File[] subFolderList = FileHandlerClass.getSubFolderList(imageFolderPath);
         File imagePath = null;

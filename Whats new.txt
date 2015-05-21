@@ -1,9 +1,7 @@
-PhoneXML Lookup - Version 0.0.7
+PhoneXML Lookup - Version 0.0.8
 
 What's new:
-1. Phone image now loads even if Physical phone selected (if logical counterpart has an image).
-2. Minor Log fixes
-
+1. Fixed bug that user could not change the selected phones folder if it was erased after first adding.
 
 For any issues or ideas send email to Nathan R.
 

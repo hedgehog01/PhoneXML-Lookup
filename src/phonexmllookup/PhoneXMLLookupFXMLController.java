@@ -63,6 +63,7 @@ import lib.xml.utils.PhoneDataHandler;
 import lib.xml.utils.ReadXML;
 import lib.xmlphonefeatures.PhoneFeatureCreator;
 import lib.xmlphonefeatures.PhoneFeatureProperty;
+import lib.xmlphonefeatures.PhoneFeaturePropertyCompare;
 import lib.xmlphonename.PhoneNameCreator;
 import lib.xmlphonename.PhoneNameHandler;
 import lib.xmlphonename.PhoneNameProperty;
@@ -107,7 +108,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
     private final Level LOG_LEVEL_INFO = Level.INFO;
     private final Level LOG_LEVEL_SEVER = Level.SEVERE;
     private final Level LOG_LEVEL_FINE = Level.FINE;
-    private final String APPLICATION_VERSION = "0.0.7";
+    private final String APPLICATION_VERSION = "0.0.8";
     private final String[] SUPPORTED_IMAGE_EXTENTIONS =
     {
         "jpg", "png"
@@ -302,6 +303,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     @FXML
     private Label searchByValueResultLabel;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb)
@@ -732,7 +734,17 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         if (lastFolderSelected != null)
         {
             final File initialDir = new File(lastFolderSelected.getPath());
-            dirChoose.setInitialDirectory(initialDir);
+            if (initialDir.exists() && initialDir.isDirectory())
+            {
+                dirChoose.setInitialDirectory(initialDir);
+            }
+            else
+            {
+                MyLogger.log(LOG_LEVEL_SEVER, "Folder path from prefrences appears to be incorrect: {0}", lastFolderSelected.getPath());
+                folderPathTextField.setText("");
+                dirChoose.setInitialDirectory(null);
+            }
+            
         }
 
         dirChoose.setTitle(FOLDER_CHOOSER_TITLE);
@@ -773,7 +785,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             public void run()
             {
                 fileList = FileHandlerClass.getFileList(folderPath);
-                if (!fileList.isEmpty())
+                if (fileList != null && !fileList.isEmpty())
                 {
                     selectFolderLabel.setText("");
                     setFilePropertyData(fileList);
@@ -898,20 +910,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         //create list from the inputed strings
         ObservableList<PhoneFeatureProperty> phoneFeatureTempData;
         phoneFeatureTempData = PhoneFeatureCreator.createPhoneFeatureList(phoneTagNameList, phoneTagValueList, phoneAttributeList, defaultType, defaultSection, tagSource);
-        // if the list is default section, remove duplicated tags 
-        //take care of Default section - remove tags already in phone and Default OS
-        /*
-         if (defaultSection && (defaultType.equals(DEFAULT_SECTION)) && (phoneFeaturePropertyData.size() > 0))
-         {
-         phoneFeatureTempData = PhoneDataHandler.removeDupProperties(phoneFeatureTempData, phoneFeaturePropertyData);
-         }
-
-         /// take care of OS default section
-         if (defaultSection && (defaultType.contains(OS_DEFAULT)) && phoneFeaturePropertyData.size() > 0)
-         {
-         phoneFeatureTempData = PhoneDataHandler.removeDupDefaultProperties1(phoneFeatureTempData, phoneFeaturePropertyData);
-         }
-         */
+ 
         //get phone feature property
         if (phoneToUpdate == 1)
         {
@@ -1256,34 +1255,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             {
                 MyLogger.log(Level.SEVERE, "IOException when trying to load image: {0}", ex);
             }
-
-        } //check if dump family (FamilyID >10000) and if so check if logical counterpart has image
-        /*
-        else if (imagePath == null && Integer.parseInt(physicalFamilyID) > 10000)
-        {
-
-            ArrayList<Node> resultNodes = new ArrayList<>();
-            String folderPath = folderPathTextField.getText();
-            String logicalCounterpart = FileHandlerClass.getLogicalCounterpart(selectedFile.getFileName(), fileList);
-            String logicalXMLPath = (folderPathTextField.getText() + "\\" + logicalCounterpart);
-            Node logicalDefaultNode = ReadXML.getNodeByTagValue(logicalXMLPath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
-            String logicalFamilyID = ReadXML.getNodePhoneTagValue(logicalDefaultNode, "FamilyID");
-            //verify logical is indeed counterpart by FamilyID
-            if (Integer.parseInt(physicalFamilyID) - Integer.parseInt(logicalFamilyID) == 10000)
-            {
-                MyLogger.log(LOG_LEVEL_INFO, "Logical counterpart verified by Family ID");
-                Node logicalNode = ReadXML.getNodeByTagValue(logicalXMLPath, MAIN_NODE_ELEMENT, physicalPhoneGuid);
-                if (logicalNode != null)
-                {
-
-                } else if (logicalNode == null)
-                {
-                    MyLogger.log(LOG_LEVEL_INFO, "Could not find logical counterpart with GUID {0}", physicalPhoneGuid);
-                    return null;
-                }
-            }
-
-        }*/
+        } 
         return localDeviceImage;
     }
 
@@ -1485,6 +1457,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         alert.setContentText(body);
         alert.showAndWait();
     }
+    
+
 
     /*
      *method to exit the application 
