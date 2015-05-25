@@ -304,7 +304,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     @FXML
     private Label searchByValueResultLabel;
-    
+
     @FXML
     private ChoiceBox<String> searchTypeChoiceBox;
 
@@ -1056,9 +1056,6 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
             Parent root = fxmlLoader.load(location.openStream());
             PhoneXMLLookupAboutWindowController aboutWindowController = (PhoneXMLLookupAboutWindowController) fxmlLoader.getController();
-            //PhoneXMLLookupAboutWindowController.setUserData(userUUID, collectionUUID,coinTableData);
-
-            //Parent parent = FXMLLoader.load(getClass().getResource("/com/jjlcollectors/fxml/collectionview/CollectionView.fxml"));
             Stage aboutWindowStage = new Stage();
             Scene scene = new Scene(root);
             aboutWindowStage.setScene(scene);
@@ -1302,21 +1299,20 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 if (searchTypeChoiceBox.getSelectionModel().getSelectedItem().equals("Tag Value"))
                 {
                     MyLogger.log(LOG_LEVEL_FINE, "Searching by tag value: {0}", searchTypeChoiceBox.getSelectionModel().getSelectedItem());
-                    searchInXMLByTagValue(folderPath,i);
-                }
-                else if (searchTypeChoiceBox.getSelectionModel().getSelectedItem().equals("Tag Name"))
+                    searchInXMLByTagValue(folderPath, i);
+                } else if (searchTypeChoiceBox.getSelectionModel().getSelectedItem().equals("Tag Name"))
                 {
                     MyLogger.log(LOG_LEVEL_FINE, "Searching by tag Name: {0}", searchTypeChoiceBox.getSelectionModel().getSelectedItem());
-                    searchInXMLByTagName(folderPath,i);
+                    searchInXMLByTagName(folderPath, i);
                 }
-                
+
                 updateMessage("Update message");
 
             }
         };
     }
 
-    private void searchInXMLByTagValue(String folderPath,int i)
+    private void searchInXMLByTagValue(String folderPath, int i)
     {
         ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(), matchWholeWordSelected);
         for (int j = 0; j < modelInFile.size(); j++)
@@ -1330,8 +1326,8 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             VendorModelCreator.addVendorModelPropertyItem(vendorModelPropertyData, fileList.get(i), phoneName);
         }
     }
-    
-        private void searchInXMLByTagName(String folderPath,int i)
+
+    private void searchInXMLByTagName(String folderPath, int i)
     {
         ArrayList<Node> modelInFile = ReadXML.getNodeListByTagName(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(), matchWholeWordSelected);
         for (int j = 0; j < modelInFile.size(); j++)
