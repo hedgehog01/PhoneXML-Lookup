@@ -14,6 +14,10 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import lib.logUtil.MyLogger;
 
 import org.w3c.dom.Document;
@@ -31,10 +35,12 @@ import org.xml.sax.SAXException;
 public final class ReadXML
 {
 
-    private static Level LOG_LEVEL_INFO = Level.INFO;
-    private static Level LOG_LEVEL_WARNING = Level.WARNING;
-    private static Level LOG_LEVEL_FINE = Level.FINE;
-    private static Level LOG_LEVEL_SEVERE = Level.SEVERE;
+    private static final Level LOG_LEVEL_INFO = Level.INFO;
+    private static final Level LOG_LEVEL_WARNING = Level.WARNING;
+    private static final Level LOG_LEVEL_FINE = Level.FINE;
+    private static final Level LOG_LEVEL_SEVERE = Level.SEVERE;
+    private static final String LOG_CLASS_NAME = "ReadXML: ";
+    private static final String XPATH_TAG_WITH_NO_ATTRIBUTES = "[not(@*)]";
     /**
      * Method to return all XML tag text from specific tags in the XML
      *
@@ -621,6 +627,56 @@ public final class ReadXML
             }
         }
         return tagValue;
+    }
+    
+//====================================================================================================//
+//========================================XPATH methods==============================================//
+    /*
+     * Method to search for specific tag value the node child elements.
+     *
+     * @param XMLName the XML to get results from (full XML path)
+     * @param mainElement the main XML element (PHONE)
+     * @param tagValue the value in the tag (MUST BE LONGER THAN 2 CHARS)
+     * return true value exists in the Node
+     */
+    /**
+     * Method to return all XML tag text from specific tags in the XML
+     *
+     * @param XMLName the XML to get results from (full XML path)
+     * @param rootElement the XML root element
+     * @param mainElement the main XML element (PHONE)
+     * @param tagName the tag to get results from
+     * @return list of all tag text from the requested tags
+     */
+    public static ArrayList<String> getAllXMLTagTextByNameXPATH(String XMLName,String rootElement, String mainElement, String tagName)
+    {
+        //the list to be returned
+        ArrayList<String> list = new ArrayList<>();
+        try
+        {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = docFactory.newDocumentBuilder();
+            Document doc = builder.parse(XMLName);
+            
+            XPath xPath =  XPathFactory.newInstance().newXPath();
+            System.out.println("*************************");
+            String expression = "/"+rootElement+"/"+mainElement +"/"+tagName+XPATH_TAG_WITH_NO_ATTRIBUTES;
+            System.out.println(expression);
+            NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
+            System.out.println("Number of results found: "+(nodeList.getLength()-1));
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                String nodeValue=nodeList.item(i).getFirstChild().getNodeValue();
+                MyLogger.log(LOG_LEVEL_FINE, LOG_CLASS_NAME + "Getting value for tag: {0} , value= {1}", new Object[] {nodeList.item(i).getNodeName(),nodeValue});
+                list.add(nodeValue);
+            }
+            
+ 
+        } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException ex)
+        {
+            Logger.getLogger(ReadXML.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return list;
     }
 
 }

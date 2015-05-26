@@ -30,13 +30,14 @@ import org.w3c.dom.Node;
  */
 public class ReadXMLTest {
     
+
     public ReadXMLTest() {
     }
-    
+    @Ignore
     @BeforeClass
     public static void setUpClass() {
     }
-    
+    @Ignore
     @AfterClass
     public static void tearDownClass() {
     }
@@ -44,11 +45,11 @@ public class ReadXMLTest {
     /**
      * Test of getAllXMLTagTextByName method, of class ReadXML.
      */
-    
+    @Ignore
     @Test
     public void testGetAllXMLTagTextByName() {
         System.out.println("getAllXMLTagTextByName");
-        String XMLName = "SamsungGSM.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
         String mainElement = "PHONE";
         String tagName = "Name";
         String expResult = "YP-GB70 Yepp Galaxy S Player";
@@ -135,6 +136,109 @@ public class ReadXMLTest {
         System.out.println ("Result: " + result);
         assertEquals(expResult, result);
         
+    }
+
+    /**
+     * Test of getNodeListByTagValue method, of class ReadXML.
+     */
+    @Ignore
+    @Test
+    public void testGetNodeListByTagValue()
+    {
+        System.out.println("getNodeListByTagValue");
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String mainElement = "PHONE";
+        String tagValue = "Name";
+        boolean matchWholeWordSelected = false;
+        ArrayList<Node> expResult = null;
+        ArrayList<Node> result = ReadXML.getNodeListByTagValue(XMLName, mainElement, tagValue, matchWholeWordSelected);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodeListByTagName method, of class ReadXML.
+     */
+    @Ignore
+    @Test
+    public void testGetNodeListByTagName()
+    {
+        System.out.println("getNodeListByTagName");
+        String XMLName = "";
+        String mainElement = "";
+        String tagName = "";
+        boolean matchWholeWordSelected = false;
+        ArrayList<Node> expResult = null;
+        ArrayList<Node> result = ReadXML.getNodeListByTagName(XMLName, mainElement, tagName, matchWholeWordSelected);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodePhoneTagValueList method, of class ReadXML.
+     */
+    @Ignore
+    @Test
+    public void testGetNodePhoneTagValueList()
+    {
+        System.out.println("getNodePhoneTagValueList");
+        Node node = null;
+        ArrayList<String> expResult = null;
+        ArrayList<String> result = ReadXML.getNodePhoneTagValueList(node);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodePhoneTagValue method, of class ReadXML.
+     */
+    @Ignore
+    @Test
+    public void testGetNodePhoneTagValue()
+    {
+        System.out.println("getNodePhoneTagValue");
+        Node node = null;
+        String tagName = "";
+        String expResult = "";
+        String result = ReadXML.getNodePhoneTagValue(node, tagName);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getAllXMLTagTextByNameXPATH method, of class ReadXML.
+     */
+    @Test
+    public void testGetAllXMLTagTextByNameXPATH()
+    {
+        System.out.println("getAllXMLTagTextByNameXPATH");
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String mainElement = "PHONE";
+        String tagName = "Name";
+        String rootElement = "dataroot";
+        ArrayList<String> expResultTest = new ArrayList<String>();
+        ArrayList<String> expResult = ReadXML.getAllXMLTagTextByName(XMLName, mainElement, tagName);
+        ArrayList<String> result = ReadXML.getAllXMLTagTextByNameXPATH(XMLName,rootElement, mainElement, tagName);
+        System.out.println("expected result length of array: "+expResult.size());
+        System.out.println("actual result length of array: "+result.size());
+        System.out.println("getAllXMLTagTextByName");
+        expResult.stream().forEach((exp) ->
+        {
+            System.out.println(exp);
+        });
+        System.out.println();
+        System.out.println("getAllXMLTagTextByNameXPATH");
+        result.stream().forEach((exp) ->
+        {
+            System.out.println(exp);
+        });
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
     }
 
 
