@@ -218,15 +218,16 @@ public class ReadXMLTest {
         System.out.println("getAllXMLTagTextByNameXPATH");
         String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
         String mainElement = "PHONE";
-        String tagName = "Name";
+        String tagName = "DataBaseModuleClass";
         String rootElement = "dataroot";
         ArrayList<String> expResultTest = new ArrayList<String>();
-        ArrayList<String> expResult = ReadXML.getAllXMLTagTextByName(XMLName, mainElement, tagName);
+        expResultTest.add("AppsData");
+        //ArrayList<String> expResult = ReadXML.getAllXMLTagTextByName(XMLName, mainElement, tagName);
         ArrayList<String> result = ReadXML.getAllXMLTagTextByNameXPATH(XMLName,rootElement, mainElement, tagName);
-        System.out.println("expected result length of array: "+expResult.size());
+        System.out.println("expected result length of array: "+expResultTest.size());
         System.out.println("actual result length of array: "+result.size());
         System.out.println("getAllXMLTagTextByName");
-        expResult.stream().forEach((exp) ->
+        expResultTest.stream().forEach((exp) ->
         {
             System.out.println(exp);
         });
@@ -236,7 +237,7 @@ public class ReadXMLTest {
         {
             System.out.println(exp);
         });
-        assertEquals(expResult, result);
+        assertEquals(expResultTest, result);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }

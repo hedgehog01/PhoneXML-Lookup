@@ -660,7 +660,7 @@ public final class ReadXML
             
             XPath xPath =  XPathFactory.newInstance().newXPath();
             System.out.println("*************************");
-            String expression = "/"+rootElement+"/"+mainElement +"/"+tagName+XPATH_TAG_WITH_NO_ATTRIBUTES;
+            String expression = "/"+rootElement+"/"+mainElement +"//"+tagName+XPATH_TAG_WITH_NO_ATTRIBUTES;
             System.out.println(expression);
             NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
             System.out.println("Number of results found: "+(nodeList.getLength()-1));
