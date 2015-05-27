@@ -41,6 +41,7 @@ public final class ReadXML
     private static final Level LOG_LEVEL_SEVERE = Level.SEVERE;
     private static final String LOG_CLASS_NAME = "ReadXML: ";
     private static final String XPATH_TAG_WITH_NO_ATTRIBUTES = "[not(@*)]";
+
     /**
      * Method to return all XML tag text from specific tags in the XML
      *
@@ -119,7 +120,6 @@ public final class ReadXML
         }
         return tagText;
     }
-    
 
     /**
      * Method to search for list of Nodes by text in one of the nodes elements -
@@ -161,7 +161,7 @@ public final class ReadXML
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         // check if text exist in the node if so it's node we want.
 
-                        if ((isTagValueInNodeChildren(xmlChilderenNodes, tagValue,matchWholeWordSelected)))
+                        if ((isTagValueInNodeChildren(xmlChilderenNodes, tagValue, matchWholeWordSelected)))
                         {
                             phoneInfoNode.add(node);
                         }
@@ -180,15 +180,14 @@ public final class ReadXML
         }
         return phoneInfoNode;
     }
-    
-        /**
-     * Method to search for list of Nodes by tag name
-     * returns a list of nodes that contain the searched value.
+
+    /**
+     * Method to search for list of Nodes by tag name returns a list of nodes
+     * that contain the searched value.
      *
      * @param XMLName the XML to get results from (full XML path)
      * @param mainElement the main XML element (PHONE)
-     * @param tagName the tag name to find by (MUST BE LONGER THAN 2
-     * CHARS)
+     * @param tagName the tag name to find by (MUST BE LONGER THAN 2 CHARS)
      * @param matchWholeWordSelected if true will search for match of whole word
      * only, false will return value contained in the value
      * @return the phone Node or null if not found
@@ -221,7 +220,7 @@ public final class ReadXML
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         // check if text exist in the node if so it's node we want.
 
-                        if ((isTagNameInNodeChildren(xmlChilderenNodes, tagName,matchWholeWordSelected)))
+                        if ((isTagNameInNodeChildren(xmlChilderenNodes, tagName, matchWholeWordSelected)))
                         {
                             phoneInfoNode.add(node);
                         }
@@ -281,7 +280,7 @@ public final class ReadXML
                         NodeList xmlChilderenNodes = element.getChildNodes();
                         // check if text exist in the node if so it's node we want.
 
-                        if ((isTagValueInNodeChildren(xmlChilderenNodes, tagValue,matchWholeWord)))
+                        if ((isTagValueInNodeChildren(xmlChilderenNodes, tagValue, matchWholeWord)))
                         {
                             phoneInfoNode = node;
                         }
@@ -342,8 +341,8 @@ public final class ReadXML
         }
         return textExists;
     }
-    
-        /*
+
+    /*
      * Method to search for specific tag by the tag name the node child elements.
      *
      * @param XMLName the XML to get results from (full XML path)
@@ -386,8 +385,7 @@ public final class ReadXML
     }
 
     /**
-     * Method to return all node Elements and attributes as StringBuilder
-     * object
+     * Method to return all node Elements and attributes as StringBuilder object
      *
      * @param node the node to evaluate
      * @return StringBuilder containing element tag name + tag text +element
@@ -628,7 +626,7 @@ public final class ReadXML
         }
         return tagValue;
     }
-    
+
 //====================================================================================================//
 //========================================XPATH methods==============================================//
     /*
@@ -648,7 +646,7 @@ public final class ReadXML
      * @param tagName the tag to get results from
      * @return list of all tag text from the requested tags
      */
-    public static ArrayList<String> getAllXMLTagTextByNameXPATH(String XMLName,String rootElement, String mainElement, String tagName)
+    public static ArrayList<String> getAllXMLTagTextByNameXPATH(String XMLName, String rootElement, String mainElement, String tagName)
     {
         //the list to be returned
         ArrayList<String> list = new ArrayList<>();
@@ -657,26 +655,87 @@ public final class ReadXML
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = docFactory.newDocumentBuilder();
             Document doc = builder.parse(XMLName);
-            
-            XPath xPath =  XPathFactory.newInstance().newXPath();
+
+            XPath xPath = XPathFactory.newInstance().newXPath();
             System.out.println("*************************");
-            String expression = "/"+rootElement+"/"+mainElement +"//"+tagName+XPATH_TAG_WITH_NO_ATTRIBUTES;
+            String expression = "/" + rootElement + "/" + mainElement + "//" + tagName + XPATH_TAG_WITH_NO_ATTRIBUTES;
             System.out.println(expression);
             NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
-            System.out.println("Number of results found: "+(nodeList.getLength()-1));
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                String nodeValue=nodeList.item(i).getFirstChild().getNodeValue();
-                MyLogger.log(LOG_LEVEL_FINE, LOG_CLASS_NAME + "Getting value for tag: {0} , value= {1}", new Object[] {nodeList.item(i).getNodeName(),nodeValue});
+            System.out.println("Number of results found: " + (nodeList.getLength() - 1));
+            for (int i = 0; i < nodeList.getLength(); i++)
+            {
+                String nodeValue = nodeList.item(i).getFirstChild().getNodeValue();
+                MyLogger.log(LOG_LEVEL_FINE, LOG_CLASS_NAME + "Getting value for tag: {0} , value= {1}", new Object[]
+                {
+                    nodeList.item(i).getNodeName(), nodeValue
+                });
                 list.add(nodeValue);
             }
-            
- 
+
         } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException ex)
         {
             Logger.getLogger(ReadXML.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return list;
+    }
+
+    /**
+     * Method to search for list of Nodes by text in one of the nodes elements -
+     * returns a list of nodes that contain the searched value.
+     *
+     * @param XMLName the XML to get results from (full XML path)
+     * @param mainElement the main XML element (PHONE)
+     * @param tagValue the text in the tag to find by (MUST BE LONGER THAN 2
+     * CHARS)
+     * @param matchWholeWordSelected if true will search for match of whole word
+     * only, false will return value contained in the value
+     * @return the phone Node or null if not found
+     */
+    public static ArrayList<Node> getNodeListByTagValueXPATH(String XMLName, String rootElement, String mainElement, String tagValue, boolean matchWholeWordSelected)
+    {
+        //StringBuilder phoneInfo = new StringBuilder();
+        ArrayList<Node> phoneInfoNodeList = new ArrayList<>();
+
+        //Make sure search text is not
+        if (tagValue != null && tagValue.length() > 2)
+        {
+            try
+            {
+                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder builder = docFactory.newDocumentBuilder();
+                Document doc = builder.parse(XMLName);
+
+                XPath xPath = XPathFactory.newInstance().newXPath();
+                System.out.println("*************************");
+                //String expression = "/Employees/Employee/firstname";
+                String expression = "/" + rootElement + "/" + mainElement + "//" + tagValue + XPATH_TAG_WITH_NO_ATTRIBUTES;
+                System.out.println(expression);
+                NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
+                System.out.println("Number of results found: " + (nodeList.getLength() - 1));
+                for (int i = 0; i < nodeList.getLength(); i++)
+                {
+                    String nodeValue = nodeList.item(i).getFirstChild().getNodeValue();
+                    MyLogger.log(LOG_LEVEL_FINE, LOG_CLASS_NAME + "Getting value for tag: {0} , value= {1}", new Object[]
+                    {
+                        nodeList.item(i).getNodeName(), nodeValue
+                    });
+                    list.add(nodeValue);
+                }
+
+            } catch (ParserConfigurationException | SAXException | IOException ex)
+            {
+                MyLogger.log(Level.SEVERE, null, ex);
+            } catch (XPathExpressionException ex)
+            {
+                Logger.getLogger(ReadXML.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else
+        {
+            MyLogger.log(LOG_LEVEL_FINE, "Text to be search was too short or null: {0}", tagValue);
+        }
+        return phoneInfoNodeList;
     }
 
 }
