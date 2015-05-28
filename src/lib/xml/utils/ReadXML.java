@@ -711,16 +711,19 @@ public final class ReadXML
                 //String expression = "/" + rootElement + "/" + mainElement + "//"+tagValue+ " [text()]";
                 String expression;
                 if (!matchWholeWordSelected)
-                    expression = "//"+mainElement+"/*[contains(.,'GSM')]";
-                else
+                {
+                    expression = "//" + mainElement + "/*[contains(.,'GSM')]";
+                } else
+                {
                     expression = "//*[text()='GSM']";
-                    //expression = "//"+mainElement+"/*[text()='GSM']";
+                }
+                //expression = "//"+mainElement+"/*[text()='GSM']";
                 System.out.println(expression);
                 NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
                 System.out.println("Number of results found: " + (nodeList.getLength() - 1));
                 for (int i = 0; i < nodeList.getLength(); i++)
                 {
-                    
+
                     String nodeValue = nodeList.item(i).getFirstChild().getNodeValue();
                     System.out.println(nodeValue);
                     phoneInfoNodeList.add(nodeList.item(i));
@@ -740,6 +743,38 @@ public final class ReadXML
             MyLogger.log(LOG_LEVEL_FINE, "Text to be search was too short or null: {0}", tagValue);
         }
         return phoneInfoNodeList;
+    }
+
+    public static void getAllXMLNodes(String XMLName, String rootElement, String mainElement, String tagValue, boolean matchWholeWordSelected)
+    {
+        try
+        {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = docFactory.newDocumentBuilder();
+            Document doc = builder.parse(XMLName);
+
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            System.out.println("*************************");
+            String expression = "/" + rootElement + "/*";
+
+            NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
+            System.out.println("Number of results found: " + (nodeList.getLength() - 1));
+            for (int i = 0; i < nodeList.getLength(); i++)
+            {
+
+                NodeList childNodes = nodeList.item(i).getChildNodes();
+                System.out.println("Node children: " + childNodes.getLength());
+
+            }
+
+        } catch (ParserConfigurationException | SAXException | IOException ex)
+        {
+            MyLogger.log(Level.SEVERE, null, ex);
+        } catch (XPathExpressionException ex)
+        {
+            Logger.getLogger(ReadXML.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
 }

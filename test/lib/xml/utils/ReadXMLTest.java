@@ -247,7 +247,7 @@ public class ReadXMLTest {
     /**
      * Test of getNodeListByTagValueXPATH method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testGetNodeListByTagValueXPATH()
     {
@@ -262,6 +262,23 @@ public class ReadXMLTest {
         System.out.println ("expResult number of results: "+(expResult.size()-1));
         System.out.println ("result number of results: "+(result.size()-1));
         assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getAllXMLNodes method, of class ReadXML.
+     */
+    @Test
+    public void testGetAllXMLNodes()
+    {
+        System.out.println("getAllXMLNodes");
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String mainElement = "PHONE";
+        String tagValue = "GSM";
+        String rootElement = "dataroot";
+        boolean matchWholeWordSelected = false;
+        ReadXML.getAllXMLNodes(XMLName, rootElement, mainElement, tagValue, matchWholeWordSelected);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
