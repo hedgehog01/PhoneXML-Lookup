@@ -692,11 +692,10 @@ public final class ReadXML
      * only, false will return value contained in the value
      * @return the phone Node or null if not found
      */
-    public static ArrayList<Node> getNodeListByTagValueXPATH(String XMLName, String rootElement, String mainElement, String tagValue, boolean matchWholeWordSelected)
+    public static NodeList getNodeListByTagValueXPATH(String XMLName, String rootElement, String mainElement, String tagValue, boolean matchWholeWordSelected)
     {
-        //StringBuilder phoneInfo = new StringBuilder();
-        ArrayList<Node> phoneInfoNodeList = new ArrayList<>();
-
+        //ArrayList<Node> phoneInfoNodeList = new ArrayList<>();
+        NodeList nodeList = null;
         //Make sure search text is not
         if (tagValue != null && tagValue.length() > 2)
         {
@@ -709,18 +708,20 @@ public final class ReadXML
                 XPath xPath = XPathFactory.newInstance().newXPath();
                 System.out.println("*************************");
                 //String expression = "/Employees/Employee/firstname";
-                String expression = "/" + rootElement + "/" + mainElement + "//" + tagValue + XPATH_TAG_WITH_NO_ATTRIBUTES;
+                //String expression = "/" + rootElement + "/" + mainElement + "//"+tagValue+ " [text()]";
+                String expression = "//"+mainElement+"/*[contains(.,'GSM')]";
                 System.out.println(expression);
-                NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
+                nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
                 System.out.println("Number of results found: " + (nodeList.getLength() - 1));
                 for (int i = 0; i < nodeList.getLength(); i++)
                 {
+                    
                     String nodeValue = nodeList.item(i).getFirstChild().getNodeValue();
+                    System.out.println(nodeValue);
                     MyLogger.log(LOG_LEVEL_FINE, LOG_CLASS_NAME + "Getting value for tag: {0} , value= {1}", new Object[]
                     {
                         nodeList.item(i).getNodeName(), nodeValue
                     });
-                    list.add(nodeValue);
                 }
 
             } catch (ParserConfigurationException | SAXException | IOException ex)
@@ -735,7 +736,7 @@ public final class ReadXML
         {
             MyLogger.log(LOG_LEVEL_FINE, "Text to be search was too short or null: {0}", tagValue);
         }
-        return phoneInfoNodeList;
+        return nodeList;
     }
 
 }

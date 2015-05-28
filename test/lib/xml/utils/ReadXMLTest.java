@@ -23,6 +23,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -212,6 +213,7 @@ public class ReadXMLTest {
     /**
      * Test of getAllXMLTagTextByNameXPATH method, of class ReadXML.
      */
+    @Ignore
     @Test
     public void testGetAllXMLTagTextByNameXPATH()
     {
@@ -238,6 +240,25 @@ public class ReadXMLTest {
             System.out.println(exp);
         });
         assertEquals(expResultTest, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodeListByTagValueXPATH method, of class ReadXML.
+     */
+    @Test
+    public void testGetNodeListByTagValueXPATH()
+    {
+        System.out.println("getNodeListByTagValueXPATH");
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String mainElement = "PHONE";
+        String tagValue = "GSM";
+        String rootElement = "dataroot";
+        boolean matchWholeWordSelected = true;
+        NodeList expResult = null;
+        NodeList result = ReadXML.getNodeListByTagValueXPATH(XMLName, rootElement, mainElement, tagValue, matchWholeWordSelected);
+        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
