@@ -29,6 +29,7 @@ public final class PhoneNameHandler
 
     private static final String MAIN_ELEMENT = "PHONE";
     private static final String PHONE_NAME = "Name";
+    private static final String ROOT_ELEMENT = "dataroot";
 
     /**
      * method to get the list of phones in an XML
@@ -41,7 +42,7 @@ public final class PhoneNameHandler
         ArrayList<String> list = new ArrayList<>();
         if (!xmlPath.isEmpty() && xmlPath.contains(".xml"))
         {
-            list = ReadXML.getAllXMLTagTextByName(xmlPath, MAIN_ELEMENT, PHONE_NAME);
+            list = ReadXML.getAllXMLTagTextByNameXPATH(xmlPath,ROOT_ELEMENT ,MAIN_ELEMENT, PHONE_NAME);
         }
 
         return list;
