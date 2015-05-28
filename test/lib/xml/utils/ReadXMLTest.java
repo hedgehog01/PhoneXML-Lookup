@@ -247,6 +247,7 @@ public class ReadXMLTest {
     /**
      * Test of getNodeListByTagValueXPATH method, of class ReadXML.
      */
+    //@Ignore
     @Test
     public void testGetNodeListByTagValueXPATH()
     {
@@ -256,8 +257,10 @@ public class ReadXMLTest {
         String tagValue = "GSM";
         String rootElement = "dataroot";
         boolean matchWholeWordSelected = true;
-        NodeList expResult = null;
-        NodeList result = ReadXML.getNodeListByTagValueXPATH(XMLName, rootElement, mainElement, tagValue, matchWholeWordSelected);
+        ArrayList<Node> expResult = ReadXML.getNodeListByTagValue(XMLName, mainElement, tagValue, matchWholeWordSelected);
+        ArrayList<Node> result = ReadXML.getNodeListByTagValueXPATH(XMLName, rootElement, mainElement, tagValue, matchWholeWordSelected);
+        System.out.println ("expResult number of results: "+(expResult.size()-1));
+        System.out.println ("result number of results: "+(result.size()-1));
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
