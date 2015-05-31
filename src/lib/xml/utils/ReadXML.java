@@ -705,6 +705,8 @@ public final class ReadXML
             {
                 if (isValueInNodeXPATH(nodelist.item(i),tagValue,matchWholeWordSelected))
                 {
+                    MyLogger.log(LOG_LEVEL_INFO, "Tag value found adding node");
+                    System.out.println("Tag value found adding node");
                     phoneInfoNodeList.add(nodelist.item(i));
                 }
             }
@@ -755,16 +757,20 @@ public final class ReadXML
         {
            XPath xPath = XPathFactory.newInstance().newXPath();
             System.out.println("*************************");
-            String expression ="/*";
+            String expression ="/dataroot/PHONE[text()]";
 
             NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(node, XPathConstants.NODESET);
-            System.out.println("Number of results found: " + (nodeList.getLength() - 1));
+            System.out.println("Number of results found: " + (nodeList.getLength()));
             for (int i = 0; i < nodeList.getLength(); i++)
             {
 
                 NodeList childNodes = nodeList.item(i).getChildNodes();
                 System.out.println("Node children: " + childNodes.getLength());
-
+                System.out.println("*******************************");
+                for (int j=0;j<childNodes.getLength();j++)
+                {
+                    System.out.println("Node name: "+childNodes.item(j).getNodeName() + " value: "+childNodes.item(j).getTextContent());
+                }
             }
 
         } catch (XPathExpressionException ex)
@@ -777,14 +783,25 @@ public final class ReadXML
     {
         String expression;
         boolean valueExists = false;
+        System.out.println("Node number of chldren: " + node.getChildNodes().getLength());
+        for (int i=0;i>node.getChildNodes().getLength();i++)
+        {
+            System.out.println("childNode name: "+ node.getChildNodes().item(i).getNodeName() + " value: " + node.getChildNodes().item(i).getTextContent());
+        }
         try
         {
            XPath xPath = XPathFactory.newInstance().newXPath();
             System.out.println("*************************");
             if(!matchWholeWordSelected)
-                expression ="/*[contains(.,'"+value+"')]";
+            {
+                System.out.println("isValueInNodeXPATH: matchWholeWordSelected: " + matchWholeWordSelected);
+                expression ="/dataroot/PHONE[contains(.,'"+value+"')]";
+            }
             else
-                expression ="/*[text()="+value+"]";
+            {
+                System.out.println("isValueInNodeXPATH: matchWholeWordSelected: " + matchWholeWordSelected);
+                expression ="/dataroot/PHONE/*[text()="+value+"]";
+            }
 
             valueExists = (Boolean) xPath.compile(expression).evaluate(node, XPathConstants.BOOLEAN);
             System.out.println("result found: " + valueExists);

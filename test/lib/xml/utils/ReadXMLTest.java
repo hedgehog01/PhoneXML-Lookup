@@ -247,7 +247,7 @@ public class ReadXMLTest {
     /**
      * Test of getNodeListByTagValueXPATH method, of class ReadXML.
      */
-    
+    @Ignore
     @Test
     public void testGetNodeListByTagValueXPATH()
     {
@@ -305,20 +305,20 @@ public class ReadXMLTest {
     /**
      * Test of isValueInNodeXPATH method, of class ReadXML.
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testIsValueInNodeXPATH()
     {
         System.out.println("isValueInNodeXPATH");
         String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
         String mainElement = "PHONE";
-        String tagValue = "GSM";
+        String tagValue = "A500 Iconia Tab";
         Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, tagValue);
         String value = "GSM";
         ReadXML instance = new ReadXML();
         boolean expResult = true;
-        boolean exactMath = true;
-        boolean result = instance.isValueInNodeXPATH(node, value,exactMath);
+        boolean exactMatch = true;
+        boolean result = instance.isValueInNodeXPATH(node, value,exactMatch);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
