@@ -736,7 +736,7 @@ public final class ReadXML
 
             XPath xPath = XPathFactory.newInstance().newXPath();
             System.out.println("*************************");
-            String expression = "/" + rootElement + "/*";
+            String expression = "/" + rootElement + "/node()";
 
             nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
             System.out.println("Number of results found: " + (nodeList.getLength() - 1));
@@ -783,11 +783,6 @@ public final class ReadXML
     {
         String expression;
         boolean valueExists = false;
-        System.out.println("Node number of chldren: " + node.getChildNodes().getLength());
-        for (int i=0;i>node.getChildNodes().getLength();i++)
-        {
-            System.out.println("childNode name: "+ node.getChildNodes().item(i).getNodeName() + " value: " + node.getChildNodes().item(i).getTextContent());
-        }
         try
         {
            XPath xPath = XPathFactory.newInstance().newXPath();
@@ -800,7 +795,7 @@ public final class ReadXML
             else
             {
                 System.out.println("isValueInNodeXPATH: matchWholeWordSelected: " + matchWholeWordSelected);
-                expression ="/dataroot/PHONE/*[text()="+value+"]";
+                expression ="/dataroot/PHONE[text()="+value+"]";
             }
 
             valueExists = (Boolean) xPath.compile(expression).evaluate(node, XPathConstants.BOOLEAN);

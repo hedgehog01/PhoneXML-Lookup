@@ -247,7 +247,7 @@ public class ReadXMLTest {
     /**
      * Test of getNodeListByTagValueXPATH method, of class ReadXML.
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testGetNodeListByTagValueXPATH()
     {
@@ -305,7 +305,7 @@ public class ReadXMLTest {
     /**
      * Test of isValueInNodeXPATH method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testIsValueInNodeXPATH()
     {
@@ -314,6 +314,13 @@ public class ReadXMLTest {
         String mainElement = "PHONE";
         String tagValue = "A500 Iconia Tab";
         Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, tagValue);
+        NodeList childNodes = node.getChildNodes();
+        for (int i=0;i<childNodes.getLength();i++)
+        {
+            if (childNodes.item(i).getNodeType() == Node.ELEMENT_NODE)
+                System.out.println("Node name: " + childNodes.item(i).getNodeName()+ " value: " + childNodes.item(i).getTextContent());
+        }
+        
         String value = "GSM";
         ReadXML instance = new ReadXML();
         boolean expResult = true;
