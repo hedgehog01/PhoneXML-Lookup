@@ -307,7 +307,7 @@ public class ReadXMLTest {
     /**
      * Test of isValueInNodeXPATH method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testIsValueInNodeXPATH()
     {
@@ -350,25 +350,28 @@ public class ReadXMLTest {
     /**
      * Test of getNodeListByTagNameXPATH method, of class ReadXML.
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testGetNodeListByTagNameXPATH()
     {
         System.out.println("getNodeListByTagNameXPATH");
-        String XMLName = "";
-        String mainElement = "";
-        String tagName = "";
-        boolean matchWholeWordSelected = false;
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String mainElement = "PHONE";
+        String tagName = "DBFolderList";
+        boolean matchWholeWordSelected = true;
         ArrayList<Node> expResult = ReadXML.getNodeListByTagName(XMLName, mainElement, tagName, matchWholeWordSelected);;
         ArrayList<Node> result = ReadXML.getNodeListByTagNameXPATH(XMLName, mainElement, tagName, matchWholeWordSelected);
+        System.out.println("Expected Array Length: "+ expResult.size());
+        System.out.println("Actual Array Length: "+ result.size());
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
      * Test of isTagInNodeXPATH method, of class ReadXML.
      */
+    @Ignore
     @Test
     public void testIsTagInNodeXPATH()
     {
@@ -379,7 +382,7 @@ public class ReadXMLTest {
         Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, selectedPhone);
         String tagName = "ResetTime";
         boolean matchWholeWordSelected = true;
-        boolean expResult = true;
+        boolean expResult = true;       
         boolean result = ReadXML.isTagInNodeXPATH(node, tagName, matchWholeWordSelected);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
