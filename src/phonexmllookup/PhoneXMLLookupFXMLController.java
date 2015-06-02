@@ -1314,11 +1314,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     private void searchInXMLByTagValue(String folderPath, int i)
     {
-        ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValue(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(), matchWholeWordSelected);
+        ArrayList<Node> modelInFile = ReadXML.getNodeListByTagValueXPATH(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(), matchWholeWordSelected);
         for (int j = 0; j < modelInFile.size(); j++)
         {
 
-            String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
+            String phoneName = ReadXML.getNodePhoneTagValueXPATH(modelInFile.get(j), PHONE_NAME_TAG);
             MyLogger.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
             {
                 fileList.get(i), phoneName
@@ -1329,11 +1329,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
     private void searchInXMLByTagName(String folderPath, int i)
     {
-        ArrayList<Node> modelInFile = ReadXML.getNodeListByTagName(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(), matchWholeWordSelected);
+        ArrayList<Node> modelInFile = ReadXML.getNodeListByTagNameXPATH(folderPath + "/" + fileList.get(i), MAIN_NODE_ELEMENT, searchByTagTextField.getText(), matchWholeWordSelected);
         for (int j = 0; j < modelInFile.size(); j++)
         {
 
-            String phoneName = ReadXML.getNodePhoneTagValue(modelInFile.get(j), PHONE_NAME_TAG);
+            String phoneName = ReadXML.getNodePhoneTagValueXPATH(modelInFile.get(j), PHONE_NAME_TAG);
             MyLogger.log(Level.INFO, "Adding Vendor model info for file: {0}, model: {1}", new Object[]
             {
                 fileList.get(i), phoneName

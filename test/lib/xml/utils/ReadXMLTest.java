@@ -247,7 +247,7 @@ public class ReadXMLTest {
     /**
      * Test of getNodeListByTagValueXPATH method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testGetNodeListByTagValueXPATH()
     {
@@ -281,7 +281,7 @@ public class ReadXMLTest {
         String tagValue = "GSM";
         String rootElement = "dataroot";
         boolean matchWholeWordSelected = false;
-        ReadXML.getAllXMLNodesXPATH(XMLName, mainElement, tagValue);
+        ReadXML.getAllXMLNodesXPATH(XMLName, mainElement);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
@@ -307,27 +307,19 @@ public class ReadXMLTest {
     /**
      * Test of isValueInNodeXPATH method, of class ReadXML.
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testIsValueInNodeXPATH()
     {
         System.out.println("isValueInNodeXPATH");
         String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
         String mainElement = "PHONE";
-        String tagValue = "A500 Iconia Tab";
+        String tagValue = "e427b97b-14c0-47c4-8b5a-c0b0ac2569ce";
         Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, tagValue);
-        NodeList childNodes = node.getChildNodes();
-        /*
-        for (int i=0;i<childNodes.getLength();i++)
-        {
-            if (childNodes.item(i).getNodeType() == Node.ELEMENT_NODE)
-                System.out.println("Node name: " + childNodes.item(i).getNodeName()+ " value: " + childNodes.item(i).getTextContent());
-        }
-        */
         String value = "dffb8a35-c882-4385-af9e";
         ReadXML instance = new ReadXML();
         boolean expResult = true;
-        boolean exactMatch = false;
+        boolean exactMatch = true;
         boolean result = instance.isValueInNodeXPATH(node, value,exactMatch);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
@@ -353,6 +345,63 @@ public class ReadXMLTest {
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodeListByTagNameXPATH method, of class ReadXML.
+     */
+    @Ignore
+    @Test
+    public void testGetNodeListByTagNameXPATH()
+    {
+        System.out.println("getNodeListByTagNameXPATH");
+        String XMLName = "";
+        String mainElement = "";
+        String tagName = "";
+        boolean matchWholeWordSelected = false;
+        ArrayList<Node> expResult = ReadXML.getNodeListByTagName(XMLName, mainElement, tagName, matchWholeWordSelected);;
+        ArrayList<Node> result = ReadXML.getNodeListByTagNameXPATH(XMLName, mainElement, tagName, matchWholeWordSelected);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of isTagInNodeXPATH method, of class ReadXML.
+     */
+    @Test
+    public void testIsTagInNodeXPATH()
+    {
+        System.out.println("isTagInNodeXPATH");
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String mainElement = "PHONE";
+        String selectedPhone = "A500 Iconia Tab";
+        Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, selectedPhone);
+        String tagName = "ResetTime";
+        boolean matchWholeWordSelected = true;
+        boolean expResult = true;
+        boolean result = ReadXML.isTagInNodeXPATH(node, tagName, matchWholeWordSelected);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodeByTagValueXPATH method, of class ReadXML.
+     */
+    @Ignore
+    @Test
+    public void testGetNodeByTagValueXPATH()
+    {
+        System.out.println("getNodeByTagValueXPATH");
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String mainElement = "PHONE";
+        String tagValue = "e427b97b-14c0-47c4-8b5a-c0b0ac2569ce";
+        Node expResult = ReadXML.getNodeByTagValue(XMLName, mainElement, tagValue);;
+        Node result = ReadXML.getNodeByTagValueXPATH(XMLName, mainElement, tagValue);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
 
