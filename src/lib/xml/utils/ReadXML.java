@@ -694,7 +694,7 @@ public final class ReadXML
      * only, false will return value contained in the value
      * @return the phone Node or null if not found
      */
-    public static ArrayList<Node> getNodeListByTagValueXPATH(String XMLName,String mainElement, String tagValue, boolean matchWholeWordSelected)
+    public static ArrayList<Node> getNodeListByTagValueXPATH(String XMLName, String mainElement, String tagValue, boolean matchWholeWordSelected)
     {
         ArrayList<Node> phoneInfoNodeList = new ArrayList<>();
         //NodeList nodeList = null;
@@ -707,7 +707,7 @@ public final class ReadXML
                 //detach node from parent for better performance
                 Node singleNode = nodelist.get(i);
                 singleNode.getParentNode().removeChild(singleNode);
-                
+
                 //System.out.println("tag name: " + nodelist.item(i).getNodeName()+"tag value: " + nodelist.item(i).getTextContent());
                 if (isValueInNodeXPATH(singleNode, tagValue, matchWholeWordSelected))
                 {
@@ -726,7 +726,7 @@ public final class ReadXML
     /**
      * Test method using XPATH to get all xml nodes via XPATH
      *
-     * @param XMLName the XML path 
+     * @param XMLName the XML path
      * @param mainElement the XMl main element
      */
     static ArrayList<Node> getAllXMLNodesXPATH(String XMLName, String mainElement)
@@ -740,7 +740,7 @@ public final class ReadXML
 
             XPath xPath = XPathFactory.newInstance().newXPath();
             //System.out.println("*************************");
-            String expression = "/dataroot/"+mainElement;
+            String expression = "/dataroot/" + mainElement;
 
             NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
             nodeArrayList = convertNodeListToArrayList(nodeList);
@@ -756,7 +756,7 @@ public final class ReadXML
         return nodeArrayList;
     }
 
-    public void getAllNodeElementsXPATH(Node node)
+    void getAllNodeElementsXPATH(Node node)
     {
         try
         {
@@ -828,7 +828,7 @@ public final class ReadXML
             //ArrayList<String> phoneInfoList = new ArrayList<>();
 
             XPath xPath = XPathFactory.newInstance().newXPath();
-            String expression = ".//"+tagName;
+            String expression = ".//" + tagName;
             Node nodeTag = (Node) xPath.compile(expression).evaluate(node, XPathConstants.NODE);
             if (nodeTag != null)
             {
@@ -842,7 +842,7 @@ public final class ReadXML
         }
         return tagValue;
     }
-    
+
     /**
      * Method to search for list of Nodes by tag name returns a list of nodes
      * that contain the searched value.
@@ -859,8 +859,7 @@ public final class ReadXML
         //StringBuilder phoneInfo = new StringBuilder();
         ArrayList<Node> phoneInfoNode = new ArrayList<>();
         ArrayList<Node> nodeList = null;
-        
-        
+
         //Make sure search text is not
         if (tagName != null && tagName.length() > 2)
         {
@@ -870,7 +869,7 @@ public final class ReadXML
                 //detach node from parent for better performance
                 Node singleNode = nodeList.get(i);
                 singleNode.getParentNode().removeChild(singleNode);
-                
+
                 //System.out.println("tag name: " + nodelist.item(i).getNodeName()+"tag value: " + nodelist.item(i).getTextContent());
                 if (isTagInNodeXPATH(singleNode, tagName, matchWholeWordSelected))
                 {
@@ -886,7 +885,7 @@ public final class ReadXML
         }
         return phoneInfoNode;
     }
-    
+
     static boolean isTagInNodeXPATH(Node node, String tagName, boolean matchWholeWordSelected)
     {
         String expression;
@@ -900,11 +899,11 @@ public final class ReadXML
                 //System.out.println("isValueInNodeXPATH: matchWholeWordSelected: " + matchWholeWordSelected);
                 //expression = "self::node()[contains(.,'" + tagName + "')]";
                 //expression = "//*[contains(.,'" + tagName + "')]";
-                expression = "//*[contains(local-name(),'"+tagName+"')]";
+                expression = "//*[contains(local-name(),'" + tagName + "')]";
             } else
             {
                 //System.out.println("isValueInNodeXPATH: matchWholeWordSelected: " + matchWholeWordSelected);
-                expression = "//"+tagName;
+                expression = "//" + tagName;
             }
 
             valueExists = (Boolean) xPath.compile(expression).evaluate(node, XPathConstants.BOOLEAN);
@@ -916,7 +915,7 @@ public final class ReadXML
         }
         return valueExists;
     }
-    
+
     /**
      * Method to search for specific Node by text in one of it's elements -
      * returns the first node with the value if found.
@@ -937,10 +936,10 @@ public final class ReadXML
         //Make sure search text is not
         if (tagValue != null && tagValue.length() > 2)
         {
-            ArrayList<Node> nodeList = getAllXMLNodesXPATH(XMLName,mainElement);
-            for (int i=0;i<nodeList.size();i++)
+            ArrayList<Node> nodeList = getAllXMLNodesXPATH(XMLName, mainElement);
+            for (int i = 0; i < nodeList.size(); i++)
             {
-                if (isValueInNodeXPATH(nodeList.get(i),tagValue,matchWholeWord))
+                if (isValueInNodeXPATH(nodeList.get(i), tagValue, matchWholeWord))
                 {
                     return phoneInfoNode;
                 }
@@ -952,21 +951,160 @@ public final class ReadXML
         }
         return phoneInfoNode;
     }
+
+    /**
+     * Method to return all a node phone tag names
+     *
+     * @param node the node to evaluate
+     * @return ArrayList of String containing XML element tag names
+     */
+    public static ArrayList<String> getNodePhoneTagNameListXPATH(Node node)
+    {
+        ArrayList<String> phoneInfoList = new ArrayList<>();
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE)
+        {
+            try
+            {
+                XPath xPath = XPathFactory.newInstance().newXPath();
+                String expression = ".//*";
+                NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(node, XPathConstants.NODESET);
+                for (int i = 0; i < nodeList.getLength(); i++)
+                {
+                    System.out.println("Node name: " + nodeList.item(i).getNodeName());
+                    phoneInfoList.add(nodeList.item(i).getNodeName());
+                }
+            } catch (XPathExpressionException ex)
+            {
+                Logger.getLogger(ReadXML.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return phoneInfoList;
+    }
+
+    /**
+     * Method to return all a node phone tag values
+     *
+     * @param node the node to evaluate
+     * @return ArrayList of String containing element XML tag values
+     */
+    public static ArrayList<String> getNodePhoneTagValueListXPATH(Node node)
+    {
+        ArrayList<String> phoneInfoList = new ArrayList<>();
+
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE)
+        {
+            try
+            {
+                XPath xPath = XPathFactory.newInstance().newXPath();
+                String expression = "./*[node()]";
+                NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(node, XPathConstants.NODESET);
+                for (int i = 0; i < nodeList.getLength(); i++)
+                {
+                    if (nodeList.item(i) != null && nodeList.item(i).getNodeType() == Node.ELEMENT_NODE)
+                    {
+                        NodeList childNodes = nodeList.item(i).getChildNodes();
+                        //check for node for children
+                        int numChildren = 0;
+                        for (int j = 0; j < childNodes.getLength(); j++)
+                        {
+                            //check if element node has child node with info, if so only add children not parent
+                            if (childNodes.item(j)!= null && childNodes.item(j).getNodeType() == Node.ELEMENT_NODE)
+                            {
+                                numChildren++;
+                                System.out.println("Child Node name: " + childNodes.item(j).getNodeName() + " value: "+childNodes.item(j).getTextContent());
+                                phoneInfoList.add(nodeList.item(j).getTextContent());
+                            }
+                        }
+                        //check if children actually added
+                        if (numChildren == 0 && nodeList.item(i) != null)
+                        {
+                            System.out.println("No children added for node Name: "+nodeList.item(i).getNodeName()+" value: " + nodeList.item(i).getTextContent());
+                            phoneInfoList.add(nodeList.item(i).getTextContent());
+                        } else if (numChildren > 0)
+                        {
+                            System.out.println("Children added for node, so node info empty. node name: " + nodeList.item(i).getNodeName());
+                            phoneInfoList.add("");
+                        }
+                    }
+                }
+            } catch (XPathExpressionException ex)
+            {
+                Logger.getLogger(ReadXML.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return phoneInfoList;
+    }
     
+    /**
+     * Method to return all a node phone Attributes
+     *
+     * @param node the node to evaluate
+     * @return ArrayList of String containing XML element attributes if exists
+     * and empty if not
+     */
+    public static ArrayList<String> getNodePhoneAttributeListXPATH(Node node)
+    {
+        ArrayList<String> attributeList = new ArrayList<>();
+
+        if (node != null && node.getNodeType() == Node.ELEMENT_NODE)
+        {
+                        try
+            {
+                XPath xPath = XPathFactory.newInstance().newXPath();
+                String expression = "./*[node()]";
+                NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(node, XPathConstants.NODESET);
+                System.out.println("Attribute nodelist length: "+nodeList.getLength());
+                for (int i = 0; i < nodeList.getLength(); i++)
+                {
+                    if (nodeList.item(i) != null && nodeList.item(i).getNodeType() == Node.ELEMENT_NODE)
+                    {
+                        NodeList childNodes = nodeList.item(i).getChildNodes();
+                        //check for node for children
+                        int numChildren = 0;
+                        for (int j = 0; j < childNodes.getLength(); j++)
+                        {
+                            //check if element node has child node with info, if so only add children not parent
+                            if (childNodes.item(j)!= null && childNodes.item(j).getNodeType() == Node.ELEMENT_NODE)
+                            {
+                                numChildren++;
+                                System.out.println("Child Node name: " + childNodes.item(j).getNodeName() + " value: "+childNodes.item(j).getTextContent());
+                                attributeList.add(nodeList.item(j).getTextContent());
+                            }
+                        }
+                        //check if children actually added
+                        if (numChildren == 0 && nodeList.item(i) != null)
+                        {
+                            System.out.println("No children added for node Name: "+nodeList.item(i).getNodeName()+" value: " + nodeList.item(i).getTextContent());
+                            attributeList.add(nodeList.item(i).getTextContent());
+                        } else if (numChildren > 0)
+                        {
+                            System.out.println("Children added for node, so node info empty. node name: " + nodeList.item(i).getNodeName());
+                            attributeList.add("");
+                        }
+                    }
+                }
+            } catch (XPathExpressionException ex)
+            {
+                Logger.getLogger(ReadXML.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return attributeList;
+    }
+
     /*
-    * method to convert NodeList to ArrayList<Node>
-    */
+     * method to convert NodeList to ArrayList<Node>
+     */
     private static ArrayList<Node> convertNodeListToArrayList(NodeList nodeList)
     {
         ArrayList<Node> arrayList = new ArrayList<>();
-        if (nodeList != null && nodeList.getLength()>0)
+        if (nodeList != null && nodeList.getLength() > 0)
         {
-            for (int i=0;i<nodeList.getLength();i++)
+            for (int i = 0; i < nodeList.getLength(); i++)
             {
                 arrayList.add(nodeList.item(i));
             }
         }
-        
+
         return arrayList;
     }
 }

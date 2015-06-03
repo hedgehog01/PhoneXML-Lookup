@@ -350,7 +350,7 @@ public class ReadXMLTest {
     /**
      * Test of getNodeListByTagNameXPATH method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testGetNodeListByTagNameXPATH()
     {
@@ -402,6 +402,65 @@ public class ReadXMLTest {
         String tagValue = "e427b97b-14c0-47c4-8b5a-c0b0ac2569ce";
         Node expResult = ReadXML.getNodeByTagValue(XMLName, mainElement, tagValue);;
         Node result = ReadXML.getNodeByTagValueXPATH(XMLName, mainElement, tagValue);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodePhoneTagNameListXPATH method, of class ReadXML.
+     */
+    @Ignore
+    @Test
+    public void testGetNodePhoneTagNameListXPATH()
+    {
+        System.out.println("getNodePhoneTagNameListXPATH");
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__SamsungGSM.xml";
+        String mainElement = "PHONE";
+        String selectedPhone = "Android_OS_Default";
+        Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, selectedPhone);
+        ArrayList<String> expResult = ReadXML.getNodePhoneTagNameList(node);
+        ArrayList<String> result = ReadXML.getNodePhoneTagNameListXPATH(node);
+        System.out.println("List expected length: "+expResult.size()+" Actual list length: "+ result.size());
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodePhoneTagValueListXPATH method, of class ReadXML.
+     */
+    @Ignore
+    @Test
+    public void testGetNodePhoneTagValueListXPATH()
+    {
+        System.out.println("getNodePhoneTagValueListXPATH");
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__SamsungGSM.xml";
+        String mainElement = "PHONE";
+        String selectedPhone = "Android_OS_Default";
+        Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, selectedPhone);
+        ArrayList<String> expResult = ReadXML.getNodePhoneTagValueList(node);
+        ArrayList<String> result = ReadXML.getNodePhoneTagValueListXPATH(node);
+        System.out.println("List expected length: "+expResult.size()+" Actual list length: "+ result.size());
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNodePhoneAttributeListXPATH method, of class ReadXML.
+     */
+    @Test
+    public void testGetNodePhoneAttributeListXPATH()
+    {
+        System.out.println("getNodePhoneAttributeListXPATH");
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__SamsungGSM.xml";
+        String mainElement = "PHONE";
+        String selectedPhone = "Android_OS_Default";
+        Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, selectedPhone);
+        ArrayList<String> expResult = ReadXML.getNodePhoneAttributeList(node);
+        ArrayList<String> result = ReadXML.getNodePhoneAttributeListXPATH(node);
+        System.out.println("List expected length: "+expResult.size()+" Actual list length: "+ result.size());
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
