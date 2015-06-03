@@ -461,9 +461,10 @@ public class ReadXMLTest {
         ArrayList<String> expResult = ReadXML.getNodePhoneAttributeList(node);
         ArrayList<String> result = ReadXML.getNodePhoneAttributeListXPATH(node);
         System.out.println("List expected length: "+expResult.size()+" Actual list length: "+ result.size());
+        System.out.println("List expected length: "+expResult.size()+" Actual list length: "+ result.size());
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
 
