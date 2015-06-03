@@ -547,9 +547,9 @@ public final class PhoneXMLLookupFXMLController implements Initializable
 
                     allNodeElements = ReadXML.getAllNodeListElements(currentPhoneNode);
                     //Return specific phone section as String ArrayList's
-                    ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(currentPhoneNode);
-                    ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(currentPhoneNode);
-                    ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(currentPhoneNode);
+                    ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameListXPATH(currentPhoneNode);
+                    ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueListXPATH(currentPhoneNode);
+                    ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeListXPATH(currentPhoneNode);
                     MyLogger.log(Level.INFO, "Adding phone info to phone feature table");
                     setMainPhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false, TAG_SOURCE_PHONE);
 
