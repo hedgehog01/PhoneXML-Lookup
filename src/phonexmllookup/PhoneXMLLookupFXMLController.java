@@ -610,15 +610,15 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 if (xmlPath.contains(".xml"))
                 {
                     MyLogger.log(Level.INFO, "getting phone1 node");
-                    Phone1Node = ReadXML.getNodeByTagValue(xmlPath, MAIN_NODE_ELEMENT, selectedPhone);
+                    Phone1Node = ReadXML.getNodeByTagValueXPATH(xmlPath, MAIN_NODE_ELEMENT, selectedPhone);
                 }
 
                 //clear phone1 data
                 phone1FeatureData.clear();
 
-                ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(Phone1Node);
-                ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(Phone1Node);
-                ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(Phone1Node);
+                ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameListXPATH(Phone1Node);
+                ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueListXPATH(Phone1Node);
+                ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeListXPATH(Phone1Node);
 
                 setSearchByValuePhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false, TAG_SOURCE_PHONE, 1);
             }
@@ -654,15 +654,15 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 if (xmlPath.contains(".xml"))
                 {
                     MyLogger.log(Level.INFO, "getting phone2 node");
-                    Phone2Node = ReadXML.getNodeByTagValue(xmlPath, MAIN_NODE_ELEMENT, selectedPhone);
+                    Phone2Node = ReadXML.getNodeByTagValueXPATH(xmlPath, MAIN_NODE_ELEMENT, selectedPhone);
                 }
 
                 //clear phone1 data
                 phone2FeatureData.clear();
 
-                ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(Phone2Node);
-                ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(Phone2Node);
-                ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeList(Phone2Node);
+                ArrayList<String> phoneTagNameArrayList = ReadXML.getNodePhoneTagNameListXPATH(Phone2Node);
+                ArrayList<String> phoneTagValueArrayList = ReadXML.getNodePhoneTagValueListXPATH(Phone2Node);
+                ArrayList<String> phoneAttributeList = ReadXML.getNodePhoneAttributeListXPATH(Phone2Node);
 
                 setSearchByValuePhoneFeatureData(phoneTagNameArrayList, phoneTagValueArrayList, phoneAttributeList, NOT_DEFAULT, false, TAG_SOURCE_PHONE, 2);
             }
@@ -1082,27 +1082,27 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         String defaultOSSelected = ReadXML.getNodePhoneTagValue(currentPhoneNode, OSTYPETAGNAME);
         MyLogger.log(Level.INFO, "phone OSType is: {0}", defaultOSSelected);
         //get default OS sections
-        if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(ANDROID) && (ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT) != null))
+        if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(ANDROID) && (ReadXML.getNodeByTagValueXPATH(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT) != null))
         {
             MyLogger.log(Level.INFO, "Get default OS section Node: {0} (Should be Android)", defaultOSSelected);
-            androidDefaultOSSection = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
+            androidDefaultOSSection = ReadXML.getNodeByTagValueXPATH(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
 
             //return Android OS Default phone section as String ArrayList
-            ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
-            ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(androidDefaultOSSection);
-            ArrayList<String> androidDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(androidDefaultOSSection);
+            ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameListXPATH(androidDefaultOSSection);
+            ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueListXPATH(androidDefaultOSSection);
+            ArrayList<String> androidDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeListXPATH(androidDefaultOSSection);
 
             //set the default Android OS section
             setMainPhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true, TAG_SOURCE_DEFAULT_OS);
-        } else if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(IOS) && (ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT) != null))
+        } else if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(IOS) && (ReadXML.getNodeByTagValueXPATH(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT) != null))
         {
             MyLogger.log(Level.INFO, "Get default OS section Node: {0} (Should be iOS)", defaultOSSelected);
-            iOSDefaultOSSection = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
+            iOSDefaultOSSection = ReadXML.getNodeByTagValueXPATH(selectedXMLFilePath, MAIN_NODE_ELEMENT, IOS + OS_DEFAULT);
 
             //return iOS OS Default phone section as String ArrayList
-            ArrayList<String> iOSDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(iOSDefaultOSSection);
-            ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(iOSDefaultOSSection);
-            ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
+            ArrayList<String> iOSDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameListXPATH(iOSDefaultOSSection);
+            ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueListXPATH(iOSDefaultOSSection);
+            ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeListXPATH(iOSDefaultOSSection);
 
             //set the default Android OS section
             setMainPhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true, TAG_SOURCE_DEFAULT_OS);
@@ -1112,14 +1112,14 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             defaultOSSectionCheckBox.setSelected(false);
 
             //return Android OS Default phone section as String ArrayList
-            ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(androidDefaultOSSection);
-            ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(androidDefaultOSSection);
-            ArrayList<String> androidDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(androidDefaultOSSection);
+            ArrayList<String> androidDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameListXPATH(androidDefaultOSSection);
+            ArrayList<String> androidDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueListXPATH(androidDefaultOSSection);
+            ArrayList<String> androidDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeListXPATH(androidDefaultOSSection);
 
             //return iOS OS Default phone section as String ArrayList
-            ArrayList<String> iOSDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(iOSDefaultOSSection);
-            ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(iOSDefaultOSSection);
-            ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeList(iOSDefaultOSSection);
+            ArrayList<String> iOSDefaultOSPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameListXPATH(iOSDefaultOSSection);
+            ArrayList<String> iOSDefaultOSPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueListXPATH(iOSDefaultOSSection);
+            ArrayList<String> iOSDefaultOSPhoneAttributeList = ReadXML.getNodePhoneAttributeListXPATH(iOSDefaultOSSection);
 
             removePhoneFeatureData(androidDefaultOSPhoneTagNameArrayList, androidDefaultOSPhoneTagValueArrayList, androidDefaultOSPhoneAttributeList, ANDROID + OS_DEFAULT, true, TAG_SOURCE_DEFAULT_OS);
             removePhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true, TAG_SOURCE_DEFAULT_OS);
@@ -1134,21 +1134,21 @@ public final class PhoneXMLLookupFXMLController implements Initializable
         if (defaultSectionCheckBoxselected)
         {
             MyLogger.log(Level.INFO, "Parsing default section Node");
-            defaultSectionNode = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
+            defaultSectionNode = ReadXML.getNodeByTagValueXPATH(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
             //Return default phone section as String ArrayList's
-            ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
-            ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
-            ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
+            ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameListXPATH(defaultSectionNode);
+            ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueListXPATH(defaultSectionNode);
+            ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeListXPATH(defaultSectionNode);
 
             setMainPhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true, TAG_SOURCE_DEFAULT);
 
         } else
         {
             MyLogger.log(Level.INFO, "default section unselected - removing default section Node");
-            defaultSectionNode = ReadXML.getNodeByTagValue(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
-            ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameList(defaultSectionNode);
-            ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueList(defaultSectionNode);
-            ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeList(defaultSectionNode);
+            defaultSectionNode = ReadXML.getNodeByTagValueXPATH(selectedXMLFilePath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
+            ArrayList<String> defaultPhoneTagNameArrayList = ReadXML.getNodePhoneTagNameListXPATH(defaultSectionNode);
+            ArrayList<String> defaultPhoneTagValueArrayList = ReadXML.getNodePhoneTagValueListXPATH(defaultSectionNode);
+            ArrayList<String> defaultPhoneAttributeList = ReadXML.getNodePhoneAttributeListXPATH(defaultSectionNode);
 
             removePhoneFeatureData(defaultPhoneTagNameArrayList, defaultPhoneTagValueArrayList, defaultPhoneAttributeList, DEFAULT_SECTION, true, TAG_SOURCE_DEFAULT);
         }
@@ -1222,10 +1222,10 @@ public final class PhoneXMLLookupFXMLController implements Initializable
                 {
                     String logicalCounterpart = FileHandlerClass.getLogicalCounterpart(selectedFile.getFileName(), fileList);
                     String logicalXMLPath = (folderPathTextField.getText() + "\\" + logicalCounterpart);
-                    Node logicalDefaultNode = ReadXML.getNodeByTagValue(logicalXMLPath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
-                    Node logicalCounterpartNode = ReadXML.getNodeByTagValue(logicalXMLPath, MAIN_NODE_ELEMENT, phoneGuid);
-                    String logicalFamilyID = ReadXML.getNodePhoneTagValue(logicalDefaultNode, "FamilyID");
-                    String logicalAutoPK = ReadXML.getNodePhoneTagValue(logicalCounterpartNode, "Auto_PK");
+                    Node logicalDefaultNode = ReadXML.getNodeByTagValueXPATH(logicalXMLPath, MAIN_NODE_ELEMENT, DEFAULT_SECTION);
+                    Node logicalCounterpartNode = ReadXML.getNodeByTagValueXPATH(logicalXMLPath, MAIN_NODE_ELEMENT, phoneGuid);
+                    String logicalFamilyID = ReadXML.getNodePhoneTagValueXPATH(logicalDefaultNode, "FamilyID");
+                    String logicalAutoPK = ReadXML.getNodePhoneTagValueXPATH(logicalCounterpartNode, "Auto_PK");
                     imagePath = FileHandlerClass.getImageFolderPath(imageFolderPath, logicalFamilyID, logicalAutoPK, SUPPORTED_IMAGE_EXTENTIONS);
 
                 }

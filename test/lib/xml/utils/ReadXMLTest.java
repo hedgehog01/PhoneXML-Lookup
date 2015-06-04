@@ -99,7 +99,7 @@ public class ReadXMLTest {
         System.out.println("getNodePhoneInfoList");
         Node node = null;
         ArrayList<String> expResult = null;
-        ArrayList<String> result = ReadXML.getNodePhoneTagNameList(node);
+        ArrayList<String> result = ReadXML.getNodePhoneTagNameListXPATH(node);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -410,7 +410,7 @@ public class ReadXMLTest {
     /**
      * Test of getNodePhoneTagNameListXPATH method, of class ReadXML.
      */
-    @Ignore
+    //@Ignore
     @Test
     public void testGetNodePhoneTagNameListXPATH()
     {
@@ -450,6 +450,7 @@ public class ReadXMLTest {
     /**
      * Test of getNodePhoneAttributeListXPATH method, of class ReadXML.
      */
+    @Ignore
     @Test
     public void testGetNodePhoneAttributeListXPATH()
     {
