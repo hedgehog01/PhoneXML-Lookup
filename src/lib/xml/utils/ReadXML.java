@@ -729,8 +729,8 @@ public final class ReadXML
 
             XPath xPath = XPathFactory.newInstance().newXPath();
             //System.out.println("*************************");
-            String expression = "/dataroot/" + mainElement;
-
+            //String expression = "/dataroot/" + mainElement;
+            String expression = "/dataroot/PHONE[node()]";
             NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(doc, XPathConstants.NODESET);
             nodeArrayList = convertNodeListToArrayList(nodeList);
             //System.out.println("Number of results found: " + (nodeList.getLength() - 1));
@@ -955,6 +955,7 @@ public final class ReadXML
             try
             {
                 XPath xPath = XPathFactory.newInstance().newXPath();
+                //String expression = "./*[node()]";
                 String expression = "./*";
                 NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(node, XPathConstants.NODESET);
                 for (int i = 0; i < nodeList.getLength(); i++)
@@ -1014,7 +1015,8 @@ public final class ReadXML
             try
             {
                 XPath xPath = XPathFactory.newInstance().newXPath();
-                String expression = "./*[node()]";
+                //String expression = "./*[node()]";
+                String expression = "./*";
                 NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(node, XPathConstants.NODESET);
                 for (int i = 0; i < nodeList.getLength(); i++)
                 {
@@ -1030,7 +1032,10 @@ public final class ReadXML
                             {
                                 numChildren++;
                                 System.out.println("Child Node name: " + childNodes.item(j).getNodeName() + " value: " + childNodes.item(j).getTextContent());
-                                phoneInfoList.add(nodeList.item(j).getTextContent());
+                                if (childNodes.item(j).getTextContent()!= null)
+                                    phoneInfoList.add(childNodes.item(j).getTextContent());
+                                else
+                                    phoneInfoList.add("");
                             }
                         }
                         //check if children actually added
@@ -1069,7 +1074,8 @@ public final class ReadXML
             try
             {
                 XPath xPath = XPathFactory.newInstance().newXPath();
-                String expression = "./*[node()]";
+                //String expression = "./*[node()]";
+                String expression = "./*";
                 NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(node, XPathConstants.NODESET);
                 System.out.println("Attribute nodelist length: " + nodeList.getLength());
                 for (int i = 0; i < nodeList.getLength(); i++)
@@ -1085,7 +1091,7 @@ public final class ReadXML
                             if (childNodes.item(j) != null && childNodes.item(j).getNodeType() == Node.ELEMENT_NODE)
                             {
                                 numChildren++;
-                                NamedNodeMap attributesNodeMap = nodeList.item(j).getAttributes();
+                                NamedNodeMap attributesNodeMap = childNodes.item(j).getAttributes();
                                 String elementInfo = (getNodeAttributesSB(attributesNodeMap));
                                 System.out.println("Child Node name: " + childNodes.item(j).getNodeName() + " Attributes: "+elementInfo);
                                 attributeList.add(elementInfo);

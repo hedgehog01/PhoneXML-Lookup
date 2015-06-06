@@ -1079,10 +1079,11 @@ public final class PhoneXMLLookupFXMLController implements Initializable
      */
     private void setDefaultOSSection()
     {
-        String defaultOSSelected = ReadXML.getNodePhoneTagValue(currentPhoneNode, OSTYPETAGNAME);
+        String defaultOSSelected = ReadXML.getNodePhoneTagValueXPATH(currentPhoneNode, OSTYPETAGNAME);
         MyLogger.log(Level.INFO, "phone OSType is: {0}", defaultOSSelected);
+        Node defaulOSAndroid = ReadXML.getNodeByTagValueXPATH(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
         //get default OS sections
-        if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(ANDROID) && (ReadXML.getNodeByTagValueXPATH(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT) != null))
+        if (defaultOSSectionCheckBoxselected && defaultOSSelected.equals(ANDROID) &&  (defaulOSAndroid != null))
         {
             MyLogger.log(Level.INFO, "Get default OS section Node: {0} (Should be Android)", defaultOSSelected);
             androidDefaultOSSection = ReadXML.getNodeByTagValueXPATH(selectedXMLFilePath, MAIN_NODE_ELEMENT, ANDROID + OS_DEFAULT);
@@ -1108,7 +1109,7 @@ public final class PhoneXMLLookupFXMLController implements Initializable
             setMainPhoneFeatureData(iOSDefaultOSPhoneTagNameArrayList, iOSDefaultOSPhoneTagValueArrayList, iOSDefaultOSPhoneAttributeList, IOS + OS_DEFAULT, true, TAG_SOURCE_DEFAULT_OS);
         } else
         {
-            MyLogger.log(Level.INFO, "Mo match found for OSType: {0} or checkbox unchecked", defaultOSSelected);
+            MyLogger.log(Level.INFO, "No match found for OSType: {0} or checkbox unchecked", defaultOSSelected);
             defaultOSSectionCheckBox.setSelected(false);
 
             //return Android OS Default phone section as String ArrayList
