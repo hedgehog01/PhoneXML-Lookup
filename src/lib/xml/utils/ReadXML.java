@@ -517,7 +517,7 @@ public final class ReadXML
                 {
 
                     NamedNodeMap attributesNodeMap = phoneNode.getAttributes();
-                    
+
                     String elementInfo = (getNodeAttributesSB(attributesNodeMap));
 
                     attributeList.add(elementInfo);
@@ -930,7 +930,7 @@ public final class ReadXML
             {
                 if (isValueInNodeXPATH(nodeList.get(i), tagValue, matchWholeWord))
                 {
-                    return phoneInfoNode;
+                    return nodeList.get(i);
                 }
             }
 
@@ -963,34 +963,22 @@ public final class ReadXML
                     if (nodeList.item(i) != null && nodeList.item(i).getNodeType() == Node.ELEMENT_NODE)
                     {
                         phoneInfoList.add(nodeList.item(i).getNodeName());
-                        System.out.println("Parent Node added: "+nodeList.item(i).getNodeName() );
-                        
+                        //System.out.println("Parent Node added: "+nodeList.item(i).getNodeName() );
+
                         //check for node for children
-                        NodeList childNodes = nodeList.item(i).getChildNodes();                                          
-                        int numChildren = 0;
+                        NodeList childNodes = nodeList.item(i).getChildNodes();
+                        //int numChildren = 0;
                         for (int j = 0; j < childNodes.getLength(); j++)
                         {
                             //check if element node has child node with info, if so only add children not parent
                             if (childNodes.item(j) != null && childNodes.item(j).getNodeType() == Node.ELEMENT_NODE)
                             {
-                                numChildren++;
-                                System.out.println("Child Node name: " + childNodes.item(j).getNodeName());
+                                //numChildren++;
+                                //System.out.println("Child Node name: " + childNodes.item(j).getNodeName());
                                 phoneInfoList.add(childNodes.item(j).getNodeName());
                             }
                         }
-                        /*
-                        //check if children actually added
-                        if (numChildren == 0 && nodeList.item(i) != null)
-                        {
-                            System.out.println("No children added for node Name: " + nodeList.item(i).getNodeName());
-                            phoneInfoList.add(nodeList.item(i).getNodeName());
-                        }
-                        */
                     }
-                    /*
-                    System.out.println("Node name: " + nodeList.item(i).getNodeName());
-                    phoneInfoList.add(nodeList.item(i).getNodeName());
-                    */
                 }
             } catch (XPathExpressionException ex)
             {
@@ -1031,22 +1019,25 @@ public final class ReadXML
                             if (childNodes.item(j) != null && childNodes.item(j).getNodeType() == Node.ELEMENT_NODE)
                             {
                                 numChildren++;
-                                System.out.println("Child Node name: " + childNodes.item(j).getNodeName() + " value: " + childNodes.item(j).getTextContent());
-                                if (childNodes.item(j).getTextContent()!= null)
+                                //System.out.println("Child Node name: " + childNodes.item(j).getNodeName() + " value: " + childNodes.item(j).getTextContent());
+                                if (childNodes.item(j).getTextContent() != null)
+                                {
                                     phoneInfoList.add(childNodes.item(j).getTextContent());
-                                else
+                                } else
+                                {
                                     phoneInfoList.add("");
+                                }
                             }
                         }
                         //check if children actually added
                         if (numChildren == 0 && nodeList.item(i) != null)
                         {
-                            System.out.println("No children added for node Name: " + nodeList.item(i).getNodeName() + " value: " + nodeList.item(i).getTextContent());
+                            //System.out.println("No children added for node Name: " + nodeList.item(i).getNodeName() + " value: " + nodeList.item(i).getTextContent());
                             phoneInfoList.add(nodeList.item(i).getTextContent());
                         } else if (numChildren > 0)
                         {
-                            System.out.println("Children added for node, so node info empty. node name: " + nodeList.item(i).getNodeName());
-                            phoneInfoList.add("");
+                            //System.out.println("Children added for node, so node info empty. node name: " + nodeList.item(i).getNodeName());
+                            phoneInfoList.add("NO Value");
                         }
                     }
                 }
@@ -1077,7 +1068,6 @@ public final class ReadXML
                 //String expression = "./*[node()]";
                 String expression = "./*";
                 NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(node, XPathConstants.NODESET);
-                System.out.println("Attribute nodelist length: " + nodeList.getLength());
                 for (int i = 0; i < nodeList.getLength(); i++)
                 {
                     if (nodeList.item(i) != null && nodeList.item(i).getNodeType() == Node.ELEMENT_NODE)
@@ -1093,22 +1083,22 @@ public final class ReadXML
                                 numChildren++;
                                 NamedNodeMap attributesNodeMap = childNodes.item(j).getAttributes();
                                 String elementInfo = (getNodeAttributesSB(attributesNodeMap));
-                                System.out.println("Child Node name: " + childNodes.item(j).getNodeName() + " Attributes: "+elementInfo);
+                                //System.out.println("Child Node name: " + childNodes.item(j).getNodeName() + " Attributes: "+elementInfo);
                                 attributeList.add(elementInfo);
                             }
                         }
                         //check if children actually added
                         if (numChildren == 0 && nodeList.item(i) != null)
                         {
-                            
+
                             NamedNodeMap attributesNodeMap = nodeList.item(i).getAttributes();
                             String elementInfo = (getNodeAttributesSB(attributesNodeMap));
-                            System.out.println("Node name: " + nodeList.item(i).getNodeName() +" Attributes: "+elementInfo);
+                            //System.out.println("Node name: " + nodeList.item(i).getNodeName() +" Attributes: "+elementInfo);
                             attributeList.add(elementInfo);
-                            
+
                         } else if (numChildren > 0)
                         {
-                            System.out.println("Children added for node, so node attribute empty. node name: " + nodeList.item(i).getNodeName());
+                            //System.out.println("Children added for node, so node attribute empty. node name: " + nodeList.item(i).getNodeName());
                             attributeList.add("");
                         }
                     }
@@ -1139,8 +1129,8 @@ public final class ReadXML
     }
 
     /*
-    * method to get attributes from NamedNodeMap as String
-    */
+     * method to get attributes from NamedNodeMap as String
+     */
     private static String getNodeAttributesSB(NamedNodeMap attributesNodeMap)
     {
         StringBuilder attributeSB = new StringBuilder("");

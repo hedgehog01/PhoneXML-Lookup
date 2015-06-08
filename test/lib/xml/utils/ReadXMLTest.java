@@ -49,7 +49,7 @@ public class ReadXMLTest {
     @Test
     public void testGetAllXMLTagTextByName() {
         System.out.println("getAllXMLTagTextByName");
-        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String tagName = "Name";
         String expResult = "YP-GB70 Yepp Galaxy S Player";
@@ -146,7 +146,7 @@ public class ReadXMLTest {
     public void testGetNodeListByTagValue()
     {
         System.out.println("getNodeListByTagValue");
-        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String tagValue = "Name";
         boolean matchWholeWordSelected = false;
@@ -217,7 +217,7 @@ public class ReadXMLTest {
     public void testGetAllXMLTagTextByNameXPATH()
     {
         System.out.println("getAllXMLTagTextByNameXPATH");
-        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String tagName = "DataBaseModuleClass";
         String rootElement = "dataroot";
@@ -251,7 +251,7 @@ public class ReadXMLTest {
     public void testGetNodeListByTagValueXPATH()
     {
         System.out.println("getNodeListByTagValueXPATH");
-        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String tagValue = "dffb8a35-c882-4385-af9e-82d11150c552";
         String rootElement = "dataroot";
@@ -270,12 +270,12 @@ public class ReadXMLTest {
     /**
      * Test of getAllXMLNodes method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testGetAllXMLNodesXPATH()
     {
         System.out.println("getAllXMLNodes");
-        String XMLName = "F:\\Hedgehog01  DOCS\\Documents\\XML Phones\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String tagValue = "GSM";
         String rootElement = "dataroot";
@@ -304,7 +304,7 @@ public class ReadXMLTest {
     public void testGetAllNodeElementsXPATH()
     {
         System.out.println("getAllNodeElementsXPATH");
-        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String tagValue = "GSM";
         Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, tagValue);
@@ -317,12 +317,12 @@ public class ReadXMLTest {
     /**
      * Test of isValueInNodeXPATH method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testIsValueInNodeXPATH()
     {
         System.out.println("isValueInNodeXPATH");
-        String XMLName = "F:\\Hedgehog01  DOCS\\Documents\\XML Phones\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String tagValue = "Android_OS_Default";
         Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, tagValue);
@@ -345,7 +345,7 @@ public class ReadXMLTest {
     {
         
         System.out.println("getNodePhoneTagValueXPATH");
-        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String selectedPhone = "A500 Iconia Tab";
         Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, selectedPhone);
@@ -365,7 +365,7 @@ public class ReadXMLTest {
     public void testGetNodeListByTagNameXPATH()
     {
         System.out.println("getNodeListByTagNameXPATH");
-        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String tagName = "DBFolderList";
         boolean matchWholeWordSelected = true;
@@ -386,7 +386,7 @@ public class ReadXMLTest {
     public void testIsTagInNodeXPATH()
     {
         System.out.println("isTagInNodeXPATH");
-        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String selectedPhone = "A500 Iconia Tab";
         Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, selectedPhone);
@@ -402,12 +402,12 @@ public class ReadXMLTest {
     /**
      * Test of getNodeByTagValueXPATH method, of class ReadXML.
      */
-    //@Ignore
+    @Ignore
     @Test
     public void testGetNodeByTagValueXPATH()
     {
         System.out.println("getNodeByTagValueXPATH");
-        String XMLName = "F:\\Hedgehog01  DOCS\\Documents\\XML Phones\\DataFiles\\Phones\\__Acer.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__Alcatel.xml";
         String mainElement = "PHONE";
         String tagValue = "Android_OS_Default";
         Node expResult = ReadXML.getNodeByTagValue(XMLName, mainElement, tagValue);;
@@ -425,8 +425,8 @@ public class ReadXMLTest {
     public void testGetNodePhoneTagNameListXPATH()
     {
         System.out.println("getNodePhoneTagNameListXPATH");
-        //String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__SamsungGSM.xml";
-        String XMLName = "F:\\Hedgehog01  DOCS\\Documents\\XML Phones\\DataFiles\\Phones\\__SamsungGSM.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__SamsungGSM.xml";
+        //String XMLName = "F:\\Hedgehog01  DOCS\\Documents\\XML Phones\\DataFiles\\Phones\\__SamsungGSM.xml";
         String mainElement = "PHONE";
         //String selectedPhone = "YP-GB70 Yepp Galaxy S Player";
         String selectedPhone = "Android_OS_Default";
@@ -447,8 +447,8 @@ public class ReadXMLTest {
     public void testGetNodePhoneTagValueListXPATH()
     {
         System.out.println("getNodePhoneTagValueListXPATH");
-        //String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__SamsungGSM.xml";
-        String XMLName = "F:\\Hedgehog01  DOCS\\Documents\\XML Phones\\DataFiles\\Phones\\__SamsungGSM.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__SamsungGSM.xml";
+        //String XMLName = "F:\\Hedgehog01  DOCS\\Documents\\XML Phones\\DataFiles\\Phones\\__SamsungGSM.xml";
         String mainElement = "PHONE";
         //String selectedPhone = "YP-GB70 Yepp Galaxy S Player";
         String selectedPhone = "Android_OS_Default";
@@ -469,8 +469,8 @@ public class ReadXMLTest {
     public void testGetNodePhoneAttributeListXPATH()
     {
         System.out.println("getNodePhoneAttributeListXPATH");
-        //String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__SamsungGSM.xml";
-        String XMLName = "F:\\Hedgehog01  DOCS\\Documents\\XML Phones\\DataFiles\\Phones\\__SamsungGSM.xml";
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__SamsungGSM.xml";
+        //String XMLName = "F:\\Hedgehog01  DOCS\\Documents\\XML Phones\\DataFiles\\Phones\\__SamsungGSM.xml";
         
         String mainElement = "PHONE";
         //String selectedPhone = "YP-GB70 Yepp Galaxy S Player";
@@ -484,8 +484,44 @@ public class ReadXMLTest {
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }
-
-
-
     
+    /**
+     * Test of getNodePhoneTagNameListXPATH + getNodePhoneTagValueListXPATH + getNodePhoneAttributeListXPATH methods, of class ReadXML.
+     */
+    //@Ignore
+    @Test
+    public void testGetNodePhoneNamesValuesAttributesListXPATH()
+    {
+        System.out.println("testGetNodePhoneNamesValuesAttributesListXPATH");
+        String XMLName = "C:\\Users\\nathanr\\Desktop\\TFS\\Soft\\Genesis\\XML DB\\DataFiles\\Phones\\__SamsungGSM.xml";
+        //String XMLName = "F:\\Hedgehog01  DOCS\\Documents\\XML Phones\\DataFiles\\Phones\\__SamsungGSM.xml";
+        
+        String mainElement = "PHONE";
+        //String selectedPhone = "YP-GB70 Yepp Galaxy S Player";
+        String selectedPhone = "Android_OS_Default";
+        Node node = ReadXML.getNodeByTagValue(XMLName, mainElement, selectedPhone);
+        
+        ArrayList<String> tagNameList = ReadXML.getNodePhoneTagNameListXPATH(node);
+        ArrayList<String> tagValueList = ReadXML.getNodePhoneTagValueListXPATH(node);
+        ArrayList<String> attributeList = ReadXML.getNodePhoneAttributeListXPATH(node);
+        
+        
+        System.out.println("List tag name length: "+tagNameList.size());
+        System.out.println("List tag value length: "+tagValueList.size());
+        System.out.println("List tag attribute length: "+attributeList.size());
+        
+        if (tagNameList.size()==tagValueList.size() &&attributeList.size() == tagNameList.size())
+        {
+            for (int i=0; i<tagNameList.size();i++)
+            {
+                System.out.println ("Name: "+tagNameList.get(i) + " value: "+tagValueList.get(i)+ " attribute: " +attributeList.get(i));
+            }
+        }else
+        {
+            fail("failed due to different lengths of Array lists");
+        }
+        
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
 }
