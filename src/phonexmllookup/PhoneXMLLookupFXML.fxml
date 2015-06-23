@@ -55,13 +55,11 @@
                         <TableView fx:id="phoneNameTableView" layoutX="154.0" layoutY="150.0" prefHeight="553.0" prefWidth="251.0" AnchorPane.bottomAnchor="13.0" AnchorPane.topAnchor="150.0">
                            <columns>
                               <TableColumn fx:id="phoneNameColumn" editable="false" prefWidth="250.0" text="Phone list" />
-                           </columns>
-                        </TableView>
+                           </columns></TableView>
                         <TableView fx:id="fileListTableView" layoutX="4.0" layoutY="150.0" prefHeight="553.0" prefWidth="149.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="4.0" AnchorPane.topAnchor="150.0">
                            <columns>
                               <TableColumn editable="false" prefWidth="148.0" resizable="false" text="XML List" fx:id="xmlNameColumn" />
-                           </columns>
-                        </TableView>
+                           </columns></TableView>
                         <Label fx:id="infoLabel" layoutX="911.0" layoutY="5.0" prefHeight="142.0" prefWidth="313.0" textFill="#1032da" AnchorPane.leftAnchor="911.0" AnchorPane.rightAnchor="188.0" />
                         <ImageView fx:id="deviceImageView" fitHeight="133.0" fitWidth="166.0" layoutX="1230.0" layoutY="13.0" onMouseClicked="#openDeviceImage" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="16.0" />
                         <TextField fx:id="filteredTagValueTextField" layoutX="648.0" layoutY="93.0" prefHeight="25.0" prefWidth="261.0" promptText="Search value..." />
