@@ -1066,7 +1066,7 @@ public final class ReadXML
             {
                 XPath xPath = XPathFactory.newInstance().newXPath();
                 //String expression = "./*[node()]";
-                String expression = "./*/@*";
+                String expression = "./*";
                 NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(node, XPathConstants.NODESET);
                 System.out.println("Attribute nodelist length: "+nodeList.getLength());
                 for(int i = 0; i < nodeList.getLength(); i++)

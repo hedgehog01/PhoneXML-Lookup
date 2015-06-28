@@ -17,8 +17,10 @@
 package lib.xmlphonefeatures;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import lib.logUtil.MyLogger;
 
 /**
  *Class to handle creation of PhoneFeature properties as Observable lists
@@ -60,13 +62,17 @@ public final class PhoneFeatureCreator {
      */
     public static ObservableList<PhoneFeatureProperty> createPhoneFeatureList(ArrayList<String> elementName, ArrayList<String> elementValue,ArrayList<String> elementAttribute,String elementDefaultType,boolean isDefault,String tagSource) {
         ObservableList<PhoneFeatureProperty> phoneData = FXCollections.observableArrayList();
-        if ((elementName!=null && elementValue!=null) && (elementName.size() == elementValue.size())) 
+        if ((elementName!=null && elementValue!=null && elementAttribute!=null) && (elementName.size() == elementValue.size()) && (elementValue.size() == elementAttribute.size())) 
         {
             for (int i=0; i<elementName.size(); i++)
             {
                 phoneData.add(new PhoneFeatureProperty(elementName.get(i), elementValue.get(i),elementAttribute.get(i),elementDefaultType,isDefault,tagSource));
                 
             }
+        }
+        else
+        {
+            MyLogger.log(Level.WARNING, "Phone Array lengths don't match or are null.");
         }
 
         return phoneData;
